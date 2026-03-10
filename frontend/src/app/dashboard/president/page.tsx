@@ -3,6 +3,9 @@
 import React from 'react';
 import { RoleLayout } from '@/components/layout/RoleLayout';
 import { DashboardStats } from '@/components/dashboard/DashboardStats';
+import { PersonnelDistributionChart } from '@/components/dashboard/PersonnelDistributionChart';
+import { EmploymentStatusChart } from '@/components/dashboard/EmploymentStatusChart';
+import { ComplianceTracker } from '@/components/dashboard/ComplianceTracker';
 import { ReportBuilder } from '@/components/reports/ReportBuilder';
 
 export default function PresidentDashboard() {
@@ -10,8 +13,13 @@ export default function PresidentDashboard() {
         <RoleLayout userRole="President">
             <div className="space-y-8 pb-12">
                 <DashboardStats />
+                <PersonnelDistributionChart />
+                <EmploymentStatusChart />
+                <ComplianceTracker />
                 <ReportBuilder />
             </div>
         </RoleLayout>
     );
 }
+
+

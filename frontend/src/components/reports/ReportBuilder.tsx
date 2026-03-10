@@ -3,6 +3,13 @@
 import React, { useState } from 'react';
 import type { ReportResult } from '@/types';
 import { BarChart3, ChevronDown, Play, FileSearch } from 'lucide-react';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 
 export function ReportBuilder() {
     const [loading, setLoading] = useState(false);
@@ -41,18 +48,16 @@ export function ReportBuilder() {
                 <div className="flex items-center gap-3">
                     <div className="relative">
                         <label className="block text-[11px] uppercase tracking-wider font-medium text-slate-400 mb-1.5">Group By</label>
-                        <div className="relative">
-                            <select
-                                value={groupBy}
-                                onChange={(e) => setGroupBy(e.target.value)}
-                                className="appearance-none pl-3 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-lg text-[13px] font-medium text-slate-700 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all outline-none cursor-pointer"
-                            >
-                                <option value="department">Department</option>
-                                <option value="status">Employment Status</option>
-                                <option value="degree">Highest Degree</option>
-                            </select>
-                            <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 pointer-events-none" />
-                        </div>
+                        <Select value={groupBy} onValueChange={setGroupBy}>
+                            <SelectTrigger className="w-[180px] bg-slate-50 border-slate-200 text-[13px] font-medium text-slate-700 h-9">
+                                <SelectValue placeholder="Select criteria" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="department">Department</SelectItem>
+                                <SelectItem value="status">Employment Status</SelectItem>
+                                <SelectItem value="degree">Highest Degree</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
                     <div className="self-end">
                         <button
