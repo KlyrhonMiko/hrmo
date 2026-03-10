@@ -1,0 +1,120 @@
+"use client";
+
+import React, { useState } from 'react';
+import type { ReportResult } from '@/types';
+import { BarChart3, ChevronDown, Play, FileSearch } from 'lucide-react';
+
+export function ReportBuilder() {
+    const [loading, setLoading] = useState(false);
+    const [groupBy, setGroupBy] = useState('department');
+    const [results, setResults] = useState<ReportResult[] | null>(null);
+
+    const generateReport = async () => {
+        setLoading(true);
+        try {
+            const response = await fetch(`/api/reports/dynamic?groupBy=${groupBy}`);
+            if (!response.ok) throw new Error('Network response not ok');
+            const data = await response.json();
+            setResults(data.data);
+        } catch (error) {
+            console.error('Failed to fetch report', error);
+            alert('Error fetching report data');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <div className="bg-white rounded-xl border border-slate-200/80 overflow-hidden">
+            {/* Header */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-6 border-b border-slate-100">
+                <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-lg bg-slate-100 flex items-center justify-center">
+                        <BarChart3 className="w-[18px] h-[18px] text-slate-600" />
+                    </div>
+                    <div>
+                        <h2 className="text-[15px] font-semibold text-slate-800">Dynamic Report Builder</h2>
+                        <p className="text-[12px] text-slate-400">Generate aggregate counts by criteria</p>
+                    </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                    <div className="relative">
+                        <label className="block text-[11px] uppercase tracking-wider font-medium text-slate-400 mb-1.5">Group By</label>
+                        <div className="relative">
+                            <select
+                                value={groupBy}
+                                onChange={(e) => setGroupBy(e.target.value)}
+                                className="appearance-none pl-3 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-lg text-[13px] font-medium text-slate-700 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all outline-none cursor-pointer"
+                            >
+                                <option value="department">Department</option>
+                                <option value="status">Employment Status</option>
+                                <option value="degree">Highest Degree</option>
+                            </select>
+                            <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 pointer-events-none" />
+                        </div>
+                    </div>
+                    <div className="self-end">
+                        <button
+                            onClick={generateReport}
+                            disabled={loading}
+                            className="inline-flex items-center gap-2 px-5 py-2 bg-indigo-600 text-white text-[13px] font-medium rounded-lg hover:bg-indigo-700 active:scale-[0.98] shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <Play className="w-3.5 h-3.5" />
+                            {loading ? 'Running...' : 'Run Report'}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {/* Results */}
+            <div className="p-6">
+                {results ? (
+                    <div className="overflow-hidden rounded-lg border border-slate-200">
+                        <table className="min-w-full divide-y divide-slate-200">
+                            <thead>
+                                <tr className="bg-slate-50">
+                                    <th scope="col" className="px-5 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+                                        {groupBy.charAt(0).toUpperCase() + groupBy.slice(1)}
+                                    </th>
+                                    <th scope="col" className="px-5 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+                                        Headcount
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-100">
+                                {results.map((item, idx) => (
+                                    <tr key={idx} className={`transition-colors hover:bg-slate-50 ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}`}>
+                                        <td className="px-5 py-3.5 text-[13px] font-medium text-slate-800">
+                                            {item.group}
+                                        </td>
+                                        <td className="px-5 py-3.5 text-[13px] text-slate-600">
+                                            <span className="inline-flex items-center min-w-[32px] justify-center px-2.5 py-0.5 rounded-md text-[12px] font-semibold bg-indigo-50 text-indigo-700">
+                                                {item.value}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                ))}
+                                {results.length === 0 && (
+                                    <tr>
+                                        <td colSpan={2} className="px-5 py-10 text-center text-[13px] text-slate-400">
+                                            No data found for this grouping.
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                ) : (
+                    <div className="flex flex-col items-center justify-center py-16 text-center">
+                        <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center mb-4">
+                            <FileSearch className="w-6 h-6 text-slate-400" />
+                        </div>
+                        <p className="text-[13px] font-medium text-slate-500">No report generated yet</p>
+                        <p className="text-[12px] text-slate-400 mt-1">Select parameters and click &quot;Run Report&quot; to view data</p>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+}
