@@ -67,17 +67,17 @@ export function RoleLayout({ children, userRole }: RoleLayoutProps) {
     });
 
     return (
-        <div className="flex h-screen bg-slate-50">
+        <div className="flex h-screen bg-stone-50">
             {/* Sidebar */}
-            <aside className="w-64 bg-white border-r border-slate-200 flex flex-col">
+            <aside className="w-64 bg-white border-r border-stone-200 flex flex-col">
                 {/* Brand */}
-                <div className="h-16 flex items-center gap-3 px-6 border-b border-slate-100">
-                    <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center">
+                <div className="h-16 flex items-center gap-3 px-6 border-b border-stone-100">
+                    <div className="w-8 h-8 rounded-lg bg-green-700 flex items-center justify-center">
                         <span className="text-white font-bold text-sm">HR</span>
                     </div>
                     <div>
-                        <h1 className="text-sm font-semibold text-slate-900 leading-none">HRMO System</h1>
-                        <p className="text-[11px] text-slate-400 mt-0.5">{userRole}</p>
+                        <h1 className="text-sm font-semibold text-stone-900 leading-none">HRMO System</h1>
+                        <p className="text-[11px] text-stone-400 mt-0.5">{userRole}</p>
                     </div>
                 </div>
 
@@ -89,9 +89,9 @@ export function RoleLayout({ children, userRole }: RoleLayoutProps) {
                             <Link
                                 key={link.href}
                                 href={link.href}
-                                className="group flex items-center gap-3 px-3 py-2.5 text-[13px] font-medium text-slate-600 rounded-lg hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200"
+                                className="group flex items-center gap-3 px-3 py-2.5 text-[13px] font-medium text-stone-600 rounded-lg hover:bg-green-50 hover:text-green-700 transition-all duration-200"
                             >
-                                <Icon className="w-[18px] h-[18px] text-slate-400 group-hover:text-indigo-600 transition-colors duration-200" />
+                                <Icon className="w-[18px] h-[18px] text-stone-400 group-hover:text-green-700 transition-colors duration-200" />
                                 {link.label}
                             </Link>
                         );
@@ -99,8 +99,8 @@ export function RoleLayout({ children, userRole }: RoleLayoutProps) {
                 </nav>
 
                 {/* Sign Out */}
-                <div className="px-3 py-4 border-t border-slate-100">
-                    <button className="w-full flex items-center gap-3 px-3 py-2.5 text-[13px] font-medium text-slate-500 rounded-lg hover:bg-red-50 hover:text-red-600 transition-all duration-200">
+                <div className="px-3 py-4 border-t border-stone-100">
+                    <button className="w-full flex items-center gap-3 px-3 py-2.5 text-[13px] font-medium text-stone-500 rounded-lg hover:bg-red-50 hover:text-red-600 transition-all duration-200">
                         <LogOut className="w-[18px] h-[18px]" />
                         Sign Out
                     </button>
@@ -109,15 +109,15 @@ export function RoleLayout({ children, userRole }: RoleLayoutProps) {
 
             {/* Main Content */}
             <main className="flex-1 flex flex-col overflow-hidden">
-                <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8">
+                <header className="h-16 bg-white border-b border-stone-200 flex items-center justify-between px-8">
                     <div>
-                        <h2 className="text-[15px] font-semibold text-slate-800">
+                        <h2 className="text-[15px] font-semibold text-stone-800">
                             Welcome back, {userRole}
                         </h2>
-                        <p className="text-[12px] text-slate-400">{today}</p>
+                        <p className="text-[12px] text-stone-400">{today}</p>
                     </div>
                 </header>
-                <div className="flex-1 overflow-auto p-8 bg-slate-50">
+                <div className="flex-1 overflow-auto p-8 bg-stone-50">
                     {children}
                 </div>
             </main>

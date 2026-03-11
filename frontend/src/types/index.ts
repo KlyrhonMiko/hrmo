@@ -25,3 +25,13 @@ export interface ReportResult {
     group: string;
     value: number;
 }
+
+export interface SavedReport {
+    id: string;
+    title: string;
+    description: string;
+    groupBy: 'department' | 'status' | 'degree';
+    createdAt: string;
+    createdBy: string;
+    results: ReportResult[];
+}

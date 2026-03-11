@@ -25,14 +25,13 @@ const categoryData = [
 
 /* ─── Department Breakdown Data (Bar) ─── */
 const departmentData = [
-    { department: "CICS", teaching: 38, nonTeaching: 12 },
+    { department: "CCS", teaching: 38, nonTeaching: 12 },
     { department: "CBA", teaching: 42, nonTeaching: 14 },
     { department: "CAS", teaching: 35, nonTeaching: 10 },
     { department: "COE", teaching: 48, nonTeaching: 15 },
-    { department: "CTE", teaching: 30, nonTeaching: 11 },
+    { department: "CIHM", teaching: 25, nonTeaching: 8 },
+    { department: "COED", teaching: 32, nonTeaching: 10 },
     { department: "CON", teaching: 28, nonTeaching: 9 },
-    { department: "ADMIN", teaching: 3, nonTeaching: 12 },
-    { department: "SHS", teaching: 20, nonTeaching: 8 },
 ];
 
 const TOTAL = categoryData.reduce((sum, item) => sum + item.value, 0);

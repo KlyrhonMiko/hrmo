@@ -4,7 +4,7 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const groupBy = searchParams.get('groupBy'); // e.g., 'department' or 'status'
-    
+
     if (!groupBy) {
       return NextResponse.json(
         { error: 'Missing groupBy parameter' },
@@ -24,8 +24,9 @@ export async function GET(request: Request) {
     let data = [];
     if (groupBy === 'department') {
       data = [
-        { group: 'Computer Studies', value: 45 },
-        { group: 'Education', value: 80 },
+        { group: 'CCS', value: 45 },
+        { group: 'CIHM', value: 33 },
+        { group: 'COED', value: 42 },
         { group: 'Business Administration', value: 65 },
         { group: 'HRMO', value: 5 },
       ];
@@ -42,7 +43,7 @@ export async function GET(request: Request) {
         { group: 'Doctorate', value: 45 },
       ];
     } else {
-        return NextResponse.json({ error: 'Invalid groupBy parameter' }, { status: 400 });
+      return NextResponse.json({ error: 'Invalid groupBy parameter' }, { status: 400 });
     }
 
     return NextResponse.json(

@@ -48,7 +48,7 @@ export function ReportBuilder() {
                 <div className="flex items-center gap-3">
                     <div className="relative">
                         <label className="block text-[11px] uppercase tracking-wider font-medium text-slate-400 mb-1.5">Group By</label>
-                        <Select value={groupBy} onValueChange={setGroupBy}>
+                        <Select value={groupBy} onValueChange={(v) => { if (v) setGroupBy(v); }}>
                             <SelectTrigger className="w-[180px] bg-slate-50 border-slate-200 text-[13px] font-medium text-slate-700 h-9">
                                 <SelectValue placeholder="Select criteria" />
                             </SelectTrigger>

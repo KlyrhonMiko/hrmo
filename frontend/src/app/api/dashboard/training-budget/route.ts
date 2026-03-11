@@ -18,16 +18,22 @@ export async function GET(request: Request) {
       },
       departments: [
         {
-          department: 'Computer Studies',
+          department: 'Computer Studies (CCS)',
+          allocated: 700000,
+          utilized: 270000,
+          balance: 430000,
+        },
+        {
+          department: 'CIHM',
+          allocated: 250000,
+          utilized: 80000,
+          balance: 170000,
+        },
+        {
+          department: 'COED',
           allocated: 300000,
           utilized: 120000,
           balance: 180000,
-        },
-        {
-          department: 'Education',
-          allocated: 400000,
-          utilized: 150000,
-          balance: 250000,
         },
         {
           department: 'Business Administration',
