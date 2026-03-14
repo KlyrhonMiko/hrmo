@@ -44,20 +44,6 @@ const actions: QuickAction[] = [
         icon: Users,
         color: "emerald",
     },
-    {
-        label: "Training",
-        description: "View requests",
-        href: "/training/requests",
-        icon: ClipboardList,
-        color: "amber",
-    },
-    {
-        label: "Budget",
-        description: "Training budget",
-        href: "/training/budget",
-        icon: Wallet,
-        color: "stone",
-    },
 ];
 
 /* ─── Color map ─── */

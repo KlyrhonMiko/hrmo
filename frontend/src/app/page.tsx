@@ -1,50 +1,76 @@
 import React from 'react';
 import Link from 'next/link';
+import { Shield, UserCog, Eye, User } from 'lucide-react';
 
 export default function Home() {
   const roles = [
     {
       name: 'HR Head',
       path: '/dashboard/hrmo',
-      description: 'Manage employees, training, and overall HR operations.',
-      color: 'bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100'
+      description: 'Full access to employee records, PDS data entry, certificates, training management, reports, and analytics.',
+      icon: Shield,
+      color: 'bg-green-50 text-green-700 border-green-200 hover:bg-green-100',
+      iconBg: 'bg-green-100',
     },
     {
-      name: 'Lifelong Head',
-      path: '/dashboard/lifelong-head',
-      description: 'Oversee training budgets and lifelong learning programs.',
-      color: 'bg-green-50 text-green-700 border-green-200 hover:bg-green-100'
+      name: 'HR Record Asst',
+      path: '/dashboard/hr-record-asst',
+      description: 'Manage employee 201 files, PDS data entry, certificate scanning, and training records.',
+      icon: UserCog,
+      color: 'bg-teal-50 text-teal-700 border-teal-200 hover:bg-teal-100',
+      iconBg: 'bg-teal-100',
     },
     {
       name: 'President',
       path: '/dashboard/president',
-      description: 'View high-level reports and analytics.',
-      color: 'bg-purple-50 text-purple-700 border-purple-200 hover:bg-purple-100'
+      description: 'View high-level dashboards, data analytics, and downloadable reports.',
+      icon: Eye,
+      color: 'bg-purple-50 text-purple-700 border-purple-200 hover:bg-purple-100',
+      iconBg: 'bg-purple-100',
     },
     {
       name: 'Employee',
       path: '/dashboard/employee',
-      description: 'Manage Personal Data Sheet (PDS) and training requests.',
-      color: 'bg-orange-50 text-orange-700 border-orange-200 hover:bg-orange-100'
+      description: 'View and update your Personal Data Sheet (201 file) and training records.',
+      icon: User,
+      color: 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100',
+      iconBg: 'bg-amber-100',
     },
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-6">
+    <div className="min-h-screen bg-stone-50 flex flex-col items-center justify-center p-6">
       <div className="max-w-4xl w-full">
         <div className="text-center mb-10">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">HRMO System</h1>
-          <p className="text-gray-600 text-lg">Personnel Digitization and Lifelong Training System</p>
-          <p className="text-gray-500 mt-2 text-sm">Select your role to access the relevant dashboard.</p>
+          <div className="w-14 h-14 rounded-2xl bg-green-700 flex items-center justify-center mx-auto mb-4">
+            <span className="text-white font-bold text-xl">HR</span>
+          </div>
+          <h1 className="text-3xl font-bold text-stone-900 mb-2">HRMO System</h1>
+          <p className="text-stone-500 text-base">Personnel Digitization &amp; Records Management</p>
+          <p className="text-stone-400 mt-1 text-sm">Select your role to continue</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {roles.map((role) => (
-            <Link key={role.path} href={role.path} className={`block p-8 rounded-xl border transition-all ${role.color}`}>
-              <h2 className="text-2xl font-semibold mb-3">{role.name}</h2>
-              <p className="opacity-90 leading-relaxed">{role.description}</p>
-            </Link>
-          ))}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {roles.map((role) => {
+            const Icon = role.icon;
+            return (
+              <Link
+                key={role.path}
+                href={role.path}
+                className={`group block p-6 rounded-xl border transition-all duration-200 ${role.color}`}
+              >
+                <div className="flex items-start gap-4">
+                  <div className={`w-10 h-10 rounded-lg ${role.iconBg} flex items-center justify-center shrink-0`}>
+                    <Icon className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-semibold mb-1">{role.name}</h2>
+                    <p className="text-sm opacity-80 leading-relaxed">{role.description}</p>
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </div>

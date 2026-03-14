@@ -27,16 +27,6 @@ interface PendingItem {
 
 const pendingItems: PendingItem[] = [
     {
-        id: 1,
-        label: "Training Requests",
-        description: "Awaiting approval",
-        count: 5,
-        href: "/training/requests",
-        icon: GraduationCap,
-        color: "teal",
-        urgentCount: 2,
-    },
-    {
         id: 2,
         label: "Leave Requests",
         description: "Pending review",
@@ -112,7 +102,7 @@ export function PendingApprovals() {
 
             {/* Approval items */}
             <div className="flex-1 px-3 pb-3">
-                {pendingItems.map((item) => {
+                {pendingItems.slice(0, 3).map((item) => {
                     const Icon = item.icon;
                     const colors = colorMap[item.color];
                     return (

@@ -102,7 +102,7 @@ export function RecentActivity() {
             {/* Activity list */}
             <div className="flex-1 px-6 pb-5">
                 <div className="space-y-0.5">
-                    {activities.map((activity, idx) => {
+                    {activities.slice(0, 3).map((activity, idx) => {
                         const Icon = activity.icon;
                         const colors = colorMap[activity.color];
                         return (

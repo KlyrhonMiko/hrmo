@@ -17,6 +17,7 @@ interface SavedReportsListProps {
     onDelete: (id: string) => void;
     onCreateNew: () => void;
     loading: boolean;
+    renderActions?: (report: SavedReport) => React.ReactNode;
 }
 
 const GROUPBY_LABELS: Record<string, { label: string; color: string }> = {
@@ -31,6 +32,7 @@ export function SavedReportsList({
     onDelete,
     onCreateNew,
     loading,
+    renderActions,
 }: SavedReportsListProps) {
     const handleDelete = (e: React.MouseEvent, id: string) => {
         e.stopPropagation();
@@ -102,18 +104,21 @@ export function SavedReportsList({
                         onClick={() => onSelect(report)}
                         className="group bg-white rounded-xl border border-slate-200/80 p-5 cursor-pointer hover:border-indigo-200 hover:shadow-md hover:shadow-indigo-500/5 transition-all duration-200"
                     >
-                        {/* Top row: icon + delete */}
+                        {/* Top row: icon + actions */}
                         <div className="flex items-start justify-between mb-3">
                             <div className="w-9 h-9 rounded-lg bg-indigo-50 flex items-center justify-center group-hover:bg-indigo-100 transition-colors">
                                 <FileBarChart className="w-[18px] h-[18px] text-indigo-600" />
                             </div>
-                            <button
-                                onClick={(e) => handleDelete(e, report.id)}
-                                className="w-7 h-7 rounded-md flex items-center justify-center text-slate-300 hover:text-red-500 hover:bg-red-50 opacity-0 group-hover:opacity-100 transition-all"
-                                title="Delete report"
-                            >
-                                <Trash2 className="w-3.5 h-3.5" />
-                            </button>
+                            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all">
+                                {renderActions?.(report)}
+                                <button
+                                    onClick={(e) => handleDelete(e, report.id)}
+                                    className="w-7 h-7 rounded-md flex items-center justify-center text-slate-300 hover:text-red-500 hover:bg-red-50 transition-all"
+                                    title="Delete report"
+                                >
+                                    <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                            </div>
                         </div>
 
                         {/* Title */}

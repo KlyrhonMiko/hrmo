@@ -22,43 +22,45 @@ import {
 const categoryData = [
     { name: "Teaching Staff", value: 244, color: "#1e6b45" },
     { name: "Non-Teaching", value: 103, color: "#3b82f6" },
-    { name: "Administrative", value: 34, color: "#94a3b8" },
+    { name: "COS", value: 34, color: "#94a3b8" },
 ];
 
 const statusData = [
-    { name: "Permanent", value: 198, color: "#10b981" },
-    { name: "Contractual", value: 72, color: "#6366f1" },
-    { name: "Job Order", value: 48, color: "#f59e0b" },
-    { name: "Part-Time", value: 38, color: "#94a3b8" },
-    { name: "Probationary", value: 25, color: "#06b6d4" },
+    { name: "Permanent", value: 146, color: "#10b981" },
+    { name: "Part-Time", value: 132, color: "#94a3b8" },
+    { name: "Contractual", value: 62, color: "#6366f1" },
+    { name: "Casual", value: 6, color: "#f59e0b" },
+    { name: "Temporary", value: 1, color: "#06b6d4" },
+    { name: "COS", value: 34, color: "#78716c" },
 ];
 
 const departmentData = [
-    { department: "CCS", teaching: 38, nonTeaching: 12 },
-    { department: "CBA", teaching: 42, nonTeaching: 14 },
-    { department: "CAS", teaching: 35, nonTeaching: 10 },
-    { department: "COE", teaching: 48, nonTeaching: 15 },
-    { department: "CIHM", teaching: 25, nonTeaching: 8 },
-    { department: "COED", teaching: 32, nonTeaching: 10 },
-    { department: "CON", teaching: 28, nonTeaching: 9 },
+    { department: "CCS", teaching: 38, nonTeaching: 15, cos: 5 },
+    { department: "CBA", teaching: 42, nonTeaching: 18, cos: 6 },
+    { department: "CAS", teaching: 35, nonTeaching: 14, cos: 4 },
+    { department: "COE", teaching: 48, nonTeaching: 20, cos: 8 },
+    { department: "CIHM", teaching: 25, nonTeaching: 10, cos: 3 },
+    { department: "COED", teaching: 32, nonTeaching: 12, cos: 4 },
+    { department: "CON", teaching: 24, nonTeaching: 14, cos: 4 },
 ];
 
 const deptStatusData = [
-    { department: "CCS", permanent: 28, contractual: 10, jobOrder: 5, partTime: 4, probationary: 3 },
-    { department: "CBA", permanent: 32, contractual: 12, jobOrder: 6, partTime: 4, probationary: 2 },
-    { department: "CAS", permanent: 24, contractual: 9, jobOrder: 5, partTime: 4, probationary: 3 },
-    { department: "COE", permanent: 36, contractual: 12, jobOrder: 8, partTime: 5, probationary: 2 },
-    { department: "CIHM", permanent: 18, contractual: 7, jobOrder: 4, partTime: 3, probationary: 3 },
-    { department: "COED", permanent: 22, contractual: 9, jobOrder: 5, partTime: 4, probationary: 2 },
-    { department: "CON", permanent: 20, contractual: 7, jobOrder: 4, partTime: 3, probationary: 3 },
+    { department: "CCS", permanent: 25, partTime: 15, contractual: 10, casual: 1, temporary: 0, cos: 5 },
+    { department: "CBA", permanent: 30, partTime: 18, contractual: 12, casual: 1, temporary: 0, cos: 6 },
+    { department: "CAS", permanent: 22, partTime: 12, contractual: 9, casual: 1, temporary: 0, cos: 4 },
+    { department: "COE", permanent: 35, partTime: 20, contractual: 15, casual: 1, temporary: 1, cos: 8 },
+    { department: "CIHM", permanent: 12, partTime: 25, contractual: 6, casual: 1, temporary: 0, cos: 3 },
+    { department: "COED", permanent: 10, partTime: 30, contractual: 5, casual: 1, temporary: 0, cos: 4 },
+    { department: "CON", permanent: 12, partTime: 12, contractual: 5, casual: 0, temporary: 0, cos: 4 },
 ];
 
 const statusBarColors: Record<string, { color: string; label: string }> = {
     permanent: { color: "#10b981", label: "Permanent" },
-    contractual: { color: "#6366f1", label: "Contractual" },
-    jobOrder: { color: "#f59e0b", label: "Job Order" },
     partTime: { color: "#94a3b8", label: "Part-Time" },
-    probationary: { color: "#06b6d4", label: "Probationary" },
+    contractual: { color: "#6366f1", label: "Contractual" },
+    casual: { color: "#f59e0b", label: "Casual" },
+    temporary: { color: "#06b6d4", label: "Temporary" },
+    cos: { color: "#78716c", label: "COS" },
 };
 
 type TabKey = "category" | "status";
@@ -228,6 +230,7 @@ export function PersonnelCharts() {
                                 <>
                                     <Bar dataKey="teaching" name="Teaching" fill="#1e6b45" radius={[0, 4, 4, 0]} animationDuration={500} />
                                     <Bar dataKey="nonTeaching" name="Non-Teaching" fill="#3b82f6" radius={[0, 4, 4, 0]} animationDuration={500} />
+                                    <Bar dataKey="cos" name="COS" fill="#94a3b8" radius={[0, 4, 4, 0]} animationDuration={500} />
                                 </>
                             ) : (
                                 Object.entries(statusBarColors).map(([key, { color }], i) => (
@@ -256,6 +259,10 @@ export function PersonnelCharts() {
                                 <div className="flex items-center gap-1.5 text-[11px]">
                                     <span className="w-2 h-2 rounded-full" style={{ backgroundColor: "#3b82f6" }} />
                                     <span className="text-stone-500 font-medium">Non-Teaching</span>
+                                </div>
+                                <div className="flex items-center gap-1.5 text-[11px]">
+                                    <span className="w-2 h-2 rounded-full" style={{ backgroundColor: "#94a3b8" }} />
+                                    <span className="text-stone-500 font-medium">COS</span>
                                 </div>
                             </>
                         ) : (
