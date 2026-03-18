@@ -11,8 +11,6 @@ import type {
     PDSWorkExperience,
     PDSVoluntaryWork,
     PDSLearningDevelopment,
-    PDSPage4Questions,
-    PDSQuestionItem,
     PDSReference,
     PDSGovernmentIssuedID,
 } from "@/types";
@@ -79,7 +77,6 @@ const STEPS = [
     { key: "voluntary", label: "Voluntary Work", icon: Heart, desc: "Civic and non-government organization involvement" },
     { key: "learning", label: "Learning & Development", icon: BookOpen, desc: "Training programs and seminars attended" },
     { key: "other", label: "Other Information", icon: Info, desc: "Skills, distinctions, and organization memberships" },
-    { key: "questions", label: "Questionnaire", icon: HelpCircle, desc: "Required disclosure questions (Nos. 34\u201340)" },
     { key: "references", label: "References & ID", icon: CreditCard, desc: "Character references and government-issued ID" },
     { key: "review", label: "Review & Submit", icon: ClipboardList, desc: "Review all entries before final submission" },
 ] as const;
@@ -145,23 +142,6 @@ const emptyVoluntary = (): PDSVoluntaryWork => ({
     dateTo: "",
     numberOfHours: "",
     positionNatureOfWork: "",
-});
-
-const emptyQuestionItem = (): PDSQuestionItem => ({ answer: null, details: "" });
-
-const emptyQuestions = (): PDSPage4Questions => ({
-    relatedThirdDegree: emptyQuestionItem(),
-    relatedFourthDegree: emptyQuestionItem(),
-    guiltyOfAdminOffense: emptyQuestionItem(),
-    criminallyCharged: { ...emptyQuestionItem(), dateFiled: "", caseStatus: "" },
-    convicted: emptyQuestionItem(),
-    separatedFromService: emptyQuestionItem(),
-    candidateInElection: emptyQuestionItem(),
-    resignedForCampaign: emptyQuestionItem(),
-    immigrantOrPermanentResident: emptyQuestionItem(),
-    indigenousGroupMember: emptyQuestionItem(),
-    personWithDisability: emptyQuestionItem(),
-    soloParent: emptyQuestionItem(),
 });
 
 const emptyReference = (): PDSReference => ({
@@ -232,7 +212,6 @@ const initialFormData: FullPDS = {
         nonAcademicDistinctions: [],
         membershipInAssociations: [],
     },
-    page4Questions: emptyQuestions(),
     references: [emptyReference(), emptyReference(), emptyReference()],
     governmentIssuedId: emptyGovId(),
     dateAccomplished: "",
@@ -536,18 +515,6 @@ export default function PDSOnboardPage() {
             arr[i] = { ...arr[i], [key]: val };
             return { ...p, voluntaryWork: arr };
         });
-    }
-
-    /* ── page 4 question helpers ──────────────────────── */
-
-    function updateQuestion<K extends keyof PDSPage4Questions>(
-        key: K,
-        val: PDSPage4Questions[K]
-    ) {
-        setFormData((p) => ({
-            ...p,
-            page4Questions: { ...p.page4Questions, [key]: val },
-        }));
     }
 
     /* ── reference helpers ────────────────────────────── */
@@ -1401,189 +1368,6 @@ export default function PDSOnboardPage() {
         );
     }
 
-    function renderQuestions() {
-        const q = formData.page4Questions;
-
-        function QuestionRow({
-            number,
-            text,
-            qKey,
-            item,
-            children,
-        }: {
-            number: string;
-            text: string;
-            qKey: keyof PDSPage4Questions;
-            item: PDSQuestionItem;
-            children?: React.ReactNode;
-        }) {
-            return (
-                <div className="p-4 bg-stone-50/80 rounded-xl border border-stone-100">
-                    <div className="flex items-start gap-3">
-                        <span className="text-xs font-bold text-stone-500 mt-0.5 w-8 flex-shrink-0">{number}</span>
-                        <div className="flex-1 space-y-3">
-                            <p className="text-sm text-stone-700 leading-relaxed">{text}</p>
-                            <div className="flex items-center gap-4">
-                                <label className="flex items-center gap-2 cursor-pointer text-sm">
-                                    <input
-                                        type="radio"
-                                        name={`q-${qKey}`}
-                                        checked={item.answer === true}
-                                        onChange={() =>
-                                            updateQuestion(qKey, { ...item, answer: true } as PDSPage4Questions[typeof qKey])
-                                        }
-                                        className="w-4 h-4 text-green-600 focus:ring-green-500"
-                                    />
-                                    Yes
-                                </label>
-                                <label className="flex items-center gap-2 cursor-pointer text-sm">
-                                    <input
-                                        type="radio"
-                                        name={`q-${qKey}`}
-                                        checked={item.answer === false}
-                                        onChange={() =>
-                                            updateQuestion(qKey, { ...item, answer: false } as PDSPage4Questions[typeof qKey])
-                                        }
-                                        className="w-4 h-4 text-green-600 focus:ring-green-500"
-                                    />
-                                    No
-                                </label>
-                            </div>
-                            {item.answer === true && (
-                                <div className="space-y-3">
-                                    <div>
-                                        <Label>If YES, give details</Label>
-                                        <Input
-                                            value={item.details}
-                                            onChange={(v) =>
-                                                updateQuestion(qKey, { ...item, details: v } as PDSPage4Questions[typeof qKey])
-                                            }
-                                        />
-                                    </div>
-                                    {children}
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            );
-        }
-
-        return (
-            <div className="space-y-6">
-                <SectionCard title="Questions (Nos. 34 – 40)" icon={HelpCircle}>
-                    <div className="space-y-4">
-                        <QuestionRow
-                            number="34a"
-                            text="Are you related by consanguinity or affinity to the appointing or recommending authority, or to the chief of bureau or office or to the person who has immediate supervision over you in the Office, Bureau or Department where you will be appointed, within the third degree?"
-                            qKey="relatedThirdDegree"
-                            item={q.relatedThirdDegree}
-                        />
-                        <QuestionRow
-                            number="34b"
-                            text="Are you related within the fourth degree (for Local Government Unit – Career Employees)?"
-                            qKey="relatedFourthDegree"
-                            item={q.relatedFourthDegree}
-                        />
-                        <QuestionRow
-                            number="35a"
-                            text="Have you ever been found guilty of any administrative offense?"
-                            qKey="guiltyOfAdminOffense"
-                            item={q.guiltyOfAdminOffense}
-                        />
-                        <QuestionRow
-                            number="35b"
-                            text="Have you been criminally charged before any court?"
-                            qKey="criminallyCharged"
-                            item={q.criminallyCharged}
-                        >
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                <div>
-                                    <Label>Date Filed</Label>
-                                    <Input
-                                        type="date"
-                                        value={q.criminallyCharged.dateFiled}
-                                        onChange={(v) =>
-                                            updateQuestion("criminallyCharged", {
-                                                ...q.criminallyCharged,
-                                                dateFiled: v,
-                                            })
-                                        }
-                                    />
-                                </div>
-                                <div>
-                                    <Label>Status of Case/s</Label>
-                                    <Input
-                                        value={q.criminallyCharged.caseStatus}
-                                        onChange={(v) =>
-                                            updateQuestion("criminallyCharged", {
-                                                ...q.criminallyCharged,
-                                                caseStatus: v,
-                                            })
-                                        }
-                                    />
-                                </div>
-                            </div>
-                        </QuestionRow>
-                        <QuestionRow
-                            number="36"
-                            text="Have you ever been convicted of any crime or violation of any law, decree, ordinance or regulation by any court or tribunal?"
-                            qKey="convicted"
-                            item={q.convicted}
-                        />
-                        <QuestionRow
-                            number="37"
-                            text="Have you ever been separated from the service in any of the following modes: resignation, retirement, dropped from the rolls, dismissal, termination, end of term, finished contract or phased out (abolition) in the public or private sector?"
-                            qKey="separatedFromService"
-                            item={q.separatedFromService}
-                        />
-                        <QuestionRow
-                            number="38a"
-                            text="Have you ever been a candidate in a national or local election held within the last year (except Barangay election)?"
-                            qKey="candidateInElection"
-                            item={q.candidateInElection}
-                        />
-                        <QuestionRow
-                            number="38b"
-                            text="Have you resigned from the government service during the three (3)-month period before the last election to promote/actively campaign for a national or local candidate?"
-                            qKey="resignedForCampaign"
-                            item={q.resignedForCampaign}
-                        />
-                        <QuestionRow
-                            number="39"
-                            text="Have you acquired the status of an immigrant or permanent resident of another country?"
-                            qKey="immigrantOrPermanentResident"
-                            item={q.immigrantOrPermanentResident}
-                        />
-                    </div>
-                </SectionCard>
-
-                <SectionCard title="Pursuant to RA 8371, RA 7277, RA 8972" icon={Info}>
-                    <div className="space-y-4">
-                        <QuestionRow
-                            number="40a"
-                            text="Are you a member of any indigenous group?"
-                            qKey="indigenousGroupMember"
-                            item={q.indigenousGroupMember}
-                        />
-                        <QuestionRow
-                            number="40b"
-                            text="Are you a person with disability?"
-                            qKey="personWithDisability"
-                            item={q.personWithDisability}
-                        />
-                        <QuestionRow
-                            number="40c"
-                            text="Are you a solo parent?"
-                            qKey="soloParent"
-                            item={q.soloParent}
-                        />
-                    </div>
-                </SectionCard>
-            </div>
-        );
-    }
-
     function renderReferencesAndId() {
         const refs = formData.references;
         const govId = formData.governmentIssuedId;
@@ -1901,45 +1685,6 @@ export default function PDSOnboardPage() {
                     </div>
                 </SectionCard>
 
-                {/* Questions */}
-                <SectionCard title="Page 4 — Questionnaire (Q34–40)" icon={HelpCircle}>
-                    <div className="space-y-2 text-sm">
-                        {(
-                            [
-                                ["34a", "Related within 3rd degree", formData.page4Questions.relatedThirdDegree],
-                                ["34b", "Related within 4th degree (LGU)", formData.page4Questions.relatedFourthDegree],
-                                ["35a", "Found guilty of admin offense", formData.page4Questions.guiltyOfAdminOffense],
-                                ["35b", "Criminally charged", formData.page4Questions.criminallyCharged],
-                                ["36", "Convicted of crime", formData.page4Questions.convicted],
-                                ["37", "Separated from service", formData.page4Questions.separatedFromService],
-                                ["38a", "Candidate in election", formData.page4Questions.candidateInElection],
-                                ["38b", "Resigned for campaign", formData.page4Questions.resignedForCampaign],
-                                ["39", "Immigrant / permanent resident", formData.page4Questions.immigrantOrPermanentResident],
-                                ["40a", "Indigenous group member", formData.page4Questions.indigenousGroupMember],
-                                ["40b", "Person with disability", formData.page4Questions.personWithDisability],
-                                ["40c", "Solo parent", formData.page4Questions.soloParent],
-                            ] as [string, string, PDSQuestionItem][]
-                        ).map(([num, label, item]) => (
-                            <div key={num} className="flex items-center gap-3 p-2.5 bg-stone-50/80 rounded-xl text-stone-700">
-                                <span className="text-xs font-bold text-stone-400 w-8">{num}</span>
-                                <span className="flex-1 text-xs">{label}</span>
-                                <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                                    item.answer === null
-                                        ? "bg-stone-200 text-stone-500"
-                                        : item.answer
-                                        ? "bg-red-50 text-red-700"
-                                        : "bg-green-50 text-green-700"
-                                }`}>
-                                    {item.answer === null ? "—" : item.answer ? "YES" : "NO"}
-                                </span>
-                                {item.answer && item.details && (
-                                    <span className="text-xs text-stone-500 max-w-[200px] truncate">{item.details}</span>
-                                )}
-                            </div>
-                        ))}
-                    </div>
-                </SectionCard>
-
                 {/* References */}
                 <SectionCard title="References" icon={FileCheck}>
                     {formData.references.every((r) => !r.name) ? (
@@ -2006,7 +1751,6 @@ export default function PDSOnboardPage() {
         voluntary: renderVoluntaryWork,
         learning: renderLearningDevelopment,
         other: renderOtherInfo,
-        questions: renderQuestions,
         references: renderReferencesAndId,
         review: renderReview,
     };

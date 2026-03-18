@@ -125,26 +125,6 @@ export interface PDSOtherInfo {
     membershipInAssociations: string[];
 }
 
-export interface PDSQuestionItem {
-    answer: boolean | null;
-    details: string;
-}
-
-export interface PDSPage4Questions {
-    relatedThirdDegree: PDSQuestionItem;
-    relatedFourthDegree: PDSQuestionItem;
-    guiltyOfAdminOffense: PDSQuestionItem;
-    criminallyCharged: PDSQuestionItem & { dateFiled: string; caseStatus: string };
-    convicted: PDSQuestionItem;
-    separatedFromService: PDSQuestionItem;
-    candidateInElection: PDSQuestionItem;
-    resignedForCampaign: PDSQuestionItem;
-    immigrantOrPermanentResident: PDSQuestionItem;
-    indigenousGroupMember: PDSQuestionItem;
-    personWithDisability: PDSQuestionItem;
-    soloParent: PDSQuestionItem;
-}
-
 export interface PDSReference {
     name: string;
     address: string;
@@ -168,7 +148,6 @@ export interface FullPDS {
     voluntaryWork: PDSVoluntaryWork[];
     learningDevelopment: PDSLearningDevelopment[];
     otherInfo: PDSOtherInfo;
-    page4Questions: PDSPage4Questions;
     references: PDSReference[];
     governmentIssuedId: PDSGovernmentIssuedID;
     photoUrl?: string;
