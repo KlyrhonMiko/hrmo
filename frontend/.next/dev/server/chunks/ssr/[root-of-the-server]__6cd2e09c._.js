@@ -443,6 +443,10 @@ const STEPS = [
     });
 const emptyChild = ()=>({
         fullName: "",
+        surname: "",
+        firstName: "",
+        middleName: "",
+        nameExtension: "",
         dateOfBirth: ""
     });
 const emptyEducation = (level = "Elementary")=>({
@@ -575,13 +579,13 @@ const initialFormData = {
                 children: "*"
             }, void 0, false, {
                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                lineNumber: 228,
+                lineNumber: 234,
                 columnNumber: 26
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-        lineNumber: 226,
+        lineNumber: 232,
         columnNumber: 9
     }, this);
 }
@@ -595,7 +599,7 @@ function Input({ value, onChange, placeholder, type = "text", disabled }) {
         className: "w-full px-3 py-2.5 bg-white border border-stone-200 rounded-xl focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all outline-none text-sm placeholder:text-stone-300 disabled:opacity-50"
     }, void 0, false, {
         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-        lineNumber: 247,
+        lineNumber: 253,
         columnNumber: 9
     }, this);
 }
@@ -611,7 +615,7 @@ function Select({ value, onChange, options, placeholder }) {
                 children: placeholder
             }, void 0, false, {
                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                lineNumber: 276,
+                lineNumber: 282,
                 columnNumber: 17
             }, this),
             options.map((o)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -619,13 +623,13 @@ function Select({ value, onChange, options, placeholder }) {
                     children: o.label
                 }, o.value, false, {
                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                    lineNumber: 281,
+                    lineNumber: 287,
                     columnNumber: 17
                 }, this))
         ]
     }, void 0, true, {
         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-        lineNumber: 270,
+        lineNumber: 276,
         columnNumber: 9
     }, this);
 }
@@ -642,19 +646,19 @@ function SectionCard({ title, icon: Icon, children }) {
                             className: "w-4 h-4 text-green-600"
                         }, void 0, false, {
                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                            lineNumber: 302,
+                            lineNumber: 308,
                             columnNumber: 30
                         }, this),
                         title
                     ]
                 }, void 0, true, {
                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                    lineNumber: 301,
+                    lineNumber: 307,
                     columnNumber: 17
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                lineNumber: 300,
+                lineNumber: 306,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -662,13 +666,13 @@ function SectionCard({ title, icon: Icon, children }) {
                 children: children
             }, void 0, false, {
                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                lineNumber: 306,
+                lineNumber: 312,
                 columnNumber: 13
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-        lineNumber: 299,
+        lineNumber: 305,
         columnNumber: 9
     }, this);
 }
@@ -686,7 +690,7 @@ function SectionCard({ title, icon: Icon, children }) {
                         children: "House/Block/Lot No."
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 326,
+                        lineNumber: 332,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -694,13 +698,13 @@ function SectionCard({ title, icon: Icon, children }) {
                         onChange: (v)=>set("houseBlockLot", v)
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 327,
+                        lineNumber: 333,
                         columnNumber: 17
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                lineNumber: 325,
+                lineNumber: 331,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -709,7 +713,7 @@ function SectionCard({ title, icon: Icon, children }) {
                         children: "Street"
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 330,
+                        lineNumber: 336,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -717,13 +721,13 @@ function SectionCard({ title, icon: Icon, children }) {
                         onChange: (v)=>set("street", v)
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 331,
+                        lineNumber: 337,
                         columnNumber: 17
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                lineNumber: 329,
+                lineNumber: 335,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -732,7 +736,7 @@ function SectionCard({ title, icon: Icon, children }) {
                         children: "Subdivision/Village"
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 334,
+                        lineNumber: 340,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -740,13 +744,13 @@ function SectionCard({ title, icon: Icon, children }) {
                         onChange: (v)=>set("subdivision", v)
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 335,
+                        lineNumber: 341,
                         columnNumber: 17
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                lineNumber: 333,
+                lineNumber: 339,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -755,7 +759,7 @@ function SectionCard({ title, icon: Icon, children }) {
                         children: "Barangay"
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 338,
+                        lineNumber: 344,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -763,13 +767,13 @@ function SectionCard({ title, icon: Icon, children }) {
                         onChange: (v)=>set("barangay", v)
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 339,
+                        lineNumber: 345,
                         columnNumber: 17
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                lineNumber: 337,
+                lineNumber: 343,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -778,7 +782,7 @@ function SectionCard({ title, icon: Icon, children }) {
                         children: "City/Municipality"
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 342,
+                        lineNumber: 348,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -786,13 +790,13 @@ function SectionCard({ title, icon: Icon, children }) {
                         onChange: (v)=>set("cityMunicipality", v)
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 343,
+                        lineNumber: 349,
                         columnNumber: 17
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                lineNumber: 341,
+                lineNumber: 347,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -801,7 +805,7 @@ function SectionCard({ title, icon: Icon, children }) {
                         children: "Province"
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 346,
+                        lineNumber: 352,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -809,13 +813,13 @@ function SectionCard({ title, icon: Icon, children }) {
                         onChange: (v)=>set("province", v)
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 347,
+                        lineNumber: 353,
                         columnNumber: 17
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                lineNumber: 345,
+                lineNumber: 351,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -824,7 +828,7 @@ function SectionCard({ title, icon: Icon, children }) {
                         children: "ZIP Code"
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 350,
+                        lineNumber: 356,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -832,19 +836,19 @@ function SectionCard({ title, icon: Icon, children }) {
                         onChange: (v)=>set("zipCode", v)
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 351,
+                        lineNumber: 357,
                         columnNumber: 17
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                lineNumber: 349,
+                lineNumber: 355,
                 columnNumber: 13
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-        lineNumber: 324,
+        lineNumber: 330,
         columnNumber: 9
     }, this);
 }
@@ -852,6 +856,14 @@ function PDSOnboardPage() {
     const [currentStep, setCurrentStep] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(0);
     const [formData, setFormData] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(initialFormData);
     const [sameAsResidential, setSameAsResidential] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [employeeMeta, setEmployeeMeta] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])({
+        employeeNo: "",
+        positionTitle: "",
+        dateHired: ""
+    });
+    const [isSubmitting, setIsSubmitting] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [submitError, setSubmitError] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [submitSuccess, setSubmitSuccess] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
     /* ── updaters ──────────────────────────────────────── */ const updatePersonal = (key, value)=>setFormData((prev)=>({
                 ...prev,
                 personalInfo: {
@@ -885,10 +897,24 @@ function PDSOnboardPage() {
         const arr = [
             ...formData.familyBackground.children
         ];
-        arr[i] = {
+        const updatedChild = {
             ...arr[i],
             [key]: val
         };
+        const surname = (updatedChild.surname || "").trim();
+        const firstName = (updatedChild.firstName || "").trim();
+        const middleName = (updatedChild.middleName || "").trim();
+        const extension = (updatedChild.nameExtension || "").trim();
+        const firstAndMiddle = [
+            firstName,
+            middleName
+        ].filter(Boolean).join(" ").trim();
+        updatedChild.fullName = [
+            surname ? `${surname},` : "",
+            firstAndMiddle,
+            extension
+        ].filter(Boolean).join(" ").trim();
+        arr[i] = updatedChild;
         updateFamily("children", arr);
     }
     function addEducation() {
@@ -1106,10 +1132,44 @@ function PDSOnboardPage() {
     const goNext = ()=>canGoNext && setCurrentStep((s)=>s + 1);
     const goBack = ()=>canGoBack && setCurrentStep((s)=>s - 1);
     const handleSaveDraft = ()=>{
-        alert("Draft saved successfully!");
+        try {
+            localStorage.setItem("onboard-pds-draft", JSON.stringify({
+                formData,
+                employeeMeta
+            }));
+            alert("Draft saved successfully!");
+        } catch  {
+            alert("Unable to save draft in this browser session.");
+        }
     };
-    const handleSubmit = ()=>{
-        alert("PDS submitted successfully!");
+    const handleSubmit = async ()=>{
+        setSubmitError(null);
+        setSubmitSuccess(null);
+        setIsSubmitting(true);
+        try {
+            const response = await fetch("/api/employees/onboard", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    formData,
+                    employeeMeta
+                })
+            });
+            const payload = await response.json();
+            if (!response.ok || !payload.success) {
+                const errorMessage = payload.message || "Failed to submit PDS.";
+                const stageSuffix = payload.stage ? ` (stage: ${payload.stage})` : "";
+                throw new Error(`${errorMessage}${stageSuffix}`);
+            }
+            setSubmitSuccess(payload.message || "PDS submitted successfully!");
+            localStorage.removeItem("onboard-pds-draft");
+        } catch (error) {
+            setSubmitError(error instanceof Error ? error.message : "Failed to submit PDS.");
+        } finally{
+            setIsSubmitting(false);
+        }
     };
     /* ══════════════════════════════════════════════════════
        STEP RENDERERS
@@ -1132,7 +1192,7 @@ function PDSOnboardPage() {
                                             children: "Surname"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 593,
+                                            lineNumber: 656,
                                             columnNumber: 29
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -1141,13 +1201,13 @@ function PDSOnboardPage() {
                                             placeholder: "Dela Cruz"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 594,
+                                            lineNumber: 657,
                                             columnNumber: 29
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 592,
+                                    lineNumber: 655,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1157,7 +1217,7 @@ function PDSOnboardPage() {
                                             children: "First Name"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 597,
+                                            lineNumber: 660,
                                             columnNumber: 29
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -1166,13 +1226,13 @@ function PDSOnboardPage() {
                                             placeholder: "Juan"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 598,
+                                            lineNumber: 661,
                                             columnNumber: 29
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 596,
+                                    lineNumber: 659,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1181,7 +1241,7 @@ function PDSOnboardPage() {
                                             children: "Middle Name"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 601,
+                                            lineNumber: 664,
                                             columnNumber: 29
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -1190,13 +1250,13 @@ function PDSOnboardPage() {
                                             placeholder: "Santos"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 602,
+                                            lineNumber: 665,
                                             columnNumber: 29
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 600,
+                                    lineNumber: 663,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1205,7 +1265,7 @@ function PDSOnboardPage() {
                                             children: "Name Extension"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 605,
+                                            lineNumber: 668,
                                             columnNumber: 29
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Select, {
@@ -1240,19 +1300,19 @@ function PDSOnboardPage() {
                                             ]
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 606,
+                                            lineNumber: 669,
                                             columnNumber: 29
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 604,
+                                    lineNumber: 667,
                                     columnNumber: 25
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                            lineNumber: 591,
+                            lineNumber: 654,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1265,7 +1325,7 @@ function PDSOnboardPage() {
                                             children: "Date of Birth"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 624,
+                                            lineNumber: 687,
                                             columnNumber: 29
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -1274,13 +1334,13 @@ function PDSOnboardPage() {
                                             onChange: (v)=>updatePersonal("dateOfBirth", v)
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 625,
+                                            lineNumber: 688,
                                             columnNumber: 29
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 623,
+                                    lineNumber: 686,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1290,7 +1350,7 @@ function PDSOnboardPage() {
                                             children: "Place of Birth"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 628,
+                                            lineNumber: 691,
                                             columnNumber: 29
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -1299,13 +1359,13 @@ function PDSOnboardPage() {
                                             placeholder: "City, Province"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 629,
+                                            lineNumber: 692,
                                             columnNumber: 29
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 627,
+                                    lineNumber: 690,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1315,7 +1375,7 @@ function PDSOnboardPage() {
                                             children: "Sex"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 632,
+                                            lineNumber: 695,
                                             columnNumber: 29
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Select, {
@@ -1333,13 +1393,13 @@ function PDSOnboardPage() {
                                             ]
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 633,
+                                            lineNumber: 696,
                                             columnNumber: 29
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 631,
+                                    lineNumber: 694,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1349,7 +1409,7 @@ function PDSOnboardPage() {
                                             children: "Civil Status"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 643,
+                                            lineNumber: 706,
                                             columnNumber: 29
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Select, {
@@ -1379,19 +1439,19 @@ function PDSOnboardPage() {
                                             ]
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 644,
+                                            lineNumber: 707,
                                             columnNumber: 29
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 642,
+                                    lineNumber: 705,
                                     columnNumber: 25
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                            lineNumber: 622,
+                            lineNumber: 685,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1403,7 +1463,7 @@ function PDSOnboardPage() {
                                             children: "Height (m)"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 660,
+                                            lineNumber: 723,
                                             columnNumber: 29
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -1412,13 +1472,13 @@ function PDSOnboardPage() {
                                             placeholder: "1.65"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 661,
+                                            lineNumber: 724,
                                             columnNumber: 29
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 659,
+                                    lineNumber: 722,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1427,7 +1487,7 @@ function PDSOnboardPage() {
                                             children: "Weight (kg)"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 664,
+                                            lineNumber: 727,
                                             columnNumber: 29
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -1436,13 +1496,13 @@ function PDSOnboardPage() {
                                             placeholder: "60"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 665,
+                                            lineNumber: 728,
                                             columnNumber: 29
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 663,
+                                    lineNumber: 726,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1451,7 +1511,7 @@ function PDSOnboardPage() {
                                             children: "Blood Type"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 668,
+                                            lineNumber: 731,
                                             columnNumber: 29
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Select, {
@@ -1464,13 +1524,13 @@ function PDSOnboardPage() {
                                                 }))
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 669,
+                                            lineNumber: 732,
                                             columnNumber: 29
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 667,
+                                    lineNumber: 730,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1479,7 +1539,7 @@ function PDSOnboardPage() {
                                             children: "Citizenship"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 677,
+                                            lineNumber: 740,
                                             columnNumber: 29
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -1487,19 +1547,19 @@ function PDSOnboardPage() {
                                             onChange: (v)=>updatePersonal("citizenship", v)
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 678,
+                                            lineNumber: 741,
                                             columnNumber: 29
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 676,
+                                    lineNumber: 739,
                                     columnNumber: 25
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                            lineNumber: 658,
+                            lineNumber: 721,
                             columnNumber: 21
                         }, this),
                         p.citizenship && p.citizenship !== "Filipino" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1511,7 +1571,7 @@ function PDSOnboardPage() {
                                             children: "Dual Citizenship Type"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 685,
+                                            lineNumber: 748,
                                             columnNumber: 33
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Select, {
@@ -1530,13 +1590,13 @@ function PDSOnboardPage() {
                                             ]
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 686,
+                                            lineNumber: 749,
                                             columnNumber: 33
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 684,
+                                    lineNumber: 747,
                                     columnNumber: 29
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1545,7 +1605,7 @@ function PDSOnboardPage() {
                                             children: "Country"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 697,
+                                            lineNumber: 760,
                                             columnNumber: 33
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -1554,25 +1614,25 @@ function PDSOnboardPage() {
                                             placeholder: "e.g. United States"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 698,
+                                            lineNumber: 761,
                                             columnNumber: 33
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 696,
+                                    lineNumber: 759,
                                     columnNumber: 29
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                            lineNumber: 683,
+                            lineNumber: 746,
                             columnNumber: 25
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                    lineNumber: 590,
+                    lineNumber: 653,
                     columnNumber: 17
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(SectionCard, {
@@ -1586,7 +1646,7 @@ function PDSOnboardPage() {
                                         children: "GSIS ID No."
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 712,
+                                        lineNumber: 775,
                                         columnNumber: 29
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -1594,13 +1654,13 @@ function PDSOnboardPage() {
                                         onChange: (v)=>updatePersonal("gsisIdNo", v)
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 713,
+                                        lineNumber: 776,
                                         columnNumber: 29
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 711,
+                                lineNumber: 774,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1609,7 +1669,7 @@ function PDSOnboardPage() {
                                         children: "PAG-IBIG ID No."
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 716,
+                                        lineNumber: 779,
                                         columnNumber: 29
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -1617,13 +1677,13 @@ function PDSOnboardPage() {
                                         onChange: (v)=>updatePersonal("pagIbigIdNo", v)
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 717,
+                                        lineNumber: 780,
                                         columnNumber: 29
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 715,
+                                lineNumber: 778,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1632,7 +1692,7 @@ function PDSOnboardPage() {
                                         children: "PhilHealth No."
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 720,
+                                        lineNumber: 783,
                                         columnNumber: 29
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -1640,13 +1700,13 @@ function PDSOnboardPage() {
                                         onChange: (v)=>updatePersonal("philhealthNo", v)
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 721,
+                                        lineNumber: 784,
                                         columnNumber: 29
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 719,
+                                lineNumber: 782,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1655,7 +1715,7 @@ function PDSOnboardPage() {
                                         children: "SSS No."
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 724,
+                                        lineNumber: 787,
                                         columnNumber: 29
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -1663,13 +1723,13 @@ function PDSOnboardPage() {
                                         onChange: (v)=>updatePersonal("sssNo", v)
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 725,
+                                        lineNumber: 788,
                                         columnNumber: 29
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 723,
+                                lineNumber: 786,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1678,7 +1738,7 @@ function PDSOnboardPage() {
                                         children: "TIN No."
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 728,
+                                        lineNumber: 791,
                                         columnNumber: 29
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -1686,13 +1746,13 @@ function PDSOnboardPage() {
                                         onChange: (v)=>updatePersonal("tinNo", v)
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 729,
+                                        lineNumber: 792,
                                         columnNumber: 29
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 727,
+                                lineNumber: 790,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1701,7 +1761,7 @@ function PDSOnboardPage() {
                                         children: "Agency Employee No."
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 732,
+                                        lineNumber: 795,
                                         columnNumber: 29
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -1709,31 +1769,115 @@ function PDSOnboardPage() {
                                         onChange: (v)=>updatePersonal("agencyEmployeeNo", v)
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 733,
+                                        lineNumber: 796,
                                         columnNumber: 29
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 731,
+                                lineNumber: 794,
                                 columnNumber: 25
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 710,
+                        lineNumber: 773,
                         columnNumber: 21
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                    lineNumber: 709,
+                    lineNumber: 772,
                     columnNumber: 17
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(SectionCard, {
                     title: "Office / Department & Employment",
                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "grid grid-cols-1 sm:grid-cols-2 gap-4",
+                        className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4",
                         children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Label, {
+                                        required: true,
+                                        children: "Employee No."
+                                    }, void 0, false, {
+                                        fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
+                                        lineNumber: 805,
+                                        columnNumber: 29
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
+                                        value: employeeMeta.employeeNo,
+                                        onChange: (v)=>setEmployeeMeta((prev)=>({
+                                                    ...prev,
+                                                    employeeNo: v
+                                                })),
+                                        placeholder: formData.personalInfo.agencyEmployeeNo || "e.g. EMP-2026-0001"
+                                    }, void 0, false, {
+                                        fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
+                                        lineNumber: 806,
+                                        columnNumber: 29
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
+                                lineNumber: 804,
+                                columnNumber: 25
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Label, {
+                                        required: true,
+                                        children: "Current Position Title"
+                                    }, void 0, false, {
+                                        fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
+                                        lineNumber: 815,
+                                        columnNumber: 29
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
+                                        value: employeeMeta.positionTitle,
+                                        onChange: (v)=>setEmployeeMeta((prev)=>({
+                                                    ...prev,
+                                                    positionTitle: v
+                                                })),
+                                        placeholder: "e.g. Instructor I"
+                                    }, void 0, false, {
+                                        fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
+                                        lineNumber: 816,
+                                        columnNumber: 29
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
+                                lineNumber: 814,
+                                columnNumber: 25
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Label, {
+                                        required: true,
+                                        children: "Date Hired"
+                                    }, void 0, false, {
+                                        fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
+                                        lineNumber: 825,
+                                        columnNumber: 29
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
+                                        type: "date",
+                                        value: employeeMeta.dateHired,
+                                        onChange: (v)=>setEmployeeMeta((prev)=>({
+                                                    ...prev,
+                                                    dateHired: v
+                                                }))
+                                    }, void 0, false, {
+                                        fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
+                                        lineNumber: 826,
+                                        columnNumber: 29
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
+                                lineNumber: 824,
+                                columnNumber: 25
+                            }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Label, {
@@ -1741,7 +1885,7 @@ function PDSOnboardPage() {
                                         children: "Office / Department"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 742,
+                                        lineNumber: 835,
                                         columnNumber: 29
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Select, {
@@ -1757,13 +1901,13 @@ function PDSOnboardPage() {
                                             }))
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 743,
+                                        lineNumber: 836,
                                         columnNumber: 29
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 741,
+                                lineNumber: 834,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1773,7 +1917,7 @@ function PDSOnboardPage() {
                                         children: "Employment Status"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 751,
+                                        lineNumber: 844,
                                         columnNumber: 29
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Select, {
@@ -1798,24 +1942,24 @@ function PDSOnboardPage() {
                                         ]
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 752,
+                                        lineNumber: 845,
                                         columnNumber: 29
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 750,
+                                lineNumber: 843,
                                 columnNumber: 25
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 740,
+                        lineNumber: 803,
                         columnNumber: 21
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                    lineNumber: 739,
+                    lineNumber: 802,
                     columnNumber: 17
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(SectionCard, {
@@ -1825,12 +1969,12 @@ function PDSOnboardPage() {
                         onChange: (a)=>updatePersonal("residentialAddress", a)
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 772,
+                        lineNumber: 865,
                         columnNumber: 21
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                    lineNumber: 771,
+                    lineNumber: 864,
                     columnNumber: 17
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(SectionCard, {
@@ -1848,14 +1992,14 @@ function PDSOnboardPage() {
                                             className: "w-3 h-3"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 786,
+                                            lineNumber: 879,
                                             columnNumber: 29
                                         }, this),
                                         "Same as Residential"
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 781,
+                                    lineNumber: 874,
                                     columnNumber: 25
                                 }, this),
                                 sameAsResidential && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1863,13 +2007,13 @@ function PDSOnboardPage() {
                                     children: "Copied from residential address"
                                 }, void 0, false, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 790,
+                                    lineNumber: 883,
                                     columnNumber: 29
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                            lineNumber: 780,
+                            lineNumber: 873,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(AddressFields, {
@@ -1880,13 +2024,13 @@ function PDSOnboardPage() {
                             }
                         }, void 0, false, {
                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                            lineNumber: 793,
+                            lineNumber: 886,
                             columnNumber: 21
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                    lineNumber: 779,
+                    lineNumber: 872,
                     columnNumber: 17
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(SectionCard, {
@@ -1900,7 +2044,7 @@ function PDSOnboardPage() {
                                         children: "Telephone No."
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 806,
+                                        lineNumber: 899,
                                         columnNumber: 29
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -1909,13 +2053,13 @@ function PDSOnboardPage() {
                                         placeholder: "(02) 1234-5678"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 807,
+                                        lineNumber: 900,
                                         columnNumber: 29
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 805,
+                                lineNumber: 898,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1925,7 +2069,7 @@ function PDSOnboardPage() {
                                         children: "Mobile No."
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 810,
+                                        lineNumber: 903,
                                         columnNumber: 29
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -1934,13 +2078,13 @@ function PDSOnboardPage() {
                                         placeholder: "09XX-XXX-XXXX"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 811,
+                                        lineNumber: 904,
                                         columnNumber: 29
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 809,
+                                lineNumber: 902,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1950,7 +2094,7 @@ function PDSOnboardPage() {
                                         children: "Email Address"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 814,
+                                        lineNumber: 907,
                                         columnNumber: 29
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -1960,30 +2104,30 @@ function PDSOnboardPage() {
                                         placeholder: "email@example.com"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 815,
+                                        lineNumber: 908,
                                         columnNumber: 29
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 813,
+                                lineNumber: 906,
                                 columnNumber: 25
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 804,
+                        lineNumber: 897,
                         columnNumber: 21
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                    lineNumber: 803,
+                    lineNumber: 896,
                     columnNumber: 17
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-            lineNumber: 588,
+            lineNumber: 651,
             columnNumber: 13
         }, this);
     }
@@ -2005,7 +2149,7 @@ function PDSOnboardPage() {
                                             children: "Surname"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 830,
+                                            lineNumber: 923,
                                             columnNumber: 29
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -2013,13 +2157,13 @@ function PDSOnboardPage() {
                                             onChange: (v)=>updateFamily("spouseSurname", v)
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 831,
+                                            lineNumber: 924,
                                             columnNumber: 29
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 829,
+                                    lineNumber: 922,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2028,7 +2172,7 @@ function PDSOnboardPage() {
                                             children: "First Name"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 834,
+                                            lineNumber: 927,
                                             columnNumber: 29
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -2036,13 +2180,13 @@ function PDSOnboardPage() {
                                             onChange: (v)=>updateFamily("spouseFirstName", v)
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 835,
+                                            lineNumber: 928,
                                             columnNumber: 29
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 833,
+                                    lineNumber: 926,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2051,7 +2195,7 @@ function PDSOnboardPage() {
                                             children: "Middle Name"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 838,
+                                            lineNumber: 931,
                                             columnNumber: 29
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -2059,13 +2203,13 @@ function PDSOnboardPage() {
                                             onChange: (v)=>updateFamily("spouseMiddleName", v)
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 839,
+                                            lineNumber: 932,
                                             columnNumber: 29
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 837,
+                                    lineNumber: 930,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2074,7 +2218,7 @@ function PDSOnboardPage() {
                                             children: "Name Extension"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 842,
+                                            lineNumber: 935,
                                             columnNumber: 29
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -2082,19 +2226,19 @@ function PDSOnboardPage() {
                                             onChange: (v)=>updateFamily("spouseNameExtension", v)
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 843,
+                                            lineNumber: 936,
                                             columnNumber: 29
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 841,
+                                    lineNumber: 934,
                                     columnNumber: 25
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                            lineNumber: 828,
+                            lineNumber: 921,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2106,7 +2250,7 @@ function PDSOnboardPage() {
                                             children: "Occupation"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 848,
+                                            lineNumber: 941,
                                             columnNumber: 29
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -2114,13 +2258,13 @@ function PDSOnboardPage() {
                                             onChange: (v)=>updateFamily("spouseOccupation", v)
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 849,
+                                            lineNumber: 942,
                                             columnNumber: 29
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 847,
+                                    lineNumber: 940,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2129,7 +2273,7 @@ function PDSOnboardPage() {
                                             children: "Employer/Business Name"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 852,
+                                            lineNumber: 945,
                                             columnNumber: 29
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -2137,13 +2281,13 @@ function PDSOnboardPage() {
                                             onChange: (v)=>updateFamily("spouseEmployerBusinessName", v)
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 853,
+                                            lineNumber: 946,
                                             columnNumber: 29
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 851,
+                                    lineNumber: 944,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2152,7 +2296,7 @@ function PDSOnboardPage() {
                                             children: "Business Address"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 856,
+                                            lineNumber: 949,
                                             columnNumber: 29
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -2160,13 +2304,13 @@ function PDSOnboardPage() {
                                             onChange: (v)=>updateFamily("spouseBusinessAddress", v)
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 857,
+                                            lineNumber: 950,
                                             columnNumber: 29
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 855,
+                                    lineNumber: 948,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2175,7 +2319,7 @@ function PDSOnboardPage() {
                                             children: "Telephone No."
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 860,
+                                            lineNumber: 953,
                                             columnNumber: 29
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -2183,25 +2327,25 @@ function PDSOnboardPage() {
                                             onChange: (v)=>updateFamily("spouseTelephoneNo", v)
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 861,
+                                            lineNumber: 954,
                                             columnNumber: 29
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 859,
+                                    lineNumber: 952,
                                     columnNumber: 25
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                            lineNumber: 846,
+                            lineNumber: 939,
                             columnNumber: 21
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                    lineNumber: 827,
+                    lineNumber: 920,
                     columnNumber: 17
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(SectionCard, {
@@ -2215,7 +2359,7 @@ function PDSOnboardPage() {
                                         children: "Surname"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 869,
+                                        lineNumber: 962,
                                         columnNumber: 29
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -2223,13 +2367,13 @@ function PDSOnboardPage() {
                                         onChange: (v)=>updateFamily("fatherSurname", v)
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 870,
+                                        lineNumber: 963,
                                         columnNumber: 29
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 868,
+                                lineNumber: 961,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2238,7 +2382,7 @@ function PDSOnboardPage() {
                                         children: "First Name"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 873,
+                                        lineNumber: 966,
                                         columnNumber: 29
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -2246,13 +2390,13 @@ function PDSOnboardPage() {
                                         onChange: (v)=>updateFamily("fatherFirstName", v)
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 874,
+                                        lineNumber: 967,
                                         columnNumber: 29
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 872,
+                                lineNumber: 965,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2261,7 +2405,7 @@ function PDSOnboardPage() {
                                         children: "Middle Name"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 877,
+                                        lineNumber: 970,
                                         columnNumber: 29
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -2269,13 +2413,13 @@ function PDSOnboardPage() {
                                         onChange: (v)=>updateFamily("fatherMiddleName", v)
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 878,
+                                        lineNumber: 971,
                                         columnNumber: 29
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 876,
+                                lineNumber: 969,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2284,7 +2428,7 @@ function PDSOnboardPage() {
                                         children: "Name Extension"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 881,
+                                        lineNumber: 974,
                                         columnNumber: 29
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -2292,24 +2436,24 @@ function PDSOnboardPage() {
                                         onChange: (v)=>updateFamily("fatherNameExtension", v)
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 882,
+                                        lineNumber: 975,
                                         columnNumber: 29
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 880,
+                                lineNumber: 973,
                                 columnNumber: 25
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 867,
+                        lineNumber: 960,
                         columnNumber: 21
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                    lineNumber: 866,
+                    lineNumber: 959,
                     columnNumber: 17
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(SectionCard, {
@@ -2323,7 +2467,7 @@ function PDSOnboardPage() {
                                         children: "Maiden Surname"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 890,
+                                        lineNumber: 983,
                                         columnNumber: 29
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -2331,13 +2475,13 @@ function PDSOnboardPage() {
                                         onChange: (v)=>updateFamily("motherMaidenSurname", v)
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 891,
+                                        lineNumber: 984,
                                         columnNumber: 29
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 889,
+                                lineNumber: 982,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2346,7 +2490,7 @@ function PDSOnboardPage() {
                                         children: "First Name"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 894,
+                                        lineNumber: 987,
                                         columnNumber: 29
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -2354,13 +2498,13 @@ function PDSOnboardPage() {
                                         onChange: (v)=>updateFamily("motherFirstName", v)
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 895,
+                                        lineNumber: 988,
                                         columnNumber: 29
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 893,
+                                lineNumber: 986,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2369,7 +2513,7 @@ function PDSOnboardPage() {
                                         children: "Middle Name"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 898,
+                                        lineNumber: 991,
                                         columnNumber: 29
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -2377,24 +2521,24 @@ function PDSOnboardPage() {
                                         onChange: (v)=>updateFamily("motherMiddleName", v)
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 899,
+                                        lineNumber: 992,
                                         columnNumber: 29
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 897,
+                                lineNumber: 990,
                                 columnNumber: 25
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 888,
+                        lineNumber: 981,
                         columnNumber: 21
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                    lineNumber: 887,
+                    lineNumber: 980,
                     columnNumber: 17
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(SectionCard, {
@@ -2405,89 +2549,147 @@ function PDSOnboardPage() {
                             children: "No children added yet."
                         }, void 0, false, {
                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                            lineNumber: 906,
+                            lineNumber: 999,
                             columnNumber: 25
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "space-y-3",
                             children: f.children.map((child, i)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "flex items-end gap-3 p-3 bg-stone-50/80 rounded-xl border border-stone-100",
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "flex-1",
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Label, {
-                                                    children: "Full Name"
+                                    className: "p-3 bg-stone-50/80 rounded-xl border border-stone-100",
+                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-end",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Label, {
+                                                        children: "Surname"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
+                                                        lineNumber: 1006,
+                                                        columnNumber: 41
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
+                                                        value: child.surname || "",
+                                                        onChange: (v)=>updateChild(i, "surname", v)
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
+                                                        lineNumber: 1007,
+                                                        columnNumber: 41
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
+                                                lineNumber: 1005,
+                                                columnNumber: 37
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Label, {
+                                                        children: "First Name"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
+                                                        lineNumber: 1010,
+                                                        columnNumber: 41
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
+                                                        value: child.firstName || "",
+                                                        onChange: (v)=>updateChild(i, "firstName", v)
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
+                                                        lineNumber: 1011,
+                                                        columnNumber: 41
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
+                                                lineNumber: 1009,
+                                                columnNumber: 37
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Label, {
+                                                        children: "Middle Name"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
+                                                        lineNumber: 1014,
+                                                        columnNumber: 41
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
+                                                        value: child.middleName || "",
+                                                        onChange: (v)=>updateChild(i, "middleName", v)
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
+                                                        lineNumber: 1015,
+                                                        columnNumber: 41
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
+                                                lineNumber: 1013,
+                                                columnNumber: 37
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Label, {
+                                                        children: "Date of Birth"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
+                                                        lineNumber: 1018,
+                                                        columnNumber: 41
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
+                                                        type: "date",
+                                                        value: child.dateOfBirth,
+                                                        onChange: (v)=>updateChild(i, "dateOfBirth", v)
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
+                                                        lineNumber: 1019,
+                                                        columnNumber: 41
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
+                                                lineNumber: 1017,
+                                                columnNumber: 37
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "flex justify-end",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                    type: "button",
+                                                    onClick: ()=>removeChild(i),
+                                                    className: "p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors",
+                                                    title: "Remove",
+                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$trash$2d$2$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Trash2$3e$__["Trash2"], {
+                                                        className: "w-4 h-4"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
+                                                        lineNumber: 1028,
+                                                        columnNumber: 45
+                                                    }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                    lineNumber: 912,
-                                                    columnNumber: 37
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
-                                                    value: child.fullName,
-                                                    onChange: (v)=>updateChild(i, "fullName", v)
-                                                }, void 0, false, {
-                                                    fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                    lineNumber: 913,
-                                                    columnNumber: 37
+                                                    lineNumber: 1022,
+                                                    columnNumber: 41
                                                 }, this)
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 911,
-                                            columnNumber: 33
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "w-44",
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Label, {
-                                                    children: "Date of Birth"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                    lineNumber: 916,
-                                                    columnNumber: 37
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
-                                                    type: "date",
-                                                    value: child.dateOfBirth,
-                                                    onChange: (v)=>updateChild(i, "dateOfBirth", v)
-                                                }, void 0, false, {
-                                                    fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                    lineNumber: 917,
-                                                    columnNumber: 37
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 915,
-                                            columnNumber: 33
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                            type: "button",
-                                            onClick: ()=>removeChild(i),
-                                            className: "p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors mb-0.5",
-                                            title: "Remove",
-                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$trash$2d$2$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Trash2$3e$__["Trash2"], {
-                                                className: "w-4 h-4"
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 925,
+                                                lineNumber: 1021,
                                                 columnNumber: 37
                                             }, this)
-                                        }, void 0, false, {
-                                            fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 919,
-                                            columnNumber: 33
-                                        }, this)
-                                    ]
-                                }, i, true, {
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
+                                        lineNumber: 1004,
+                                        columnNumber: 33
+                                    }, this)
+                                }, i, false, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 910,
+                                    lineNumber: 1003,
                                     columnNumber: 29
                                 }, this))
                         }, void 0, false, {
                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                            lineNumber: 908,
+                            lineNumber: 1001,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2499,26 +2701,26 @@ function PDSOnboardPage() {
                                     className: "w-3.5 h-3.5"
                                 }, void 0, false, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 935,
+                                    lineNumber: 1040,
                                     columnNumber: 25
                                 }, this),
                                 "Add Child"
                             ]
                         }, void 0, true, {
                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                            lineNumber: 930,
+                            lineNumber: 1035,
                             columnNumber: 21
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                    lineNumber: 904,
+                    lineNumber: 997,
                     columnNumber: 17
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-            lineNumber: 826,
+            lineNumber: 919,
             columnNumber: 13
         }, this);
     }
@@ -2534,7 +2736,7 @@ function PDSOnboardPage() {
                         children: "No education records added yet."
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 948,
+                        lineNumber: 1053,
                         columnNumber: 25
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2550,7 +2752,7 @@ function PDSOnboardPage() {
                                                 children: edu.level || `Record #${i + 1}`
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 954,
+                                                lineNumber: 1059,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2562,18 +2764,18 @@ function PDSOnboardPage() {
                                                     className: "w-3.5 h-3.5"
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                    lineNumber: 963,
+                                                    lineNumber: 1068,
                                                     columnNumber: 41
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 957,
+                                                lineNumber: 1062,
                                                 columnNumber: 37
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 953,
+                                        lineNumber: 1058,
                                         columnNumber: 33
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2585,7 +2787,7 @@ function PDSOnboardPage() {
                                                         children: "Level"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 968,
+                                                        lineNumber: 1073,
                                                         columnNumber: 41
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Select, {
@@ -2597,13 +2799,13 @@ function PDSOnboardPage() {
                                                             }))
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 969,
+                                                        lineNumber: 1074,
                                                         columnNumber: 41
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 967,
+                                                lineNumber: 1072,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2613,7 +2815,7 @@ function PDSOnboardPage() {
                                                         children: "School Name"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 976,
+                                                        lineNumber: 1081,
                                                         columnNumber: 41
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -2622,13 +2824,13 @@ function PDSOnboardPage() {
                                                         placeholder: "Name of school"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 977,
+                                                        lineNumber: 1082,
                                                         columnNumber: 41
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 975,
+                                                lineNumber: 1080,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2638,7 +2840,7 @@ function PDSOnboardPage() {
                                                         children: "Basic Education / Degree / Course"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 980,
+                                                        lineNumber: 1085,
                                                         columnNumber: 41
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -2647,13 +2849,13 @@ function PDSOnboardPage() {
                                                         placeholder: "e.g. BS Computer Science"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 981,
+                                                        lineNumber: 1086,
                                                         columnNumber: 41
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 979,
+                                                lineNumber: 1084,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2662,7 +2864,7 @@ function PDSOnboardPage() {
                                                         children: "Period From"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 984,
+                                                        lineNumber: 1089,
                                                         columnNumber: 41
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -2671,13 +2873,13 @@ function PDSOnboardPage() {
                                                         placeholder: "YYYY"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 985,
+                                                        lineNumber: 1090,
                                                         columnNumber: 41
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 983,
+                                                lineNumber: 1088,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2686,7 +2888,7 @@ function PDSOnboardPage() {
                                                         children: "Period To"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 988,
+                                                        lineNumber: 1093,
                                                         columnNumber: 41
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -2695,13 +2897,13 @@ function PDSOnboardPage() {
                                                         placeholder: "YYYY"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 989,
+                                                        lineNumber: 1094,
                                                         columnNumber: 41
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 987,
+                                                lineNumber: 1092,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2710,7 +2912,7 @@ function PDSOnboardPage() {
                                                         children: "Highest Level / Units Earned"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 992,
+                                                        lineNumber: 1097,
                                                         columnNumber: 41
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -2718,13 +2920,13 @@ function PDSOnboardPage() {
                                                         onChange: (v)=>updateEducation(i, "highestLevelUnitsEarned", v)
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 993,
+                                                        lineNumber: 1098,
                                                         columnNumber: 41
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 991,
+                                                lineNumber: 1096,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2733,7 +2935,7 @@ function PDSOnboardPage() {
                                                         children: "Year Graduated"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 996,
+                                                        lineNumber: 1101,
                                                         columnNumber: 41
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -2742,13 +2944,13 @@ function PDSOnboardPage() {
                                                         placeholder: "YYYY"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 997,
+                                                        lineNumber: 1102,
                                                         columnNumber: 41
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 995,
+                                                lineNumber: 1100,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2758,7 +2960,7 @@ function PDSOnboardPage() {
                                                         children: "Scholarship / Academic Honors"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1000,
+                                                        lineNumber: 1105,
                                                         columnNumber: 41
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -2767,30 +2969,30 @@ function PDSOnboardPage() {
                                                         placeholder: "e.g. Cum Laude"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1001,
+                                                        lineNumber: 1106,
                                                         columnNumber: 41
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 999,
+                                                lineNumber: 1104,
                                                 columnNumber: 37
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 966,
+                                        lineNumber: 1071,
                                         columnNumber: 33
                                     }, this)
                                 ]
                             }, i, true, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 952,
+                                lineNumber: 1057,
                                 columnNumber: 29
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 950,
+                        lineNumber: 1055,
                         columnNumber: 21
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2802,25 +3004,25 @@ function PDSOnboardPage() {
                                 className: "w-3.5 h-3.5"
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1012,
+                                lineNumber: 1117,
                                 columnNumber: 25
                             }, this),
                             "Add Education Level"
                         ]
                     }, void 0, true, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1007,
+                        lineNumber: 1112,
                         columnNumber: 21
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                lineNumber: 946,
+                lineNumber: 1051,
                 columnNumber: 17
             }, this)
         }, void 0, false, {
             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-            lineNumber: 945,
+            lineNumber: 1050,
             columnNumber: 13
         }, this);
     }
@@ -2836,7 +3038,7 @@ function PDSOnboardPage() {
                         children: "No eligibility records added. Click the button below to add one."
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1025,
+                        lineNumber: 1130,
                         columnNumber: 25
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2855,7 +3057,7 @@ function PDSOnboardPage() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1033,
+                                                lineNumber: 1138,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2866,18 +3068,18 @@ function PDSOnboardPage() {
                                                     className: "w-3.5 h-3.5"
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                    lineNumber: 1041,
+                                                    lineNumber: 1146,
                                                     columnNumber: 41
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1036,
+                                                lineNumber: 1141,
                                                 columnNumber: 37
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 1032,
+                                        lineNumber: 1137,
                                         columnNumber: 33
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2889,7 +3091,7 @@ function PDSOnboardPage() {
                                                         children: "Career Service / RA 1080 (Board/Bar)"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1046,
+                                                        lineNumber: 1151,
                                                         columnNumber: 41
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -2897,13 +3099,13 @@ function PDSOnboardPage() {
                                                         onChange: (v)=>updateEligibility(i, "careerService", v)
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1047,
+                                                        lineNumber: 1152,
                                                         columnNumber: 41
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1045,
+                                                lineNumber: 1150,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2912,7 +3114,7 @@ function PDSOnboardPage() {
                                                         children: "Rating (if applicable)"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1050,
+                                                        lineNumber: 1155,
                                                         columnNumber: 41
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -2920,13 +3122,13 @@ function PDSOnboardPage() {
                                                         onChange: (v)=>updateEligibility(i, "rating", v)
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1051,
+                                                        lineNumber: 1156,
                                                         columnNumber: 41
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1049,
+                                                lineNumber: 1154,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2935,7 +3137,7 @@ function PDSOnboardPage() {
                                                         children: "Date of Examination / Conferment"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1054,
+                                                        lineNumber: 1159,
                                                         columnNumber: 41
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -2944,13 +3146,13 @@ function PDSOnboardPage() {
                                                         onChange: (v)=>updateEligibility(i, "dateOfExamination", v)
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1055,
+                                                        lineNumber: 1160,
                                                         columnNumber: 41
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1053,
+                                                lineNumber: 1158,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2959,7 +3161,7 @@ function PDSOnboardPage() {
                                                         children: "Place of Examination / Conferment"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1058,
+                                                        lineNumber: 1163,
                                                         columnNumber: 41
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -2967,13 +3169,13 @@ function PDSOnboardPage() {
                                                         onChange: (v)=>updateEligibility(i, "placeOfExamination", v)
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1059,
+                                                        lineNumber: 1164,
                                                         columnNumber: 41
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1057,
+                                                lineNumber: 1162,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2982,7 +3184,7 @@ function PDSOnboardPage() {
                                                         children: "License Number"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1062,
+                                                        lineNumber: 1167,
                                                         columnNumber: 41
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -2990,13 +3192,13 @@ function PDSOnboardPage() {
                                                         onChange: (v)=>updateEligibility(i, "licenseNumber", v)
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1063,
+                                                        lineNumber: 1168,
                                                         columnNumber: 41
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1061,
+                                                lineNumber: 1166,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3005,7 +3207,7 @@ function PDSOnboardPage() {
                                                         children: "Date of Validity"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1066,
+                                                        lineNumber: 1171,
                                                         columnNumber: 41
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -3014,30 +3216,30 @@ function PDSOnboardPage() {
                                                         onChange: (v)=>updateEligibility(i, "dateOfValidity", v)
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1067,
+                                                        lineNumber: 1172,
                                                         columnNumber: 41
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1065,
+                                                lineNumber: 1170,
                                                 columnNumber: 37
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 1044,
+                                        lineNumber: 1149,
                                         columnNumber: 33
                                     }, this)
                                 ]
                             }, i, true, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1031,
+                                lineNumber: 1136,
                                 columnNumber: 29
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1029,
+                        lineNumber: 1134,
                         columnNumber: 21
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3049,25 +3251,25 @@ function PDSOnboardPage() {
                                 className: "w-3.5 h-3.5"
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1078,
+                                lineNumber: 1183,
                                 columnNumber: 25
                             }, this),
                             "Add Eligibility"
                         ]
                     }, void 0, true, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1073,
+                        lineNumber: 1178,
                         columnNumber: 21
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                lineNumber: 1023,
+                lineNumber: 1128,
                 columnNumber: 17
             }, this)
         }, void 0, false, {
             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-            lineNumber: 1022,
+            lineNumber: 1127,
             columnNumber: 13
         }, this);
     }
@@ -3083,7 +3285,7 @@ function PDSOnboardPage() {
                         children: "Include private employment. Start from your most recent work."
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1090,
+                        lineNumber: 1195,
                         columnNumber: 21
                     }, this),
                     formData.workExperience.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3091,7 +3293,7 @@ function PDSOnboardPage() {
                         children: "No work experience records added yet."
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1094,
+                        lineNumber: 1199,
                         columnNumber: 25
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3110,7 +3312,7 @@ function PDSOnboardPage() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1102,
+                                                lineNumber: 1207,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3121,18 +3323,18 @@ function PDSOnboardPage() {
                                                     className: "w-3.5 h-3.5"
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                    lineNumber: 1110,
+                                                    lineNumber: 1215,
                                                     columnNumber: 41
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1105,
+                                                lineNumber: 1210,
                                                 columnNumber: 37
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 1101,
+                                        lineNumber: 1206,
                                         columnNumber: 33
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3144,7 +3346,7 @@ function PDSOnboardPage() {
                                                         children: "Date From"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1115,
+                                                        lineNumber: 1220,
                                                         columnNumber: 41
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -3153,13 +3355,13 @@ function PDSOnboardPage() {
                                                         onChange: (v)=>updateWork(i, "dateFrom", v)
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1116,
+                                                        lineNumber: 1221,
                                                         columnNumber: 41
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1114,
+                                                lineNumber: 1219,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3168,7 +3370,7 @@ function PDSOnboardPage() {
                                                         children: "Date To"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1119,
+                                                        lineNumber: 1224,
                                                         columnNumber: 41
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -3177,13 +3379,13 @@ function PDSOnboardPage() {
                                                         onChange: (v)=>updateWork(i, "dateTo", v)
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1120,
+                                                        lineNumber: 1225,
                                                         columnNumber: 41
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1118,
+                                                lineNumber: 1223,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3192,7 +3394,7 @@ function PDSOnboardPage() {
                                                         children: "Position Title"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1123,
+                                                        lineNumber: 1228,
                                                         columnNumber: 41
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -3200,13 +3402,13 @@ function PDSOnboardPage() {
                                                         onChange: (v)=>updateWork(i, "positionTitle", v)
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1124,
+                                                        lineNumber: 1229,
                                                         columnNumber: 41
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1122,
+                                                lineNumber: 1227,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3215,7 +3417,7 @@ function PDSOnboardPage() {
                                                         children: "Department / Agency / Office"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1127,
+                                                        lineNumber: 1232,
                                                         columnNumber: 41
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -3223,13 +3425,13 @@ function PDSOnboardPage() {
                                                         onChange: (v)=>updateWork(i, "department", v)
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1128,
+                                                        lineNumber: 1233,
                                                         columnNumber: 41
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1126,
+                                                lineNumber: 1231,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3238,7 +3440,7 @@ function PDSOnboardPage() {
                                                         children: "Monthly Salary"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1131,
+                                                        lineNumber: 1236,
                                                         columnNumber: 41
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -3246,13 +3448,13 @@ function PDSOnboardPage() {
                                                         onChange: (v)=>updateWork(i, "monthlySalary", v)
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1132,
+                                                        lineNumber: 1237,
                                                         columnNumber: 41
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1130,
+                                                lineNumber: 1235,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3261,7 +3463,7 @@ function PDSOnboardPage() {
                                                         children: "Salary Grade & Step"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1135,
+                                                        lineNumber: 1240,
                                                         columnNumber: 41
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -3270,13 +3472,13 @@ function PDSOnboardPage() {
                                                         placeholder: "e.g. SG-15/1"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1136,
+                                                        lineNumber: 1241,
                                                         columnNumber: 41
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1134,
+                                                lineNumber: 1239,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3285,7 +3487,7 @@ function PDSOnboardPage() {
                                                         children: "Status of Appointment"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1139,
+                                                        lineNumber: 1244,
                                                         columnNumber: 41
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Select, {
@@ -3316,13 +3518,13 @@ function PDSOnboardPage() {
                                                         ]
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1140,
+                                                        lineNumber: 1245,
                                                         columnNumber: 41
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1138,
+                                                lineNumber: 1243,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3337,36 +3539,36 @@ function PDSOnboardPage() {
                                                             className: "w-4 h-4 rounded border-stone-300 text-green-600 focus:ring-green-500"
                                                         }, void 0, false, {
                                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                            lineNumber: 1155,
+                                                            lineNumber: 1260,
                                                             columnNumber: 45
                                                         }, this),
                                                         "Government Service"
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                    lineNumber: 1154,
+                                                    lineNumber: 1259,
                                                     columnNumber: 41
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1153,
+                                                lineNumber: 1258,
                                                 columnNumber: 37
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 1113,
+                                        lineNumber: 1218,
                                         columnNumber: 33
                                     }, this)
                                 ]
                             }, i, true, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1100,
+                                lineNumber: 1205,
                                 columnNumber: 29
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1098,
+                        lineNumber: 1203,
                         columnNumber: 21
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3378,25 +3580,25 @@ function PDSOnboardPage() {
                                 className: "w-3.5 h-3.5"
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1173,
+                                lineNumber: 1278,
                                 columnNumber: 25
                             }, this),
                             "Add Work Experience"
                         ]
                     }, void 0, true, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1168,
+                        lineNumber: 1273,
                         columnNumber: 21
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                lineNumber: 1089,
+                lineNumber: 1194,
                 columnNumber: 17
             }, this)
         }, void 0, false, {
             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-            lineNumber: 1088,
+            lineNumber: 1193,
             columnNumber: 13
         }, this);
     }
@@ -3412,7 +3614,7 @@ function PDSOnboardPage() {
                         children: "No training / seminar records added yet."
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1186,
+                        lineNumber: 1291,
                         columnNumber: 25
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3431,7 +3633,7 @@ function PDSOnboardPage() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1194,
+                                                lineNumber: 1299,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3442,18 +3644,18 @@ function PDSOnboardPage() {
                                                     className: "w-3.5 h-3.5"
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                    lineNumber: 1202,
+                                                    lineNumber: 1307,
                                                     columnNumber: 41
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1197,
+                                                lineNumber: 1302,
                                                 columnNumber: 37
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 1193,
+                                        lineNumber: 1298,
                                         columnNumber: 33
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3466,7 +3668,7 @@ function PDSOnboardPage() {
                                                         children: "Title of Learning & Development Interventions / Training"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1207,
+                                                        lineNumber: 1312,
                                                         columnNumber: 41
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -3474,13 +3676,13 @@ function PDSOnboardPage() {
                                                         onChange: (v)=>updateLD(i, "title", v)
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1208,
+                                                        lineNumber: 1313,
                                                         columnNumber: 41
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1206,
+                                                lineNumber: 1311,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3489,7 +3691,7 @@ function PDSOnboardPage() {
                                                         children: "Date From"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1211,
+                                                        lineNumber: 1316,
                                                         columnNumber: 41
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -3498,13 +3700,13 @@ function PDSOnboardPage() {
                                                         onChange: (v)=>updateLD(i, "dateFrom", v)
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1212,
+                                                        lineNumber: 1317,
                                                         columnNumber: 41
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1210,
+                                                lineNumber: 1315,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3513,7 +3715,7 @@ function PDSOnboardPage() {
                                                         children: "Date To"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1215,
+                                                        lineNumber: 1320,
                                                         columnNumber: 41
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -3522,13 +3724,13 @@ function PDSOnboardPage() {
                                                         onChange: (v)=>updateLD(i, "dateTo", v)
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1216,
+                                                        lineNumber: 1321,
                                                         columnNumber: 41
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1214,
+                                                lineNumber: 1319,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3537,7 +3739,7 @@ function PDSOnboardPage() {
                                                         children: "Number of Hours"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1219,
+                                                        lineNumber: 1324,
                                                         columnNumber: 41
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -3545,13 +3747,13 @@ function PDSOnboardPage() {
                                                         onChange: (v)=>updateLD(i, "numberOfHours", v)
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1220,
+                                                        lineNumber: 1325,
                                                         columnNumber: 41
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1218,
+                                                lineNumber: 1323,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3560,7 +3762,7 @@ function PDSOnboardPage() {
                                                         children: "Type of LD (Managerial / Supervisory / Technical / etc.)"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1223,
+                                                        lineNumber: 1328,
                                                         columnNumber: 41
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Select, {
@@ -3587,13 +3789,13 @@ function PDSOnboardPage() {
                                                         ]
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1224,
+                                                        lineNumber: 1329,
                                                         columnNumber: 41
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1222,
+                                                lineNumber: 1327,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3603,7 +3805,7 @@ function PDSOnboardPage() {
                                                         children: "Conducted / Sponsored By"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1237,
+                                                        lineNumber: 1342,
                                                         columnNumber: 41
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -3611,30 +3813,30 @@ function PDSOnboardPage() {
                                                         onChange: (v)=>updateLD(i, "conductedSponsoredBy", v)
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1238,
+                                                        lineNumber: 1343,
                                                         columnNumber: 41
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1236,
+                                                lineNumber: 1341,
                                                 columnNumber: 37
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 1205,
+                                        lineNumber: 1310,
                                         columnNumber: 33
                                     }, this)
                                 ]
                             }, i, true, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1192,
+                                lineNumber: 1297,
                                 columnNumber: 29
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1190,
+                        lineNumber: 1295,
                         columnNumber: 21
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3646,25 +3848,25 @@ function PDSOnboardPage() {
                                 className: "w-3.5 h-3.5"
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1249,
+                                lineNumber: 1354,
                                 columnNumber: 25
                             }, this),
                             "Add Training / Seminar"
                         ]
                     }, void 0, true, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1244,
+                        lineNumber: 1349,
                         columnNumber: 21
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                lineNumber: 1184,
+                lineNumber: 1289,
                 columnNumber: 17
             }, this)
         }, void 0, false, {
             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-            lineNumber: 1183,
+            lineNumber: 1288,
             columnNumber: 13
         }, this);
     }
@@ -3677,7 +3879,7 @@ function PDSOnboardPage() {
                         children: "No items added yet."
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1265,
+                        lineNumber: 1370,
                         columnNumber: 21
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3691,7 +3893,7 @@ function PDSOnboardPage() {
                                         placeholder: placeholder
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 1270,
+                                        lineNumber: 1375,
                                         columnNumber: 29
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3702,23 +3904,23 @@ function PDSOnboardPage() {
                                             className: "w-4 h-4"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 1280,
+                                            lineNumber: 1385,
                                             columnNumber: 33
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 1275,
+                                        lineNumber: 1380,
                                         columnNumber: 29
                                     }, this)
                                 ]
                             }, i, true, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1269,
+                                lineNumber: 1374,
                                 columnNumber: 25
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1267,
+                        lineNumber: 1372,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3730,20 +3932,20 @@ function PDSOnboardPage() {
                                 className: "w-3.5 h-3.5"
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1290,
+                                lineNumber: 1395,
                                 columnNumber: 21
                             }, this),
                             "Add Item"
                         ]
                     }, void 0, true, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1285,
+                        lineNumber: 1390,
                         columnNumber: 17
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                lineNumber: 1263,
+                lineNumber: 1368,
                 columnNumber: 13
             }, this);
         return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3755,7 +3957,7 @@ function PDSOnboardPage() {
             ]
         }, void 0, true, {
             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-            lineNumber: 1297,
+            lineNumber: 1402,
             columnNumber: 13
         }, this);
     }
@@ -3771,7 +3973,7 @@ function PDSOnboardPage() {
                         children: "No voluntary work records added yet."
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1310,
+                        lineNumber: 1415,
                         columnNumber: 25
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3790,7 +3992,7 @@ function PDSOnboardPage() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1318,
+                                                lineNumber: 1423,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3801,18 +4003,18 @@ function PDSOnboardPage() {
                                                     className: "w-3.5 h-3.5"
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                    lineNumber: 1326,
+                                                    lineNumber: 1431,
                                                     columnNumber: 41
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1321,
+                                                lineNumber: 1426,
                                                 columnNumber: 37
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 1317,
+                                        lineNumber: 1422,
                                         columnNumber: 33
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3825,7 +4027,7 @@ function PDSOnboardPage() {
                                                         children: "Name & Address of Organization"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1331,
+                                                        lineNumber: 1436,
                                                         columnNumber: 41
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -3834,13 +4036,13 @@ function PDSOnboardPage() {
                                                         placeholder: "Organization name"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1332,
+                                                        lineNumber: 1437,
                                                         columnNumber: 41
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1330,
+                                                lineNumber: 1435,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3850,7 +4052,7 @@ function PDSOnboardPage() {
                                                         children: "Organization Address"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1335,
+                                                        lineNumber: 1440,
                                                         columnNumber: 41
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -3859,13 +4061,13 @@ function PDSOnboardPage() {
                                                         placeholder: "Full address"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1336,
+                                                        lineNumber: 1441,
                                                         columnNumber: 41
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1334,
+                                                lineNumber: 1439,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3874,7 +4076,7 @@ function PDSOnboardPage() {
                                                         children: "Date From"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1339,
+                                                        lineNumber: 1444,
                                                         columnNumber: 41
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -3883,13 +4085,13 @@ function PDSOnboardPage() {
                                                         onChange: (val)=>updateVoluntary(i, "dateFrom", val)
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1340,
+                                                        lineNumber: 1445,
                                                         columnNumber: 41
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1338,
+                                                lineNumber: 1443,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3898,7 +4100,7 @@ function PDSOnboardPage() {
                                                         children: "Date To"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1343,
+                                                        lineNumber: 1448,
                                                         columnNumber: 41
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -3907,13 +4109,13 @@ function PDSOnboardPage() {
                                                         onChange: (val)=>updateVoluntary(i, "dateTo", val)
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1344,
+                                                        lineNumber: 1449,
                                                         columnNumber: 41
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1342,
+                                                lineNumber: 1447,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3922,7 +4124,7 @@ function PDSOnboardPage() {
                                                         children: "Number of Hours"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1347,
+                                                        lineNumber: 1452,
                                                         columnNumber: 41
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -3931,13 +4133,13 @@ function PDSOnboardPage() {
                                                         placeholder: "e.g. 40"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1348,
+                                                        lineNumber: 1453,
                                                         columnNumber: 41
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1346,
+                                                lineNumber: 1451,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3947,7 +4149,7 @@ function PDSOnboardPage() {
                                                         children: "Position / Nature of Work"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1351,
+                                                        lineNumber: 1456,
                                                         columnNumber: 41
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -3956,30 +4158,30 @@ function PDSOnboardPage() {
                                                         placeholder: "e.g. Volunteer Teacher"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1352,
+                                                        lineNumber: 1457,
                                                         columnNumber: 41
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1350,
+                                                lineNumber: 1455,
                                                 columnNumber: 37
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 1329,
+                                        lineNumber: 1434,
                                         columnNumber: 33
                                     }, this)
                                 ]
                             }, i, true, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1316,
+                                lineNumber: 1421,
                                 columnNumber: 29
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1314,
+                        lineNumber: 1419,
                         columnNumber: 21
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3991,25 +4193,25 @@ function PDSOnboardPage() {
                                 className: "w-3.5 h-3.5"
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1363,
+                                lineNumber: 1468,
                                 columnNumber: 25
                             }, this),
                             "Add Voluntary Work"
                         ]
                     }, void 0, true, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1358,
+                        lineNumber: 1463,
                         columnNumber: 21
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                lineNumber: 1308,
+                lineNumber: 1413,
                 columnNumber: 17
             }, this)
         }, void 0, false, {
             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-            lineNumber: 1307,
+            lineNumber: 1412,
             columnNumber: 13
         }, this);
     }
@@ -4028,7 +4230,7 @@ function PDSOnboardPage() {
                             children: "Please provide three (3) references."
                         }, void 0, false, {
                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                            lineNumber: 1378,
+                            lineNumber: 1483,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4044,7 +4246,7 @@ function PDSOnboardPage() {
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 1382,
+                                            lineNumber: 1487,
                                             columnNumber: 33
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4057,7 +4259,7 @@ function PDSOnboardPage() {
                                                             children: "Name"
                                                         }, void 0, false, {
                                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                            lineNumber: 1387,
+                                                            lineNumber: 1492,
                                                             columnNumber: 41
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -4066,13 +4268,13 @@ function PDSOnboardPage() {
                                                             placeholder: "Full Name"
                                                         }, void 0, false, {
                                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                            lineNumber: 1388,
+                                                            lineNumber: 1493,
                                                             columnNumber: 41
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                    lineNumber: 1386,
+                                                    lineNumber: 1491,
                                                     columnNumber: 37
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4082,7 +4284,7 @@ function PDSOnboardPage() {
                                                             children: "Address"
                                                         }, void 0, false, {
                                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                            lineNumber: 1391,
+                                                            lineNumber: 1496,
                                                             columnNumber: 41
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -4091,13 +4293,13 @@ function PDSOnboardPage() {
                                                             placeholder: "Complete address"
                                                         }, void 0, false, {
                                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                            lineNumber: 1392,
+                                                            lineNumber: 1497,
                                                             columnNumber: 41
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                    lineNumber: 1390,
+                                                    lineNumber: 1495,
                                                     columnNumber: 37
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4107,7 +4309,7 @@ function PDSOnboardPage() {
                                                             children: "Tel. No."
                                                         }, void 0, false, {
                                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                            lineNumber: 1395,
+                                                            lineNumber: 1500,
                                                             columnNumber: 41
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -4116,36 +4318,36 @@ function PDSOnboardPage() {
                                                             placeholder: "Contact number"
                                                         }, void 0, false, {
                                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                            lineNumber: 1396,
+                                                            lineNumber: 1501,
                                                             columnNumber: 41
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                    lineNumber: 1394,
+                                                    lineNumber: 1499,
                                                     columnNumber: 37
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 1385,
+                                            lineNumber: 1490,
                                             columnNumber: 33
                                         }, this)
                                     ]
                                 }, i, true, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 1381,
+                                    lineNumber: 1486,
                                     columnNumber: 29
                                 }, this))
                         }, void 0, false, {
                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                            lineNumber: 1379,
+                            lineNumber: 1484,
                             columnNumber: 21
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                    lineNumber: 1377,
+                    lineNumber: 1482,
                     columnNumber: 17
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(SectionCard, {
@@ -4157,7 +4359,7 @@ function PDSOnboardPage() {
                             children: "e.g. Passport, GSIS, SSS, PRC, Driver's License, etc."
                         }, void 0, false, {
                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                            lineNumber: 1405,
+                            lineNumber: 1510,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4170,7 +4372,7 @@ function PDSOnboardPage() {
                                             children: "Government Issued ID"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 1410,
+                                            lineNumber: 1515,
                                             columnNumber: 29
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Select, {
@@ -4221,13 +4423,13 @@ function PDSOnboardPage() {
                                             ]
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 1411,
+                                            lineNumber: 1516,
                                             columnNumber: 29
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 1409,
+                                    lineNumber: 1514,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4237,7 +4439,7 @@ function PDSOnboardPage() {
                                             children: "ID / License / Passport No."
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 1430,
+                                            lineNumber: 1535,
                                             columnNumber: 29
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -4246,13 +4448,13 @@ function PDSOnboardPage() {
                                             placeholder: "ID number"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 1431,
+                                            lineNumber: 1536,
                                             columnNumber: 29
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 1429,
+                                    lineNumber: 1534,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4261,7 +4463,7 @@ function PDSOnboardPage() {
                                             children: "Date of Issuance"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 1434,
+                                            lineNumber: 1539,
                                             columnNumber: 29
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -4270,13 +4472,13 @@ function PDSOnboardPage() {
                                             onChange: (v)=>updateGovId("dateOfIssuance", v)
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 1435,
+                                            lineNumber: 1540,
                                             columnNumber: 29
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 1433,
+                                    lineNumber: 1538,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4285,7 +4487,7 @@ function PDSOnboardPage() {
                                             children: "Place of Issuance"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 1438,
+                                            lineNumber: 1543,
                                             columnNumber: 29
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -4294,25 +4496,25 @@ function PDSOnboardPage() {
                                             placeholder: "e.g. Manila"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 1439,
+                                            lineNumber: 1544,
                                             columnNumber: 29
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 1437,
+                                    lineNumber: 1542,
                                     columnNumber: 25
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                            lineNumber: 1408,
+                            lineNumber: 1513,
                             columnNumber: 21
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                    lineNumber: 1404,
+                    lineNumber: 1509,
                     columnNumber: 17
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(SectionCard, {
@@ -4325,7 +4527,7 @@ function PDSOnboardPage() {
                                     children: "Date Accomplished"
                                 }, void 0, false, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 1447,
+                                    lineNumber: 1552,
                                     columnNumber: 29
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Input, {
@@ -4337,29 +4539,29 @@ function PDSOnboardPage() {
                                             }))
                                 }, void 0, false, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 1448,
+                                    lineNumber: 1553,
                                     columnNumber: 29
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                            lineNumber: 1446,
+                            lineNumber: 1551,
                             columnNumber: 25
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1445,
+                        lineNumber: 1550,
                         columnNumber: 21
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                    lineNumber: 1444,
+                    lineNumber: 1549,
                     columnNumber: 17
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-            lineNumber: 1376,
+            lineNumber: 1481,
             columnNumber: 13
         }, this);
     }
@@ -4385,12 +4587,12 @@ function PDSOnboardPage() {
                         children: "Please review all information below before submitting. You can click on any step above to go back and make corrections."
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1472,
+                        lineNumber: 1577,
                         columnNumber: 21
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                    lineNumber: 1471,
+                    lineNumber: 1576,
                     columnNumber: 17
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(SectionCard, {
@@ -4404,7 +4606,7 @@ function PDSOnboardPage() {
                                 value: `${p.surname}, ${p.firstName} ${p.middleName} ${p.nameExtension}`.trim()
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1481,
+                                lineNumber: 1586,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ReviewField, {
@@ -4412,7 +4614,7 @@ function PDSOnboardPage() {
                                 value: p.dateOfBirth
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1482,
+                                lineNumber: 1587,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ReviewField, {
@@ -4420,7 +4622,7 @@ function PDSOnboardPage() {
                                 value: p.placeOfBirth
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1483,
+                                lineNumber: 1588,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ReviewField, {
@@ -4428,7 +4630,7 @@ function PDSOnboardPage() {
                                 value: p.sex
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1484,
+                                lineNumber: 1589,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ReviewField, {
@@ -4436,7 +4638,7 @@ function PDSOnboardPage() {
                                 value: p.civilStatus
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1485,
+                                lineNumber: 1590,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ReviewField, {
@@ -4444,7 +4646,7 @@ function PDSOnboardPage() {
                                 value: p.citizenship
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1486,
+                                lineNumber: 1591,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ReviewField, {
@@ -4452,7 +4654,7 @@ function PDSOnboardPage() {
                                 value: p.height ? `${p.height} m` : "—"
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1487,
+                                lineNumber: 1592,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ReviewField, {
@@ -4460,7 +4662,7 @@ function PDSOnboardPage() {
                                 value: p.weight ? `${p.weight} kg` : "—"
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1488,
+                                lineNumber: 1593,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ReviewField, {
@@ -4468,7 +4670,7 @@ function PDSOnboardPage() {
                                 value: p.bloodType || "—"
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1489,
+                                lineNumber: 1594,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ReviewField, {
@@ -4476,7 +4678,7 @@ function PDSOnboardPage() {
                                 value: p.gsisIdNo || "—"
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1490,
+                                lineNumber: 1595,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ReviewField, {
@@ -4484,7 +4686,7 @@ function PDSOnboardPage() {
                                 value: p.pagIbigIdNo || "—"
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1491,
+                                lineNumber: 1596,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ReviewField, {
@@ -4492,7 +4694,7 @@ function PDSOnboardPage() {
                                 value: p.philhealthNo || "—"
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1492,
+                                lineNumber: 1597,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ReviewField, {
@@ -4500,7 +4702,7 @@ function PDSOnboardPage() {
                                 value: p.sssNo || "—"
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1493,
+                                lineNumber: 1598,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ReviewField, {
@@ -4508,7 +4710,7 @@ function PDSOnboardPage() {
                                 value: p.tinNo || "—"
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1494,
+                                lineNumber: 1599,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ReviewField, {
@@ -4516,7 +4718,7 @@ function PDSOnboardPage() {
                                 value: p.agencyEmployeeNo || "—"
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1495,
+                                lineNumber: 1600,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ReviewField, {
@@ -4524,7 +4726,7 @@ function PDSOnboardPage() {
                                 value: formData.office || "—"
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1496,
+                                lineNumber: 1601,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ReviewField, {
@@ -4532,7 +4734,7 @@ function PDSOnboardPage() {
                                 value: formData.employmentStatus
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1497,
+                                lineNumber: 1602,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ReviewField, {
@@ -4540,7 +4742,7 @@ function PDSOnboardPage() {
                                 value: formatAddress(p.residentialAddress)
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1498,
+                                lineNumber: 1603,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ReviewField, {
@@ -4548,7 +4750,7 @@ function PDSOnboardPage() {
                                 value: formatAddress(p.permanentAddress)
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1499,
+                                lineNumber: 1604,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ReviewField, {
@@ -4556,7 +4758,7 @@ function PDSOnboardPage() {
                                 value: p.mobileNo || "—"
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1500,
+                                lineNumber: 1605,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ReviewField, {
@@ -4564,18 +4766,18 @@ function PDSOnboardPage() {
                                 value: p.email || "—"
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1501,
+                                lineNumber: 1606,
                                 columnNumber: 25
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1480,
+                        lineNumber: 1585,
                         columnNumber: 21
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                    lineNumber: 1479,
+                    lineNumber: 1584,
                     columnNumber: 17
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(SectionCard, {
@@ -4589,7 +4791,7 @@ function PDSOnboardPage() {
                                 value: f.spouseSurname ? `${f.spouseSurname}, ${f.spouseFirstName} ${f.spouseMiddleName}`.trim() : "N/A"
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1508,
+                                lineNumber: 1613,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ReviewField, {
@@ -4597,7 +4799,7 @@ function PDSOnboardPage() {
                                 value: f.fatherSurname ? `${f.fatherSurname}, ${f.fatherFirstName} ${f.fatherMiddleName}`.trim() : "—"
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1513,
+                                lineNumber: 1618,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ReviewField, {
@@ -4605,7 +4807,7 @@ function PDSOnboardPage() {
                                 value: f.motherMaidenSurname ? `${f.motherMaidenSurname}, ${f.motherFirstName} ${f.motherMiddleName}`.trim() : "—"
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1518,
+                                lineNumber: 1623,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ReviewField, {
@@ -4613,18 +4815,18 @@ function PDSOnboardPage() {
                                 value: String(f.children.length)
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1523,
+                                lineNumber: 1628,
                                 columnNumber: 25
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1507,
+                        lineNumber: 1612,
                         columnNumber: 21
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                    lineNumber: 1506,
+                    lineNumber: 1611,
                     columnNumber: 17
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(SectionCard, {
@@ -4635,7 +4837,7 @@ function PDSOnboardPage() {
                         children: "No records"
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1530,
+                        lineNumber: 1635,
                         columnNumber: 25
                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "overflow-x-auto",
@@ -4651,7 +4853,7 @@ function PDSOnboardPage() {
                                                 children: "Level"
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1536,
+                                                lineNumber: 1641,
                                                 columnNumber: 41
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -4659,7 +4861,7 @@ function PDSOnboardPage() {
                                                 children: "School"
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1537,
+                                                lineNumber: 1642,
                                                 columnNumber: 41
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -4667,7 +4869,7 @@ function PDSOnboardPage() {
                                                 children: "Degree/Course"
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1538,
+                                                lineNumber: 1643,
                                                 columnNumber: 41
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -4675,7 +4877,7 @@ function PDSOnboardPage() {
                                                 children: "Period"
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1539,
+                                                lineNumber: 1644,
                                                 columnNumber: 41
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -4683,18 +4885,18 @@ function PDSOnboardPage() {
                                                 children: "Year Graduated"
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1540,
+                                                lineNumber: 1645,
                                                 columnNumber: 41
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 1535,
+                                        lineNumber: 1640,
                                         columnNumber: 37
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 1534,
+                                    lineNumber: 1639,
                                     columnNumber: 33
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
@@ -4706,7 +4908,7 @@ function PDSOnboardPage() {
                                                     children: e.level
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                    lineNumber: 1546,
+                                                    lineNumber: 1651,
                                                     columnNumber: 45
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -4714,7 +4916,7 @@ function PDSOnboardPage() {
                                                     children: e.schoolName
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                    lineNumber: 1547,
+                                                    lineNumber: 1652,
                                                     columnNumber: 45
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -4722,7 +4924,7 @@ function PDSOnboardPage() {
                                                     children: e.basicEducationDegreeCourse || "—"
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                    lineNumber: 1548,
+                                                    lineNumber: 1653,
                                                     columnNumber: 45
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -4734,7 +4936,7 @@ function PDSOnboardPage() {
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                    lineNumber: 1549,
+                                                    lineNumber: 1654,
                                                     columnNumber: 45
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -4742,34 +4944,34 @@ function PDSOnboardPage() {
                                                     children: e.yearGraduated || "—"
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                    lineNumber: 1550,
+                                                    lineNumber: 1655,
                                                     columnNumber: 45
                                                 }, this)
                                             ]
                                         }, i, true, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 1545,
+                                            lineNumber: 1650,
                                             columnNumber: 41
                                         }, this))
                                 }, void 0, false, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 1543,
+                                    lineNumber: 1648,
                                     columnNumber: 33
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                            lineNumber: 1533,
+                            lineNumber: 1638,
                             columnNumber: 29
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1532,
+                        lineNumber: 1637,
                         columnNumber: 25
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                    lineNumber: 1528,
+                    lineNumber: 1633,
                     columnNumber: 17
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(SectionCard, {
@@ -4780,7 +4982,7 @@ function PDSOnboardPage() {
                         children: "No records"
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1562,
+                        lineNumber: 1667,
                         columnNumber: 25
                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "space-y-2 text-sm",
@@ -4792,7 +4994,7 @@ function PDSOnboardPage() {
                                         children: e.careerService || "—"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 1567,
+                                        lineNumber: 1672,
                                         columnNumber: 37
                                     }, this),
                                     e.rating && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -4803,7 +5005,7 @@ function PDSOnboardPage() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 1568,
+                                        lineNumber: 1673,
                                         columnNumber: 50
                                     }, this),
                                     e.dateOfExamination && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -4814,23 +5016,23 @@ function PDSOnboardPage() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 1569,
+                                        lineNumber: 1674,
                                         columnNumber: 61
                                     }, this)
                                 ]
                             }, i, true, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1566,
+                                lineNumber: 1671,
                                 columnNumber: 33
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1564,
+                        lineNumber: 1669,
                         columnNumber: 25
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                    lineNumber: 1560,
+                    lineNumber: 1665,
                     columnNumber: 17
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(SectionCard, {
@@ -4841,7 +5043,7 @@ function PDSOnboardPage() {
                         children: "No records"
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1579,
+                        lineNumber: 1684,
                         columnNumber: 25
                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "overflow-x-auto",
@@ -4857,7 +5059,7 @@ function PDSOnboardPage() {
                                                 children: "Period"
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1585,
+                                                lineNumber: 1690,
                                                 columnNumber: 41
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -4865,7 +5067,7 @@ function PDSOnboardPage() {
                                                 children: "Position"
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1586,
+                                                lineNumber: 1691,
                                                 columnNumber: 41
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -4873,7 +5075,7 @@ function PDSOnboardPage() {
                                                 children: "Department"
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1587,
+                                                lineNumber: 1692,
                                                 columnNumber: 41
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -4881,7 +5083,7 @@ function PDSOnboardPage() {
                                                 children: "Salary"
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1588,
+                                                lineNumber: 1693,
                                                 columnNumber: 41
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -4889,7 +5091,7 @@ function PDSOnboardPage() {
                                                 children: "Status"
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1589,
+                                                lineNumber: 1694,
                                                 columnNumber: 41
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -4897,18 +5099,18 @@ function PDSOnboardPage() {
                                                 children: "Gov't"
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1590,
+                                                lineNumber: 1695,
                                                 columnNumber: 41
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 1584,
+                                        lineNumber: 1689,
                                         columnNumber: 37
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 1583,
+                                    lineNumber: 1688,
                                     columnNumber: 33
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
@@ -4924,7 +5126,7 @@ function PDSOnboardPage() {
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                    lineNumber: 1596,
+                                                    lineNumber: 1701,
                                                     columnNumber: 45
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -4932,7 +5134,7 @@ function PDSOnboardPage() {
                                                     children: w.positionTitle
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                    lineNumber: 1597,
+                                                    lineNumber: 1702,
                                                     columnNumber: 45
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -4940,7 +5142,7 @@ function PDSOnboardPage() {
                                                     children: w.department
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                    lineNumber: 1598,
+                                                    lineNumber: 1703,
                                                     columnNumber: 45
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -4948,7 +5150,7 @@ function PDSOnboardPage() {
                                                     children: w.monthlySalary
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                    lineNumber: 1599,
+                                                    lineNumber: 1704,
                                                     columnNumber: 45
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -4956,7 +5158,7 @@ function PDSOnboardPage() {
                                                     children: w.statusOfAppointment
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                    lineNumber: 1600,
+                                                    lineNumber: 1705,
                                                     columnNumber: 45
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -4964,34 +5166,34 @@ function PDSOnboardPage() {
                                                     children: w.isGovernmentService ? "Yes" : "No"
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                    lineNumber: 1601,
+                                                    lineNumber: 1706,
                                                     columnNumber: 45
                                                 }, this)
                                             ]
                                         }, i, true, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 1595,
+                                            lineNumber: 1700,
                                             columnNumber: 41
                                         }, this))
                                 }, void 0, false, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 1593,
+                                    lineNumber: 1698,
                                     columnNumber: 33
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                            lineNumber: 1582,
+                            lineNumber: 1687,
                             columnNumber: 29
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1581,
+                        lineNumber: 1686,
                         columnNumber: 25
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                    lineNumber: 1577,
+                    lineNumber: 1682,
                     columnNumber: 17
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(SectionCard, {
@@ -5002,7 +5204,7 @@ function PDSOnboardPage() {
                         children: "No records"
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1613,
+                        lineNumber: 1718,
                         columnNumber: 25
                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "space-y-2 text-sm",
@@ -5014,7 +5216,7 @@ function PDSOnboardPage() {
                                         children: v.organizationName
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 1618,
+                                        lineNumber: 1723,
                                         columnNumber: 37
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -5031,23 +5233,23 @@ function PDSOnboardPage() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 1619,
+                                        lineNumber: 1724,
                                         columnNumber: 37
                                     }, this)
                                 ]
                             }, i, true, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1617,
+                                lineNumber: 1722,
                                 columnNumber: 33
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1615,
+                        lineNumber: 1720,
                         columnNumber: 25
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                    lineNumber: 1611,
+                    lineNumber: 1716,
                     columnNumber: 17
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(SectionCard, {
@@ -5058,7 +5260,7 @@ function PDSOnboardPage() {
                         children: "No records"
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1631,
+                        lineNumber: 1736,
                         columnNumber: 25
                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "space-y-2 text-sm",
@@ -5070,7 +5272,7 @@ function PDSOnboardPage() {
                                         children: ld.title
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 1636,
+                                        lineNumber: 1741,
                                         columnNumber: 37
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -5086,23 +5288,23 @@ function PDSOnboardPage() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 1637,
+                                        lineNumber: 1742,
                                         columnNumber: 37
                                     }, this)
                                 ]
                             }, i, true, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1635,
+                                lineNumber: 1740,
                                 columnNumber: 33
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1633,
+                        lineNumber: 1738,
                         columnNumber: 25
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                    lineNumber: 1629,
+                    lineNumber: 1734,
                     columnNumber: 17
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(SectionCard, {
@@ -5118,7 +5320,7 @@ function PDSOnboardPage() {
                                         children: "Skills & Hobbies"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 1650,
+                                        lineNumber: 1755,
                                         columnNumber: 29
                                     }, this),
                                     formData.otherInfo.specialSkillsHobbies.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -5126,7 +5328,7 @@ function PDSOnboardPage() {
                                         children: "None"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 1652,
+                                        lineNumber: 1757,
                                         columnNumber: 33
                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
                                         className: "space-y-1",
@@ -5138,18 +5340,18 @@ function PDSOnboardPage() {
                                                 ]
                                             }, i, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1656,
+                                                lineNumber: 1761,
                                                 columnNumber: 41
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 1654,
+                                        lineNumber: 1759,
                                         columnNumber: 33
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1649,
+                                lineNumber: 1754,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5159,7 +5361,7 @@ function PDSOnboardPage() {
                                         children: "Distinctions / Recognition"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 1662,
+                                        lineNumber: 1767,
                                         columnNumber: 29
                                     }, this),
                                     formData.otherInfo.nonAcademicDistinctions.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -5167,7 +5369,7 @@ function PDSOnboardPage() {
                                         children: "None"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 1664,
+                                        lineNumber: 1769,
                                         columnNumber: 33
                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
                                         className: "space-y-1",
@@ -5179,18 +5381,18 @@ function PDSOnboardPage() {
                                                 ]
                                             }, i, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1668,
+                                                lineNumber: 1773,
                                                 columnNumber: 41
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 1666,
+                                        lineNumber: 1771,
                                         columnNumber: 33
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1661,
+                                lineNumber: 1766,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5200,7 +5402,7 @@ function PDSOnboardPage() {
                                         children: "Memberships"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 1674,
+                                        lineNumber: 1779,
                                         columnNumber: 29
                                     }, this),
                                     formData.otherInfo.membershipInAssociations.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -5208,7 +5410,7 @@ function PDSOnboardPage() {
                                         children: "None"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 1676,
+                                        lineNumber: 1781,
                                         columnNumber: 33
                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
                                         className: "space-y-1",
@@ -5220,29 +5422,29 @@ function PDSOnboardPage() {
                                                 ]
                                             }, i, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1680,
+                                                lineNumber: 1785,
                                                 columnNumber: 41
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 1678,
+                                        lineNumber: 1783,
                                         columnNumber: 33
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1673,
+                                lineNumber: 1778,
                                 columnNumber: 25
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1648,
+                        lineNumber: 1753,
                         columnNumber: 21
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                    lineNumber: 1647,
+                    lineNumber: 1752,
                     columnNumber: 17
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(SectionCard, {
@@ -5253,7 +5455,7 @@ function PDSOnboardPage() {
                         children: "No references provided"
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1691,
+                        lineNumber: 1796,
                         columnNumber: 25
                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "overflow-x-auto",
@@ -5269,7 +5471,7 @@ function PDSOnboardPage() {
                                                 children: "#"
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1697,
+                                                lineNumber: 1802,
                                                 columnNumber: 41
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -5277,7 +5479,7 @@ function PDSOnboardPage() {
                                                 children: "Name"
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1698,
+                                                lineNumber: 1803,
                                                 columnNumber: 41
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -5285,7 +5487,7 @@ function PDSOnboardPage() {
                                                 children: "Address"
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1699,
+                                                lineNumber: 1804,
                                                 columnNumber: 41
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -5293,18 +5495,18 @@ function PDSOnboardPage() {
                                                 children: "Tel. No."
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1700,
+                                                lineNumber: 1805,
                                                 columnNumber: 41
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 1696,
+                                        lineNumber: 1801,
                                         columnNumber: 37
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 1695,
+                                    lineNumber: 1800,
                                     columnNumber: 33
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
@@ -5316,7 +5518,7 @@ function PDSOnboardPage() {
                                                     children: i + 1
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                    lineNumber: 1706,
+                                                    lineNumber: 1811,
                                                     columnNumber: 45
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -5324,7 +5526,7 @@ function PDSOnboardPage() {
                                                     children: r.name
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                    lineNumber: 1707,
+                                                    lineNumber: 1812,
                                                     columnNumber: 45
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -5332,7 +5534,7 @@ function PDSOnboardPage() {
                                                     children: r.address
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                    lineNumber: 1708,
+                                                    lineNumber: 1813,
                                                     columnNumber: 45
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -5340,34 +5542,34 @@ function PDSOnboardPage() {
                                                     children: r.telephoneNo
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                    lineNumber: 1709,
+                                                    lineNumber: 1814,
                                                     columnNumber: 45
                                                 }, this)
                                             ]
                                         }, i, true, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 1705,
+                                            lineNumber: 1810,
                                             columnNumber: 41
                                         }, this))
                                 }, void 0, false, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 1703,
+                                    lineNumber: 1808,
                                     columnNumber: 33
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                            lineNumber: 1694,
+                            lineNumber: 1799,
                             columnNumber: 29
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1693,
+                        lineNumber: 1798,
                         columnNumber: 25
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                    lineNumber: 1689,
+                    lineNumber: 1794,
                     columnNumber: 17
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(SectionCard, {
@@ -5381,7 +5583,7 @@ function PDSOnboardPage() {
                                 value: formData.governmentIssuedId.idType || "—"
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1721,
+                                lineNumber: 1826,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ReviewField, {
@@ -5389,7 +5591,7 @@ function PDSOnboardPage() {
                                 value: formData.governmentIssuedId.idNumber || "—"
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1722,
+                                lineNumber: 1827,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ReviewField, {
@@ -5397,7 +5599,7 @@ function PDSOnboardPage() {
                                 value: formData.governmentIssuedId.dateOfIssuance || "—"
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1723,
+                                lineNumber: 1828,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ReviewField, {
@@ -5405,18 +5607,18 @@ function PDSOnboardPage() {
                                 value: formData.governmentIssuedId.placeOfIssuance || "—"
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1724,
+                                lineNumber: 1829,
                                 columnNumber: 25
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1720,
+                        lineNumber: 1825,
                         columnNumber: 21
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                    lineNumber: 1719,
+                    lineNumber: 1824,
                     columnNumber: 17
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(SectionCard, {
@@ -5428,7 +5630,7 @@ function PDSOnboardPage() {
                                 children: "I declare under oath that I have personally accomplished this Personal Data Sheet which is a true, correct and complete statement pursuant to the provisions of pertinent laws, rules and regulations of the Republic of the Philippines."
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1731,
+                                lineNumber: 1836,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ReviewField, {
@@ -5436,24 +5638,24 @@ function PDSOnboardPage() {
                                 value: formData.dateAccomplished || "—"
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1736,
+                                lineNumber: 1841,
                                 columnNumber: 25
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1730,
+                        lineNumber: 1835,
                         columnNumber: 21
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                    lineNumber: 1729,
+                    lineNumber: 1834,
                     columnNumber: 17
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-            lineNumber: 1470,
+            lineNumber: 1575,
             columnNumber: 13
         }, this);
     }
@@ -5488,12 +5690,12 @@ function PDSOnboardPage() {
                                     className: "w-5 h-5 text-green-700"
                                 }, void 0, false, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 1771,
+                                    lineNumber: 1876,
                                     columnNumber: 25
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1770,
+                                lineNumber: 1875,
                                 columnNumber: 21
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5503,7 +5705,7 @@ function PDSOnboardPage() {
                                         children: "PDS Data Entry"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 1774,
+                                        lineNumber: 1879,
                                         columnNumber: 25
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -5511,19 +5713,19 @@ function PDSOnboardPage() {
                                         children: "CSC Form No. 212 — Personal Data Sheet"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 1775,
+                                        lineNumber: 1880,
                                         columnNumber: 25
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1773,
+                                lineNumber: 1878,
                                 columnNumber: 21
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1769,
+                        lineNumber: 1874,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5538,12 +5740,12 @@ function PDSOnboardPage() {
                                     }
                                 }, void 0, false, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 1783,
+                                    lineNumber: 1888,
                                     columnNumber: 25
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1782,
+                                lineNumber: 1887,
                                 columnNumber: 21
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5561,12 +5763,12 @@ function PDSOnboardPage() {
                                                             className: "w-5 h-5 text-green-700"
                                                         }, void 0, false, {
                                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                            lineNumber: 1794,
+                                                            lineNumber: 1899,
                                                             columnNumber: 37
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1793,
+                                                        lineNumber: 1898,
                                                         columnNumber: 33
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5576,7 +5778,7 @@ function PDSOnboardPage() {
                                                                 children: STEPS[currentStep].label
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                                lineNumber: 1797,
+                                                                lineNumber: 1902,
                                                                 columnNumber: 37
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -5584,19 +5786,19 @@ function PDSOnboardPage() {
                                                                 children: STEPS[currentStep].desc
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                                lineNumber: 1800,
+                                                                lineNumber: 1905,
                                                                 columnNumber: 37
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1796,
+                                                        lineNumber: 1901,
                                                         columnNumber: 33
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1792,
+                                                lineNumber: 1897,
                                                 columnNumber: 29
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5607,7 +5809,7 @@ function PDSOnboardPage() {
                                                         children: currentStep + 1
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1806,
+                                                        lineNumber: 1911,
                                                         columnNumber: 33
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -5615,26 +5817,26 @@ function PDSOnboardPage() {
                                                         children: "/"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1809,
+                                                        lineNumber: 1914,
                                                         columnNumber: 33
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                         children: STEPS.length
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1810,
+                                                        lineNumber: 1915,
                                                         columnNumber: 33
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1805,
+                                                lineNumber: 1910,
                                                 columnNumber: 29
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 1791,
+                                        lineNumber: 1896,
                                         columnNumber: 25
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5652,14 +5854,14 @@ function PDSOnboardPage() {
                                                         className: "w-3.5 h-3.5"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1834,
+                                                        lineNumber: 1939,
                                                         columnNumber: 45
                                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                         className: "text-xs font-semibold",
                                                         children: i + 1
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1836,
+                                                        lineNumber: 1941,
                                                         columnNumber: 45
                                                     }, this),
                                                     isActive && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -5667,44 +5869,52 @@ function PDSOnboardPage() {
                                                         children: step.label
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                        lineNumber: 1841,
+                                                        lineNumber: 1946,
                                                         columnNumber: 45
                                                     }, this)
                                                 ]
                                             }, step.key, true, {
                                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                                lineNumber: 1820,
+                                                lineNumber: 1925,
                                                 columnNumber: 37
                                             }, this);
                                         })
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                        lineNumber: 1815,
+                                        lineNumber: 1920,
                                         columnNumber: 25
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                lineNumber: 1789,
+                                lineNumber: 1894,
                                 columnNumber: 21
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1780,
+                        lineNumber: 1885,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         children: stepContent[STEPS[currentStep].key]()
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                        lineNumber: 1853,
+                        lineNumber: 1958,
                         columnNumber: 17
+                    }, this),
+                    (submitError || submitSuccess) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: `rounded-2xl border px-4 py-3 text-sm ${submitError ? "border-red-200 bg-red-50 text-red-700" : "border-green-200 bg-green-50 text-green-700"}`,
+                        children: submitError || submitSuccess
+                    }, void 0, false, {
+                        fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
+                        lineNumber: 1961,
+                        columnNumber: 21
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                lineNumber: 1767,
+                lineNumber: 1872,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5722,7 +5932,7 @@ function PDSOnboardPage() {
                                     className: "w-4 h-4"
                                 }, void 0, false, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 1865,
+                                    lineNumber: 1982,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -5730,13 +5940,13 @@ function PDSOnboardPage() {
                                     children: "Previous"
                                 }, void 0, false, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 1866,
+                                    lineNumber: 1983,
                                     columnNumber: 25
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                            lineNumber: 1859,
+                            lineNumber: 1976,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -5748,7 +5958,7 @@ function PDSOnboardPage() {
                             ]
                         }, void 0, true, {
                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                            lineNumber: 1869,
+                            lineNumber: 1986,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5757,13 +5967,14 @@ function PDSOnboardPage() {
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                     type: "button",
                                     onClick: handleSaveDraft,
+                                    disabled: isSubmitting,
                                     className: "inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium border border-stone-200 text-stone-600 rounded-xl hover:bg-stone-50 transition-all",
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$save$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Save$3e$__["Save"], {
                                             className: "w-4 h-4"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 1879,
+                                            lineNumber: 1997,
                                             columnNumber: 29
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -5771,32 +5982,33 @@ function PDSOnboardPage() {
                                             children: "Save Draft"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 1880,
+                                            lineNumber: 1998,
                                             columnNumber: 29
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 1874,
+                                    lineNumber: 1991,
                                     columnNumber: 25
                                 }, this),
                                 currentStep === STEPS.length - 1 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                     type: "button",
                                     onClick: handleSubmit,
-                                    className: "inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold bg-green-700 text-white rounded-xl hover:bg-green-800 active:scale-[0.98] shadow-sm transition-all",
+                                    disabled: isSubmitting,
+                                    className: "inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold bg-green-700 text-white rounded-xl hover:bg-green-800 active:scale-[0.98] shadow-sm transition-all disabled:opacity-60 disabled:cursor-not-allowed",
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$send$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Send$3e$__["Send"], {
                                             className: "w-4 h-4"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 1889,
+                                            lineNumber: 2008,
                                             columnNumber: 33
                                         }, this),
-                                        "Submit PDS"
+                                        isSubmitting ? "Submitting..." : "Submit PDS"
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 1884,
+                                    lineNumber: 2002,
                                     columnNumber: 29
                                 }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                     type: "button",
@@ -5808,36 +6020,36 @@ function PDSOnboardPage() {
                                             className: "w-4 h-4"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                            lineNumber: 1899,
+                                            lineNumber: 2018,
                                             columnNumber: 33
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                                    lineNumber: 1893,
+                                    lineNumber: 2012,
                                     columnNumber: 29
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                            lineNumber: 1873,
+                            lineNumber: 1990,
                             columnNumber: 21
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                    lineNumber: 1858,
+                    lineNumber: 1975,
                     columnNumber: 17
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                lineNumber: 1857,
+                lineNumber: 1974,
                 columnNumber: 13
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-        lineNumber: 1766,
+        lineNumber: 1871,
         columnNumber: 9
     }, this);
 }
@@ -5849,7 +6061,7 @@ function PDSOnboardPage() {
                 children: label
             }, void 0, false, {
                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                lineNumber: 1914,
+                lineNumber: 2033,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("dd", {
@@ -5857,13 +6069,13 @@ function PDSOnboardPage() {
                 children: value || "—"
             }, void 0, false, {
                 fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-                lineNumber: 1915,
+                lineNumber: 2034,
                 columnNumber: 13
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/frontend/src/app/employees/onboard/page.tsx",
-        lineNumber: 1913,
+        lineNumber: 2032,
         columnNumber: 9
     }, this);
 }

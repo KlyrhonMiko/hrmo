@@ -17,6 +17,26 @@ from models.personal_background import (
 from services.base import BaseService
 
 
+async def _get_basic_information_id_by_employee_no(
+    session: AsyncSession,
+    employee_no: str,
+) -> Optional[str]:
+    """Resolve basic information ID from employee number without lazy-loading relationships."""
+    stmt = (
+        select(BasicInformation.id)
+        .join(Employee, BasicInformation.employee_id == Employee.id)
+        .where(
+            and_(
+                Employee.employee_no == employee_no,
+                Employee.is_deleted == False,
+                BasicInformation.is_deleted == False,
+            )
+        )
+    )
+    result = await session.execute(stmt)
+    return result.scalar_one_or_none()
+
+
 class FamilyDetailService(BaseService[FamilyDetail]):
     """Service for managing family details."""
 
@@ -25,19 +45,7 @@ class FamilyDetailService(BaseService[FamilyDetail]):
 
     async def _get_basic_information_id(self, employee_no: str) -> Optional[str]:
         """Helper to get basic_information_id from employee_no."""
-        stmt = select(Employee).where(
-            and_(
-                Employee.employee_no == employee_no,
-                Employee.is_deleted == False,
-            )
-        )
-        result = await self.session.execute(stmt)
-        employee = result.scalar_one_or_none()
-
-        if not employee or not employee.basic_information:
-            return None
-
-        return employee.basic_information.id
+        return await _get_basic_information_id_by_employee_no(self.session, employee_no)
 
     async def get_by_employee_no(self, employee_no: str) -> list[FamilyDetail]:
         """Get all family details by employee number."""
@@ -70,19 +78,7 @@ class EducationalBackgroundService(BaseService[EducationalBackground]):
 
     async def _get_basic_information_id(self, employee_no: str) -> Optional[str]:
         """Helper to get basic_information_id from employee_no."""
-        stmt = select(Employee).where(
-            and_(
-                Employee.employee_no == employee_no,
-                Employee.is_deleted == False,
-            )
-        )
-        result = await self.session.execute(stmt)
-        employee = result.scalar_one_or_none()
-
-        if not employee or not employee.basic_information:
-            return None
-
-        return employee.basic_information.id
+        return await _get_basic_information_id_by_employee_no(self.session, employee_no)
 
     async def get_by_employee_no(self, employee_no: str) -> list[EducationalBackground]:
         """Get all educational backgrounds by employee number."""
@@ -115,19 +111,7 @@ class OtherInformationService(BaseService[OtherInformation]):
 
     async def _get_basic_information_id(self, employee_no: str) -> Optional[str]:
         """Helper to get basic_information_id from employee_no."""
-        stmt = select(Employee).where(
-            and_(
-                Employee.employee_no == employee_no,
-                Employee.is_deleted == False,
-            )
-        )
-        result = await self.session.execute(stmt)
-        employee = result.scalar_one_or_none()
-
-        if not employee or not employee.basic_information:
-            return None
-
-        return employee.basic_information.id
+        return await _get_basic_information_id_by_employee_no(self.session, employee_no)
 
     async def get_by_employee_no(self, employee_no: str) -> list[OtherInformation]:
         """Get all other information by employee number."""
@@ -175,19 +159,7 @@ class ReferenceRecordService(BaseService[ReferenceRecord]):
 
     async def _get_basic_information_id(self, employee_no: str) -> Optional[str]:
         """Helper to get basic_information_id from employee_no."""
-        stmt = select(Employee).where(
-            and_(
-                Employee.employee_no == employee_no,
-                Employee.is_deleted == False,
-            )
-        )
-        result = await self.session.execute(stmt)
-        employee = result.scalar_one_or_none()
-
-        if not employee or not employee.basic_information:
-            return None
-
-        return employee.basic_information.id
+        return await _get_basic_information_id_by_employee_no(self.session, employee_no)
 
     async def get_by_employee_no(self, employee_no: str) -> list[ReferenceRecord]:
         """Get all reference records by employee number."""
@@ -220,19 +192,7 @@ class PrimaryGovernmentIdService(BaseService[PrimaryGovernmentId]):
 
     async def _get_basic_information_id(self, employee_no: str) -> Optional[str]:
         """Helper to get basic_information_id from employee_no."""
-        stmt = select(Employee).where(
-            and_(
-                Employee.employee_no == employee_no,
-                Employee.is_deleted == False,
-            )
-        )
-        result = await self.session.execute(stmt)
-        employee = result.scalar_one_or_none()
-
-        if not employee or not employee.basic_information:
-            return None
-
-        return employee.basic_information.id
+        return await _get_basic_information_id_by_employee_no(self.session, employee_no)
 
     async def get_by_employee_no(self, employee_no: str) -> Optional[PrimaryGovernmentId]:
         """Get primary government ID by employee number."""
@@ -265,19 +225,7 @@ class RecordCompletionService(BaseService[RecordCompletion]):
 
     async def _get_basic_information_id(self, employee_no: str) -> Optional[str]:
         """Helper to get basic_information_id from employee_no."""
-        stmt = select(Employee).where(
-            and_(
-                Employee.employee_no == employee_no,
-                Employee.is_deleted == False,
-            )
-        )
-        result = await self.session.execute(stmt)
-        employee = result.scalar_one_or_none()
-
-        if not employee or not employee.basic_information:
-            return None
-
-        return employee.basic_information.id
+        return await _get_basic_information_id_by_employee_no(self.session, employee_no)
 
     async def get_by_employee_no(self, employee_no: str) -> Optional[RecordCompletion]:
         """Get record completion by employee number."""

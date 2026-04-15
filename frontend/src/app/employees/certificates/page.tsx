@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { RoleLayout } from "@/components/layout/RoleLayout";
-import type { CertificateRecord, DocumentMOV } from "@/types";
+import type { CertificateRecord } from "@/types";
 import {
     ScanLine,
     Upload,
@@ -209,7 +209,10 @@ const STATUS_ICONS: Record<CertificateRecord["status"], React.ReactNode> = {
 };
 
 export default function CertificatesPage() {
-    const [certificates, setCertificates] = useState<CertificateRecord[]>(MOCK_CERTIFICATES);
+    const [certificates, setCertificates] = useState<CertificateRecord[]>([]);
+    const [employeeOptions, setEmployeeOptions] = useState<Array<{ employeeNo: string; name: string }>>([]);
+    const [loading, setLoading] = useState(true);
+    const [loadError, setLoadError] = useState<string | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [filterCategory, setFilterCategory] = useState<string>("All");
     const [filterStatus, setFilterStatus] = useState<string>("All");
@@ -227,6 +230,38 @@ export default function CertificatesPage() {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [uploading, setUploading] = useState(false);
     const [showUploadForm, setShowUploadForm] = useState(false);
+
+    const loadCertificates = useCallback(async () => {
+        setLoading(true);
+        setLoadError(null);
+
+        try {
+            const response = await fetch("/api/certificates", { cache: "no-store" });
+            const payload = (await response.json()) as {
+                success?: boolean;
+                message?: string;
+                data?: {
+                    employees?: Array<{ employeeNo: string; name: string }>;
+                    certificates?: CertificateRecord[];
+                };
+            };
+
+            if (!response.ok || !payload.success) {
+                throw new Error(payload.message || "Failed to load certificates.");
+            }
+
+            setEmployeeOptions(payload.data?.employees || []);
+            setCertificates(payload.data?.certificates || []);
+        } catch (error) {
+            setLoadError(error instanceof Error ? error.message : "Failed to load certificates.");
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        void loadCertificates();
+    }, [loadCertificates]);
 
     const stats = {
         total: certificates.length,
@@ -289,7 +324,7 @@ export default function CertificatesPage() {
         return true;
     };
 
-    const handleUpload = () => {
+    const handleUpload = async () => {
         if (!selectedEmployee || !certNumber || !dateIssued || !selectedFile) {
             alert("Please fill in all required fields and select a file.");
             return;
@@ -297,27 +332,39 @@ export default function CertificatesPage() {
 
         setUploading(true);
 
-        const employee = MOCK_EMPLOYEES.find((e) => e.id === selectedEmployee);
-        const newCert: CertificateRecord = {
-            id: `CERT-${String(certificates.length + 1).padStart(3, "0")}`,
-            employeeId: selectedEmployee,
-            employeeName: employee?.name ?? "",
-            title: `${documentType}${description ? ` - ${description}` : ""}`,
-            issuingBody,
-            dateIssued,
-            expiryDate: expiryDate || undefined,
-            certificateNumber: certNumber,
-            category: CATEGORY_MAP[documentType] ?? "Other",
-            fileUrl: `/files/${selectedFile.name}`,
-            fileName: selectedFile.name,
-            status: "Pending Verification",
-        };
+        try {
+            const uploadPayload = new FormData();
+            uploadPayload.set("employeeNo", selectedEmployee);
+            uploadPayload.set("certificateType", documentType);
+            uploadPayload.set("issuingBody", issuingBody);
+            uploadPayload.set("certificateNo", certNumber);
+            uploadPayload.set("dateIssued", dateIssued);
+            uploadPayload.set("expiryDate", expiryDate);
+            uploadPayload.set("description", description);
+            uploadPayload.set("file", selectedFile, selectedFile.name);
 
-        setTimeout(() => {
-            setCertificates((prev) => [newCert, ...prev]);
+            const response = await fetch("/api/certificates", {
+                method: "POST",
+                body: uploadPayload,
+            });
+
+            const payload = (await response.json()) as {
+                success?: boolean;
+                message?: string;
+                data?: CertificateRecord;
+            };
+
+            if (!response.ok || !payload.success || !payload.data) {
+                throw new Error(payload.message || "Failed to upload certificate.");
+            }
+
+            setCertificates((prev) => [payload.data as CertificateRecord, ...prev]);
             resetForm();
+        } catch (error) {
+            alert(error instanceof Error ? error.message : "Failed to upload certificate.");
+        } finally {
             setUploading(false);
-        }, 800);
+        }
     };
 
     const resetForm = () => {
@@ -343,7 +390,12 @@ export default function CertificatesPage() {
     };
 
     const formatDate = (dateStr: string) => {
-        return new Date(dateStr).toLocaleDateString("en-US", {
+        const date = new Date(dateStr);
+        if (Number.isNaN(date.getTime())) {
+            return "—";
+        }
+
+        return date.toLocaleDateString("en-US", {
             year: "numeric",
             month: "short",
             day: "numeric",
@@ -436,8 +488,8 @@ export default function CertificatesPage() {
                                     onChange={(e) => setSelectedEmployee(e.target.value)}
                                 >
                                     <option value="">Select employee...</option>
-                                    {MOCK_EMPLOYEES.map((emp) => (
-                                        <option key={emp.id} value={emp.id}>
+                                    {employeeOptions.map((emp) => (
+                                        <option key={emp.employeeNo} value={emp.employeeNo}>
                                             {emp.name}
                                         </option>
                                     ))}
@@ -664,8 +716,8 @@ export default function CertificatesPage() {
                                         onChange={(e) => setFilterEmployee(e.target.value)}
                                     >
                                         <option value="All">All Employees</option>
-                                        {MOCK_EMPLOYEES.map((emp) => (
-                                            <option key={emp.id} value={emp.id}>
+                                        {employeeOptions.map((emp) => (
+                                            <option key={emp.employeeNo} value={emp.employeeNo}>
                                                 {emp.name}
                                             </option>
                                         ))}
@@ -705,7 +757,25 @@ export default function CertificatesPage() {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-stone-100">
-                                {filteredCertificates.length === 0 ? (
+                                {loading ? (
+                                    <tr>
+                                        <td
+                                            colSpan={7}
+                                            className="text-center py-12 text-stone-400 text-sm"
+                                        >
+                                            Loading certificates...
+                                        </td>
+                                    </tr>
+                                ) : loadError ? (
+                                    <tr>
+                                        <td
+                                            colSpan={7}
+                                            className="text-center py-12 text-red-500 text-sm"
+                                        >
+                                            {loadError}
+                                        </td>
+                                    </tr>
+                                ) : filteredCertificates.length === 0 ? (
                                     <tr>
                                         <td
                                             colSpan={7}

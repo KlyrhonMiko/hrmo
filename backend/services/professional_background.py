@@ -15,6 +15,26 @@ from models.professional_background import (
 from services.base import BaseService
 
 
+async def _get_basic_information_id_by_employee_no(
+    session: AsyncSession,
+    employee_no: str,
+) -> Optional[str]:
+    """Resolve basic information ID from employee number without lazy-loading relationships."""
+    stmt = (
+        select(BasicInformation.id)
+        .join(Employee, BasicInformation.employee_id == Employee.id)
+        .where(
+            and_(
+                Employee.employee_no == employee_no,
+                Employee.is_deleted == False,
+                BasicInformation.is_deleted == False,
+            )
+        )
+    )
+    result = await session.execute(stmt)
+    return result.scalar_one_or_none()
+
+
 class WorkExperienceService(BaseService[WorkExperienceRecord]):
     """Service for managing work experience records."""
 
@@ -23,19 +43,7 @@ class WorkExperienceService(BaseService[WorkExperienceRecord]):
 
     async def _get_basic_information_id(self, employee_no: str) -> Optional[str]:
         """Helper to get basic_information_id from employee_no."""
-        stmt = select(Employee).where(
-            and_(
-                Employee.employee_no == employee_no,
-                Employee.is_deleted == False,
-            )
-        )
-        result = await self.session.execute(stmt)
-        employee = result.scalar_one_or_none()
-
-        if not employee or not employee.basic_information:
-            return None
-
-        return employee.basic_information.id
+        return await _get_basic_information_id_by_employee_no(self.session, employee_no)
 
     async def get_by_employee_no(self, employee_no: str) -> list[WorkExperienceRecord]:
         """Get all work experience records by employee number."""
@@ -85,19 +93,7 @@ class VoluntaryWorkService(BaseService[VoluntaryRecord]):
 
     async def _get_basic_information_id(self, employee_no: str) -> Optional[str]:
         """Helper to get basic_information_id from employee_no."""
-        stmt = select(Employee).where(
-            and_(
-                Employee.employee_no == employee_no,
-                Employee.is_deleted == False,
-            )
-        )
-        result = await self.session.execute(stmt)
-        employee = result.scalar_one_or_none()
-
-        if not employee or not employee.basic_information:
-            return None
-
-        return employee.basic_information.id
+        return await _get_basic_information_id_by_employee_no(self.session, employee_no)
 
     async def get_by_employee_no(self, employee_no: str) -> list[VoluntaryRecord]:
         """Get all voluntary work records by employee number."""
@@ -131,19 +127,7 @@ class TrainingService(BaseService[TrainingRecord]):
 
     async def _get_basic_information_id(self, employee_no: str) -> Optional[str]:
         """Helper to get basic_information_id from employee_no."""
-        stmt = select(Employee).where(
-            and_(
-                Employee.employee_no == employee_no,
-                Employee.is_deleted == False,
-            )
-        )
-        result = await self.session.execute(stmt)
-        employee = result.scalar_one_or_none()
-
-        if not employee or not employee.basic_information:
-            return None
-
-        return employee.basic_information.id
+        return await _get_basic_information_id_by_employee_no(self.session, employee_no)
 
     async def get_by_employee_no(self, employee_no: str) -> list[TrainingRecord]:
         """Get all training records by employee number."""
@@ -193,19 +177,7 @@ class CivilServiceEligibilityService(BaseService[CivilServiceEligibility]):
 
     async def _get_basic_information_id(self, employee_no: str) -> Optional[str]:
         """Helper to get basic_information_id from employee_no."""
-        stmt = select(Employee).where(
-            and_(
-                Employee.employee_no == employee_no,
-                Employee.is_deleted == False,
-            )
-        )
-        result = await self.session.execute(stmt)
-        employee = result.scalar_one_or_none()
-
-        if not employee or not employee.basic_information:
-            return None
-
-        return employee.basic_information.id
+        return await _get_basic_information_id_by_employee_no(self.session, employee_no)
 
     async def get_by_employee_no(self, employee_no: str) -> list[CivilServiceEligibility]:
         """Get all civil service eligibility records by employee number."""

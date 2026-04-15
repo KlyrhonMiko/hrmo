@@ -1,6 +1,6 @@
 """Schemas for Employee and Certificate entities."""
 from datetime import date, datetime
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import BaseModel, Field
 
@@ -45,6 +45,13 @@ class EmployeeResponse(EmployeeBase):
 
     class Config:
         from_attributes = True
+
+
+class EmployeeAtomicOnboardRequest(BaseModel):
+    """Payload for atomic employee onboarding submission."""
+
+    formData: dict[str, Any]
+    employeeMeta: dict[str, Any] = Field(default_factory=dict)
 
 
 # ==================== Certificate Record Schemas ====================

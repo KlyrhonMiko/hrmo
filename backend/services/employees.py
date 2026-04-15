@@ -3,8 +3,10 @@ from typing import Optional
 
 from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
 from models.employees import Employee, CertificateRecord
+from models.personal_information import BasicInformation, ContactInformation
 from services.base import BaseService
 
 
@@ -26,6 +28,31 @@ class EmployeeService(BaseService[Employee]):
         employee = await self.get_by_employee_no(employee_no)
         return employee.id if employee else None
 
+    async def get_basic_information_id_by_employee_no(self, employee_no: str) -> Optional[str]:
+        """Get basic information ID by employee number using an explicit query.
+
+        This avoids async lazy relationship loading in request handlers.
+
+        Args:
+            employee_no: The employee number/ID.
+
+        Returns:
+            The basic information ID if found, None otherwise.
+        """
+        stmt = (
+            select(BasicInformation.id)
+            .join(Employee, BasicInformation.employee_id == Employee.id)
+            .where(
+                and_(
+                    Employee.employee_no == employee_no,
+                    Employee.is_deleted == False,
+                    BasicInformation.is_deleted == False,
+                )
+            )
+        )
+        result = await self.session.execute(stmt)
+        return result.scalar_one_or_none()
+
     async def get_by_employee_no(self, employee_no: str) -> Optional[Employee]:
         """Get employee by employee number.
         
@@ -35,10 +62,14 @@ class EmployeeService(BaseService[Employee]):
         Returns:
             The employee if found and not deleted, None otherwise.
         """
-        stmt = select(Employee).where(
-            and_(
-                Employee.employee_no == employee_no,
-                Employee.is_deleted == False,
+        stmt = (
+            select(Employee)
+            .options(selectinload(Employee.basic_information))
+            .where(
+                and_(
+                    Employee.employee_no == employee_no,
+                    Employee.is_deleted == False,
+                )
             )
         )
         result = await self.session.execute(stmt)
@@ -59,7 +90,7 @@ class EmployeeService(BaseService[Employee]):
             select(Employee)
             .where(
                 and_(
-                    Employee.office == office,
+                    Employee.office_department == office,
                     Employee.is_deleted == False,
                 )
             )
@@ -84,7 +115,7 @@ class EmployeeService(BaseService[Employee]):
             select(Employee)
             .where(
                 and_(
-                    Employee.status == status,
+                    Employee.employment_status == status,
                     Employee.is_deleted == False,
                 )
             )
@@ -93,6 +124,73 @@ class EmployeeService(BaseService[Employee]):
         )
         result = await self.session.execute(stmt)
         return result.scalars().all()
+
+    async def get_all_with_details(self, skip: int = 0, limit: int = 100) -> list[dict]:
+        """Get employees with basic and contact details in a single query."""
+        stmt = (
+            select(Employee, BasicInformation, ContactInformation)
+            .outerjoin(
+                BasicInformation,
+                and_(
+                    BasicInformation.employee_id == Employee.id,
+                    BasicInformation.is_deleted == False,
+                ),
+            )
+            .outerjoin(
+                ContactInformation,
+                and_(
+                    ContactInformation.basic_information_id == BasicInformation.id,
+                    ContactInformation.is_deleted == False,
+                ),
+            )
+            .where(Employee.is_deleted == False)
+            .offset(skip)
+            .limit(limit)
+        )
+        result = await self.session.execute(stmt)
+
+        records: list[dict] = []
+        for employee, basic_info, contact_info in result.all():
+            full_name = None
+            if basic_info:
+                middle = f" {basic_info.middle_name}" if basic_info.middle_name else ""
+                full_name = f"{basic_info.surname}, {basic_info.first_name}{middle}".strip()
+
+            records.append(
+                {
+                    "id": employee.id,
+                    "employee_no": employee.employee_no,
+                    "office_department": employee.office_department,
+                    "position_title": employee.position_title,
+                    "employment_status": employee.employment_status,
+                    "date_hired": employee.date_hired,
+                    "created_at": employee.created_at,
+                    "updated_at": employee.updated_at,
+                    "basic_information": (
+                        {
+                            "id": basic_info.id,
+                            "surname": basic_info.surname,
+                            "first_name": basic_info.first_name,
+                            "middle_name": basic_info.middle_name,
+                            "name_extension": basic_info.name_extension,
+                            "full_name": full_name,
+                        }
+                        if basic_info
+                        else None
+                    ),
+                    "contact_information": (
+                        {
+                            "telephone_no": contact_info.telephone_no,
+                            "mobile_no": contact_info.mobile_no,
+                            "email_address": contact_info.email_address,
+                        }
+                        if contact_info
+                        else None
+                    ),
+                }
+            )
+
+        return records
 
 
 class CertificateRecordService(BaseService[CertificateRecord]):

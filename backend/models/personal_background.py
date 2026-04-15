@@ -17,7 +17,7 @@ class FamilyDetail(BaseModel, table=True):
     first_name: str = Field(max_length=100, description="Family member first name")
     middle_name: Optional[str] = Field(default=None, max_length=100, description="Family member middle name")
     name_extension: Optional[str] = Field(default=None, max_length=100, description="Family member name suffix")
-    date_of_birth: date = Field(description="Family member date of birth")
+    date_of_birth: Optional[date] = Field(default=None, description="Family member date of birth")
     occupation: Optional[str] = Field(default=None, max_length=100, description="Family member occupation")
     employee_business_name: Optional[str] = Field(default=None, max_length=100, description="Employer or business name")
     business_address: Optional[str] = Field(default=None, max_length=100, description="Business address")

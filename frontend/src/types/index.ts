@@ -67,6 +67,10 @@ export interface PDSFamilyBackground {
 
 export interface PDSChild {
     fullName: string;
+    surname?: string;
+    firstName?: string;
+    middleName?: string;
+    nameExtension?: string;
     dateOfBirth: string;
 }
 

@@ -33,7 +33,6 @@ import {
     ClipboardList,
     Copy,
     Heart,
-    HelpCircle,
     FileCheck,
     CreditCard,
 } from "lucide-react";
@@ -93,7 +92,14 @@ const emptyAddress = (): PDSAddress => ({
     zipCode: "",
 });
 
-const emptyChild = (): PDSChild => ({ fullName: "", dateOfBirth: "" });
+const emptyChild = (): PDSChild => ({
+    fullName: "",
+    surname: "",
+    firstName: "",
+    middleName: "",
+    nameExtension: "",
+    dateOfBirth: "",
+});
 
 const emptyEducation = (level: PDSEducation["level"] = "Elementary"): PDSEducation => ({
     level,
@@ -362,6 +368,14 @@ export default function PDSOnboardPage() {
     const [currentStep, setCurrentStep] = useState(0);
     const [formData, setFormData] = useState<FullPDS>(initialFormData);
     const [sameAsResidential, setSameAsResidential] = useState(false);
+    const [employeeMeta, setEmployeeMeta] = useState({
+        employeeNo: "",
+        positionTitle: "",
+        dateHired: "",
+    });
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
+    const [submitSuccess, setSubmitSuccess] = useState<string | null>(null);
 
     /* ── updaters ──────────────────────────────────────── */
 
@@ -401,7 +415,17 @@ export default function PDSOnboardPage() {
     }
     function updateChild(i: number, key: keyof PDSChild, val: string) {
         const arr = [...formData.familyBackground.children];
-        arr[i] = { ...arr[i], [key]: val };
+        const updatedChild = { ...arr[i], [key]: val };
+        const surname = (updatedChild.surname || "").trim();
+        const firstName = (updatedChild.firstName || "").trim();
+        const middleName = (updatedChild.middleName || "").trim();
+        const extension = (updatedChild.nameExtension || "").trim();
+        const firstAndMiddle = [firstName, middleName].filter(Boolean).join(" ").trim();
+        updatedChild.fullName = [surname ? `${surname},` : "", firstAndMiddle, extension]
+            .filter(Boolean)
+            .join(" ")
+            .trim();
+        arr[i] = updatedChild;
         updateFamily("children", arr);
     }
 
@@ -571,11 +595,50 @@ export default function PDSOnboardPage() {
     const goBack = () => canGoBack && setCurrentStep((s) => s - 1);
 
     const handleSaveDraft = () => {
-        alert("Draft saved successfully!");
+        try {
+            localStorage.setItem(
+                "onboard-pds-draft",
+                JSON.stringify({ formData, employeeMeta })
+            );
+            alert("Draft saved successfully!");
+        } catch {
+            alert("Unable to save draft in this browser session.");
+        }
     };
 
-    const handleSubmit = () => {
-        alert("PDS submitted successfully!");
+    const handleSubmit = async () => {
+        setSubmitError(null);
+        setSubmitSuccess(null);
+        setIsSubmitting(true);
+
+        try {
+            const response = await fetch("/api/employees/onboard", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ formData, employeeMeta }),
+            });
+
+            const payload = (await response.json()) as {
+                success?: boolean;
+                message?: string;
+                stage?: string;
+            };
+
+            if (!response.ok || !payload.success) {
+                const errorMessage = payload.message || "Failed to submit PDS.";
+                const stageSuffix = payload.stage ? ` (stage: ${payload.stage})` : "";
+                throw new Error(`${errorMessage}${stageSuffix}`);
+            }
+
+            setSubmitSuccess(payload.message || "PDS submitted successfully!");
+            localStorage.removeItem("onboard-pds-draft");
+        } catch (error) {
+            setSubmitError(error instanceof Error ? error.message : "Failed to submit PDS.");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     /* ══════════════════════════════════════════════════════
@@ -737,7 +800,37 @@ export default function PDSOnboardPage() {
 
                 {/* Office & Employment */}
                 <SectionCard title="Office / Department & Employment">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                        <div>
+                            <Label required>Employee No.</Label>
+                            <Input
+                                value={employeeMeta.employeeNo}
+                                onChange={(v) =>
+                                    setEmployeeMeta((prev) => ({ ...prev, employeeNo: v }))
+                                }
+                                placeholder={formData.personalInfo.agencyEmployeeNo || "e.g. EMP-2026-0001"}
+                            />
+                        </div>
+                        <div>
+                            <Label required>Current Position Title</Label>
+                            <Input
+                                value={employeeMeta.positionTitle}
+                                onChange={(v) =>
+                                    setEmployeeMeta((prev) => ({ ...prev, positionTitle: v }))
+                                }
+                                placeholder="e.g. Instructor I"
+                            />
+                        </div>
+                        <div>
+                            <Label required>Date Hired</Label>
+                            <Input
+                                type="date"
+                                value={employeeMeta.dateHired}
+                                onChange={(v) =>
+                                    setEmployeeMeta((prev) => ({ ...prev, dateHired: v }))
+                                }
+                            />
+                        </div>
                         <div>
                             <Label required>Office / Department</Label>
                             <Select
@@ -907,23 +1000,35 @@ export default function PDSOnboardPage() {
                     )}
                     <div className="space-y-3">
                         {f.children.map((child, i) => (
-                            <div key={i} className="flex items-end gap-3 p-3 bg-stone-50/80 rounded-xl border border-stone-100">
-                                <div className="flex-1">
-                                    <Label>Full Name</Label>
-                                    <Input value={child.fullName} onChange={(v) => updateChild(i, "fullName", v)} />
+                            <div key={i} className="p-3 bg-stone-50/80 rounded-xl border border-stone-100">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-end">
+                                    <div>
+                                        <Label>Surname</Label>
+                                        <Input value={child.surname || ""} onChange={(v) => updateChild(i, "surname", v)} />
+                                    </div>
+                                    <div>
+                                        <Label>First Name</Label>
+                                        <Input value={child.firstName || ""} onChange={(v) => updateChild(i, "firstName", v)} />
+                                    </div>
+                                    <div>
+                                        <Label>Middle Name</Label>
+                                        <Input value={child.middleName || ""} onChange={(v) => updateChild(i, "middleName", v)} />
+                                    </div>
+                                    <div>
+                                        <Label>Date of Birth</Label>
+                                        <Input type="date" value={child.dateOfBirth} onChange={(v) => updateChild(i, "dateOfBirth", v)} />
+                                    </div>
+                                    <div className="flex justify-end">
+                                        <button
+                                            type="button"
+                                            onClick={() => removeChild(i)}
+                                            className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                                            title="Remove"
+                                        >
+                                            <Trash2 className="w-4 h-4" />
+                                        </button>
+                                    </div>
                                 </div>
-                                <div className="w-44">
-                                    <Label>Date of Birth</Label>
-                                    <Input type="date" value={child.dateOfBirth} onChange={(v) => updateChild(i, "dateOfBirth", v)} />
-                                </div>
-                                <button
-                                    type="button"
-                                    onClick={() => removeChild(i)}
-                                    className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors mb-0.5"
-                                    title="Remove"
-                                >
-                                    <Trash2 className="w-4 h-4" />
-                                </button>
                             </div>
                         ))}
                     </div>
@@ -1851,6 +1956,18 @@ export default function PDSOnboardPage() {
 
                 {/* ── Step Content ─────────────────────── */}
                 <div>{stepContent[STEPS[currentStep].key]()}</div>
+
+                {(submitError || submitSuccess) && (
+                    <div
+                        className={`rounded-2xl border px-4 py-3 text-sm ${
+                            submitError
+                                ? "border-red-200 bg-red-50 text-red-700"
+                                : "border-green-200 bg-green-50 text-green-700"
+                        }`}
+                    >
+                        {submitError || submitSuccess}
+                    </div>
+                )}
             </div>
 
             {/* ── Sticky Bottom Navigation ──────────── */}
@@ -1874,6 +1991,7 @@ export default function PDSOnboardPage() {
                         <button
                             type="button"
                             onClick={handleSaveDraft}
+                            disabled={isSubmitting}
                             className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium border border-stone-200 text-stone-600 rounded-xl hover:bg-stone-50 transition-all"
                         >
                             <Save className="w-4 h-4" />
@@ -1884,10 +2002,11 @@ export default function PDSOnboardPage() {
                             <button
                                 type="button"
                                 onClick={handleSubmit}
-                                className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold bg-green-700 text-white rounded-xl hover:bg-green-800 active:scale-[0.98] shadow-sm transition-all"
+                                disabled={isSubmitting}
+                                className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold bg-green-700 text-white rounded-xl hover:bg-green-800 active:scale-[0.98] shadow-sm transition-all disabled:opacity-60 disabled:cursor-not-allowed"
                             >
                                 <Send className="w-4 h-4" />
-                                Submit PDS
+                                {isSubmitting ? "Submitting..." : "Submit PDS"}
                             </button>
                         ) : (
                             <button

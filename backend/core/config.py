@@ -38,7 +38,7 @@ class Settings(BaseSettings):
     # Database (sync PostgreSQL URL - will be converted to async)
     database_url: str = "postgresql://user:password@localhost/hrmo"
     database_echo: bool = False
-    database_pool_size: int = 20
+    database_pool_size: int = 4
     database_max_overflow: int = 0
     database_pool_pre_ping: bool = True
 

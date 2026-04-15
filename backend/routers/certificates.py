@@ -74,6 +74,24 @@ async def create_certificate(
     )
 
 
+@router.get("/all", response_model=APIResponse)
+async def list_all_certificates(
+    request: Request,
+    skip: int = 0,
+    limit: int = 100,
+    session: AsyncSession = Depends(get_db),
+):
+    """Get all certificate records."""
+    service = CertificateRecordService(session)
+    records = await service.get_all(skip=skip, limit=limit)
+
+    return create_response(
+        path=request.url.path,
+        data=[record.model_dump() for record in records],
+        success=True,
+    )
+
+
 @router.get("/{employee_no}", response_model=APIResponse)
 async def get_certificates(
     request: Request,

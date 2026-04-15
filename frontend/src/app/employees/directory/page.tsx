@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { RoleLayout } from "@/components/layout/RoleLayout";
 import type { Employee201, DocumentMOV, CertificateRecord, TrainingRecord } from "@/types";
 import {
@@ -226,12 +226,55 @@ export default function EmployeeDirectoryPage() {
     const [officeFilter, setOfficeFilter] = useState("");
     const [empStatusFilter, setEmpStatusFilter] = useState("");
     const [activeFilter, setActiveFilter] = useState("");
+    const [employees, setEmployees] = useState<Employee201[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [loadError, setLoadError] = useState<string | null>(null);
     const [expandedId, setExpandedId] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<DetailTab>("personal");
     const [showFilters, setShowFilters] = useState(false);
 
+    useEffect(() => {
+        let mounted = true;
+
+        async function loadDirectory() {
+            setLoading(true);
+            setLoadError(null);
+
+            try {
+                const response = await fetch("/api/employees/directory", { cache: "no-store" });
+                const payload = (await response.json()) as {
+                    success?: boolean;
+                    message?: string;
+                    data?: Employee201[];
+                };
+
+                if (!response.ok || !payload.success) {
+                    throw new Error(payload.message || "Failed to load employee directory.");
+                }
+
+                if (mounted) {
+                    setEmployees(payload.data || []);
+                }
+            } catch (error) {
+                if (mounted) {
+                    setLoadError(error instanceof Error ? error.message : "Failed to load employee directory.");
+                }
+            } finally {
+                if (mounted) {
+                    setLoading(false);
+                }
+            }
+        }
+
+        void loadDirectory();
+
+        return () => {
+            mounted = false;
+        };
+    }, []);
+
     const filtered = useMemo(() => {
-        return MOCK_EMPLOYEES.filter((e) => {
+        return employees.filter((e) => {
             const q = search.toLowerCase();
             const matchesSearch = !q || e.fullName.toLowerCase().includes(q) || e.employeeNo.toLowerCase().includes(q);
             const matchesOffice = !officeFilter || e.office === officeFilter;
@@ -239,14 +282,14 @@ export default function EmployeeDirectoryPage() {
             const matchesActive = !activeFilter || (activeFilter === "Active" ? e.isActive : !e.isActive);
             return matchesSearch && matchesOffice && matchesEmpStatus && matchesActive;
         });
-    }, [search, officeFilter, empStatusFilter, activeFilter]);
+    }, [employees, search, officeFilter, empStatusFilter, activeFilter]);
 
     const stats = useMemo(() => ({
-        total: MOCK_EMPLOYEES.length,
-        teaching: MOCK_EMPLOYEES.filter((e) => e.employmentStatus === "Teaching").length,
-        nonTeaching: MOCK_EMPLOYEES.filter((e) => e.employmentStatus === "Non-Teaching").length,
-        cos: MOCK_EMPLOYEES.filter((e) => e.employmentStatus === "COS").length,
-    }), []);
+        total: employees.length,
+        teaching: employees.filter((e) => e.employmentStatus === "Teaching").length,
+        nonTeaching: employees.filter((e) => e.employmentStatus === "Non-Teaching").length,
+        cos: employees.filter((e) => e.employmentStatus === "COS").length,
+    }), [employees]);
 
     const handleExpand = (id: string) => {
         if (expandedId === id) {
@@ -379,7 +422,19 @@ export default function EmployeeDirectoryPage() {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-stone-100">
-                                {filtered.length === 0 ? (
+                                {loading ? (
+                                    <tr>
+                                        <td colSpan={9} className="px-4 py-12 text-center text-[13px] text-stone-400">
+                                            Loading employee directory...
+                                        </td>
+                                    </tr>
+                                ) : loadError ? (
+                                    <tr>
+                                        <td colSpan={9} className="px-4 py-12 text-center text-[13px] text-red-500">
+                                            {loadError}
+                                        </td>
+                                    </tr>
+                                ) : filtered.length === 0 ? (
                                     <tr>
                                         <td colSpan={9} className="px-4 py-12 text-center">
                                             <Users className="w-8 h-8 text-stone-300 mx-auto mb-2" />

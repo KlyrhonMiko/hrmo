@@ -24,9 +24,9 @@ async def create_civil_service_eligibility(
 ):
     """Create a civil service eligibility record for an employee."""
     employee_service = EmployeeService(session)
-    employee = await employee_service.get_by_employee_no(employee_no)
+    basic_information_id = await employee_service.get_basic_information_id_by_employee_no(employee_no)
 
-    if not employee or not employee.basic_information:
+    if not basic_information_id:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Employee or basic information not found",
@@ -34,7 +34,7 @@ async def create_civil_service_eligibility(
 
     # Automatically map basic_information_id from employee
     data_dict = data.model_dump()
-    data_dict["basic_information_id"] = employee.basic_information.id
+    data_dict["basic_information_id"] = basic_information_id
 
     record = CivilServiceEligibility(**data_dict)
     session.add(record)
@@ -44,6 +44,24 @@ async def create_civil_service_eligibility(
     return create_response(
         path=request.url.path,
         data=record.model_dump(),
+        success=True,
+    )
+
+
+@router.get("/all", response_model=APIResponse)
+async def list_all_civil_service_eligibility_records(
+    request: Request,
+    skip: int = 0,
+    limit: int = 100,
+    session: AsyncSession = Depends(get_db),
+):
+    """Get all civil service eligibility records."""
+    service = CivilServiceEligibilityService(session)
+    records = await service.get_all(skip=skip, limit=limit)
+
+    return create_response(
+        path=request.url.path,
+        data=[record.model_dump() for record in records],
         success=True,
     )
 
@@ -74,16 +92,16 @@ async def get_eligibilities_by_service(
 ):
     """Get civil service eligibility records by career service type."""
     employee_service = EmployeeService(session)
-    employee = await employee_service.get_by_employee_no(employee_no)
+    basic_information_id = await employee_service.get_basic_information_id_by_employee_no(employee_no)
 
-    if not employee or not employee.basic_information:
+    if not basic_information_id:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Employee or basic information not found",
         )
 
     service = CivilServiceEligibilityService(session)
-    records = await service.get_by_status(employee.basic_information.id, career_service)
+    records = await service.get_by_status(basic_information_id, career_service)
 
     return create_response(
         path=request.url.path,
@@ -111,9 +129,9 @@ async def get_civil_service_eligibility(
 
     # Verify it belongs to employee
     employee_service = EmployeeService(session)
-    employee = await employee_service.get_by_employee_no(employee_no)
+    basic_information_id = await employee_service.get_basic_information_id_by_employee_no(employee_no)
 
-    if not employee or record.basic_information_id != employee.basic_information.id:
+    if not basic_information_id or record.basic_information_id != basic_information_id:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Civil service eligibility not found for this employee",
@@ -146,9 +164,9 @@ async def update_civil_service_eligibility(
 
     # Verify it belongs to employee
     employee_service = EmployeeService(session)
-    employee = await employee_service.get_by_employee_no(employee_no)
+    basic_information_id = await employee_service.get_basic_information_id_by_employee_no(employee_no)
 
-    if not employee or record.basic_information_id != employee.basic_information.id:
+    if not basic_information_id or record.basic_information_id != basic_information_id:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Civil service eligibility not found for this employee",
@@ -187,9 +205,9 @@ async def delete_civil_service_eligibility(
 
     # Verify it belongs to employee
     employee_service = EmployeeService(session)
-    employee = await employee_service.get_by_employee_no(employee_no)
+    basic_information_id = await employee_service.get_basic_information_id_by_employee_no(employee_no)
 
-    if not employee or record.basic_information_id != employee.basic_information_id:
+    if not basic_information_id or record.basic_information_id != basic_information_id:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Civil service eligibility not found for this employee",
@@ -232,6 +250,6 @@ async def restore_civil_service_eligibility(
     restored = await service.get(eligibility_id)
     return create_response(
         path=request.url.path,
-        data=restored.model_dump(),
+        data=restored.model_dump() if restored else None,
         success=True,
     )

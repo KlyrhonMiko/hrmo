@@ -15,7 +15,7 @@ class FamilyDetailBase(BaseModel):
     first_name: str = Field(..., max_length=100)
     middle_name: Optional[str] = Field(None, max_length=100)
     name_extension: Optional[str] = Field(None, max_length=100)
-    date_of_birth: date
+    date_of_birth: Optional[date] = None
     occupation: Optional[str] = Field(None, max_length=100)
     employee_business_name: Optional[str] = Field(None, max_length=100)
     business_address: Optional[str] = Field(None, max_length=100)

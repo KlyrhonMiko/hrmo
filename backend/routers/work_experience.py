@@ -24,9 +24,9 @@ async def create_work_experience(
 ):
     """Create a work experience record for an employee."""
     employee_service = EmployeeService(session)
-    employee = await employee_service.get_by_employee_no(employee_no)
+    basic_information_id = await employee_service.get_basic_information_id_by_employee_no(employee_no)
 
-    if not employee or not employee.basic_information:
+    if not basic_information_id:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Employee or basic information not found",
@@ -34,7 +34,7 @@ async def create_work_experience(
 
     # Automatically map basic_information_id from employee
     data_dict = data.model_dump()
-    data_dict["basic_information_id"] = employee.basic_information.id
+    data_dict["basic_information_id"] = basic_information_id
 
     record = WorkExperienceRecord(**data_dict)
     session.add(record)
@@ -44,6 +44,24 @@ async def create_work_experience(
     return create_response(
         path=request.url.path,
         data=record.model_dump(),
+        success=True,
+    )
+
+
+@router.get("/all", response_model=APIResponse)
+async def list_all_work_experience_records(
+    request: Request,
+    skip: int = 0,
+    limit: int = 100,
+    session: AsyncSession = Depends(get_db),
+):
+    """Get all work experience records."""
+    service = WorkExperienceService(session)
+    records = await service.get_all(skip=skip, limit=limit)
+
+    return create_response(
+        path=request.url.path,
+        data=[record.model_dump() for record in records],
         success=True,
     )
 
@@ -73,16 +91,16 @@ async def get_government_work_experience(
 ):
     """Get only government service work experience for an employee."""
     employee_service = EmployeeService(session)
-    employee = await employee_service.get_by_employee_no(employee_no)
+    basic_information_id = await employee_service.get_basic_information_id_by_employee_no(employee_no)
 
-    if not employee or not employee.basic_information:
+    if not basic_information_id:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Employee or basic information not found",
         )
 
     service = WorkExperienceService(session)
-    records = await service.get_only_government_service(employee.basic_information.id)
+    records = await service.get_only_government_service(basic_information_id)
 
     return create_response(
         path=request.url.path,
@@ -110,9 +128,9 @@ async def get_work_experience_detail(
 
     # Verify it belongs to employee
     employee_service = EmployeeService(session)
-    employee = await employee_service.get_by_employee_no(employee_no)
+    basic_information_id = await employee_service.get_basic_information_id_by_employee_no(employee_no)
 
-    if not employee or record.basic_information_id != employee.basic_information.id:
+    if not basic_information_id or record.basic_information_id != basic_information_id:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Work experience not found for this employee",
@@ -145,9 +163,9 @@ async def update_work_experience(
 
     # Verify it belongs to employee
     employee_service = EmployeeService(session)
-    employee = await employee_service.get_by_employee_no(employee_no)
+    basic_information_id = await employee_service.get_basic_information_id_by_employee_no(employee_no)
 
-    if not employee or record.basic_information_id != employee.basic_information.id:
+    if not basic_information_id or record.basic_information_id != basic_information_id:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Work experience not found for this employee",
@@ -161,7 +179,11 @@ async def update_work_experience(
     await session.commit()
     await session.refresh(record)
 
-    return record
+    return create_response(
+        path=request.url.path,
+        data=record.model_dump(),
+        success=True,
+    )
 
 
 @router.delete("/{employee_no}/{experience_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -182,9 +204,9 @@ async def delete_work_experience(
 
     # Verify it belongs to employee
     employee_service = EmployeeService(session)
-    employee = await employee_service.get_by_employee_no(employee_no)
+    basic_information_id = await employee_service.get_basic_information_id_by_employee_no(employee_no)
 
-    if not employee or record.basic_information_id != employee.basic_information_id:
+    if not basic_information_id or record.basic_information_id != basic_information_id:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Work experience not found for this employee",
@@ -199,8 +221,9 @@ async def delete_work_experience(
         )
 
 
-@router.post("/{employee_no}/{experience_id}/restore", response_model=WorkExperienceResponse)
+@router.post("/{employee_no}/{experience_id}/restore", response_model=APIResponse)
 async def restore_work_experience(
+    request: Request,
     employee_no: str,
     experience_id: str,
     session: AsyncSession = Depends(get_db),
@@ -224,4 +247,8 @@ async def restore_work_experience(
         )
 
     restored = await service.get(experience_id)
-    return restored
+    return create_response(
+        path=request.url.path,
+        data=restored.model_dump() if restored else None,
+        success=True,
+    )

@@ -5,6 +5,7 @@ from datetime import datetime
 
 from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 
 from core.config import get_settings
 from core.database import close_db, init_db
@@ -13,6 +14,16 @@ from routers import (
     government_ids,
     addresses,
     contact_information,
+    family_details,
+    educational_backgrounds,
+    civil_service_eligibility,
+    work_experience,
+    voluntary_work,
+    training,
+    other_information,
+    reference_records,
+    primary_government_ids,
+    record_completions,
     employees,
     certificates,
 )
@@ -51,8 +62,22 @@ def create_app() -> FastAPI:
     app.include_router(government_ids.router)
     app.include_router(addresses.router)
     app.include_router(contact_information.router)
+    app.include_router(family_details.router)
+    app.include_router(educational_backgrounds.router)
+    app.include_router(civil_service_eligibility.router)
+    app.include_router(work_experience.router)
+    app.include_router(voluntary_work.router)
+    app.include_router(training.router)
+    app.include_router(other_information.router)
+    app.include_router(reference_records.router)
+    app.include_router(primary_government_ids.router)
+    app.include_router(record_completions.router)
     app.include_router(employees.router)
     app.include_router(certificates.router)
+
+    uploads_dir = os.path.join(os.path.dirname(__file__), "uploads")
+    os.makedirs(uploads_dir, exist_ok=True)
+    app.mount("/uploads", StaticFiles(directory=uploads_dir), name="uploads")
 
     # Add exception handlers
     @app.exception_handler(HTTPException)

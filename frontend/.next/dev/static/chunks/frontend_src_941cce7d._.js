@@ -546,7 +546,10 @@ const STATUS_ICONS = {
 };
 function CertificatesPage() {
     _s();
-    const [certificates, setCertificates] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(MOCK_CERTIFICATES);
+    const [certificates, setCertificates] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [employeeOptions, setEmployeeOptions] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(true);
+    const [loadError, setLoadError] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
     const [searchQuery, setSearchQuery] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
     const [filterCategory, setFilterCategory] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("All");
     const [filterStatus, setFilterStatus] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("All");
@@ -563,6 +566,34 @@ function CertificatesPage() {
     const [selectedFile, setSelectedFile] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
     const [uploading, setUploading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [showUploadForm, setShowUploadForm] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const loadCertificates = (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "CertificatesPage.useCallback[loadCertificates]": async ()=>{
+            setLoading(true);
+            setLoadError(null);
+            try {
+                const response = await fetch("/api/certificates", {
+                    cache: "no-store"
+                });
+                const payload = await response.json();
+                if (!response.ok || !payload.success) {
+                    throw new Error(payload.message || "Failed to load certificates.");
+                }
+                setEmployeeOptions(payload.data?.employees || []);
+                setCertificates(payload.data?.certificates || []);
+            } catch (error) {
+                setLoadError(error instanceof Error ? error.message : "Failed to load certificates.");
+            } finally{
+                setLoading(false);
+            }
+        }
+    }["CertificatesPage.useCallback[loadCertificates]"], []);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "CertificatesPage.useEffect": ()=>{
+            void loadCertificates();
+        }
+    }["CertificatesPage.useEffect"], [
+        loadCertificates
+    ]);
     const stats = {
         total: certificates.length,
         pending: certificates.filter((c)=>c.status === "Pending Verification").length,
@@ -622,35 +653,40 @@ function CertificatesPage() {
         }
         return true;
     };
-    const handleUpload = ()=>{
+    const handleUpload = async ()=>{
         if (!selectedEmployee || !certNumber || !dateIssued || !selectedFile) {
             alert("Please fill in all required fields and select a file.");
             return;
         }
         setUploading(true);
-        const employee = MOCK_EMPLOYEES.find((e)=>e.id === selectedEmployee);
-        const newCert = {
-            id: `CERT-${String(certificates.length + 1).padStart(3, "0")}`,
-            employeeId: selectedEmployee,
-            employeeName: employee?.name ?? "",
-            title: `${documentType}${description ? ` - ${description}` : ""}`,
-            issuingBody,
-            dateIssued,
-            expiryDate: expiryDate || undefined,
-            certificateNumber: certNumber,
-            category: CATEGORY_MAP[documentType] ?? "Other",
-            fileUrl: `/files/${selectedFile.name}`,
-            fileName: selectedFile.name,
-            status: "Pending Verification"
-        };
-        setTimeout(()=>{
+        try {
+            const uploadPayload = new FormData();
+            uploadPayload.set("employeeNo", selectedEmployee);
+            uploadPayload.set("certificateType", documentType);
+            uploadPayload.set("issuingBody", issuingBody);
+            uploadPayload.set("certificateNo", certNumber);
+            uploadPayload.set("dateIssued", dateIssued);
+            uploadPayload.set("expiryDate", expiryDate);
+            uploadPayload.set("description", description);
+            uploadPayload.set("file", selectedFile, selectedFile.name);
+            const response = await fetch("/api/certificates", {
+                method: "POST",
+                body: uploadPayload
+            });
+            const payload = await response.json();
+            if (!response.ok || !payload.success || !payload.data) {
+                throw new Error(payload.message || "Failed to upload certificate.");
+            }
             setCertificates((prev)=>[
-                    newCert,
+                    payload.data,
                     ...prev
                 ]);
             resetForm();
+        } catch (error) {
+            alert(error instanceof Error ? error.message : "Failed to upload certificate.");
+        } finally{
             setUploading(false);
-        }, 800);
+        }
     };
     const resetForm = ()=>{
         setSelectedEmployee("");
@@ -672,7 +708,11 @@ function CertificatesPage() {
                 } : c));
     };
     const formatDate = (dateStr)=>{
-        return new Date(dateStr).toLocaleDateString("en-US", {
+        const date = new Date(dateStr);
+        if (Number.isNaN(date.getTime())) {
+            return "—";
+        }
+        return date.toLocaleDateString("en-US", {
             year: "numeric",
             month: "short",
             day: "numeric"
@@ -697,12 +737,12 @@ function CertificatesPage() {
                                         className: "w-5 h-5 text-green-700"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                        lineNumber: 364,
+                                        lineNumber: 416,
                                         columnNumber: 29
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                    lineNumber: 363,
+                                    lineNumber: 415,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -712,7 +752,7 @@ function CertificatesPage() {
                                             children: "Certificates & MOV Documents"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                            lineNumber: 367,
+                                            lineNumber: 419,
                                             columnNumber: 29
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -720,19 +760,19 @@ function CertificatesPage() {
                                             children: "Upload, scan, and manage employee certificates and means of verification"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                            lineNumber: 370,
+                                            lineNumber: 422,
                                             columnNumber: 29
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                    lineNumber: 366,
+                                    lineNumber: 418,
                                     columnNumber: 25
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                            lineNumber: 362,
+                            lineNumber: 414,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -743,20 +783,20 @@ function CertificatesPage() {
                                     className: "w-4 h-4"
                                 }, void 0, false, {
                                     fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                    lineNumber: 379,
+                                    lineNumber: 431,
                                     columnNumber: 25
                                 }, this),
                                 showUploadForm ? "Hide Upload Form" : "Upload Certificate"
                             ]
                         }, void 0, true, {
                             fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                            lineNumber: 375,
+                            lineNumber: 427,
                             columnNumber: 21
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                    lineNumber: 361,
+                    lineNumber: 413,
                     columnNumber: 17
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -769,13 +809,13 @@ function CertificatesPage() {
                                 className: "w-5 h-5 text-green-700"
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                lineNumber: 389,
+                                lineNumber: 441,
                                 columnNumber: 31
                             }, void 0),
                             accent: "bg-green-50"
                         }, void 0, false, {
                             fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                            lineNumber: 386,
+                            lineNumber: 438,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(StatsCard, {
@@ -785,13 +825,13 @@ function CertificatesPage() {
                                 className: "w-5 h-5 text-amber-600"
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                lineNumber: 395,
+                                lineNumber: 447,
                                 columnNumber: 31
                             }, void 0),
                             accent: "bg-amber-50"
                         }, void 0, false, {
                             fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                            lineNumber: 392,
+                            lineNumber: 444,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(StatsCard, {
@@ -801,13 +841,13 @@ function CertificatesPage() {
                                 className: "w-5 h-5 text-emerald-600"
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                lineNumber: 401,
+                                lineNumber: 453,
                                 columnNumber: 31
                             }, void 0),
                             accent: "bg-emerald-50"
                         }, void 0, false, {
                             fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                            lineNumber: 398,
+                            lineNumber: 450,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(StatsCard, {
@@ -817,19 +857,19 @@ function CertificatesPage() {
                                 className: "w-5 h-5 text-red-600"
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                lineNumber: 407,
+                                lineNumber: 459,
                                 columnNumber: 31
                             }, void 0),
                             accent: "bg-red-50"
                         }, void 0, false, {
                             fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                            lineNumber: 404,
+                            lineNumber: 456,
                             columnNumber: 21
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                    lineNumber: 385,
+                    lineNumber: 437,
                     columnNumber: 17
                 }, this),
                 showUploadForm && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -845,7 +885,7 @@ function CertificatesPage() {
                                             className: "w-4 h-4 text-green-700"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                            lineNumber: 417,
+                                            lineNumber: 469,
                                             columnNumber: 33
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
@@ -853,13 +893,13 @@ function CertificatesPage() {
                                             children: "Upload New Certificate / MOV"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                            lineNumber: 418,
+                                            lineNumber: 470,
                                             columnNumber: 33
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                    lineNumber: 416,
+                                    lineNumber: 468,
                                     columnNumber: 29
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -869,18 +909,18 @@ function CertificatesPage() {
                                         className: "w-4 h-4"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                        lineNumber: 426,
+                                        lineNumber: 478,
                                         columnNumber: 33
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                    lineNumber: 422,
+                                    lineNumber: 474,
                                     columnNumber: 29
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                            lineNumber: 415,
+                            lineNumber: 467,
                             columnNumber: 25
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -893,7 +933,7 @@ function CertificatesPage() {
                                             children: "Employee *"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                            lineNumber: 432,
+                                            lineNumber: 484,
                                             columnNumber: 33
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -906,27 +946,27 @@ function CertificatesPage() {
                                                     children: "Select employee..."
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                    lineNumber: 438,
+                                                    lineNumber: 490,
                                                     columnNumber: 37
                                                 }, this),
-                                                MOCK_EMPLOYEES.map((emp)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
-                                                        value: emp.id,
+                                                employeeOptions.map((emp)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                        value: emp.employeeNo,
                                                         children: emp.name
-                                                    }, emp.id, false, {
+                                                    }, emp.employeeNo, false, {
                                                         fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                        lineNumber: 440,
+                                                        lineNumber: 492,
                                                         columnNumber: 41
                                                     }, this))
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                            lineNumber: 433,
+                                            lineNumber: 485,
                                             columnNumber: 33
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                    lineNumber: 431,
+                                    lineNumber: 483,
                                     columnNumber: 29
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -936,7 +976,7 @@ function CertificatesPage() {
                                             children: "Certificate / Document Type *"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                            lineNumber: 448,
+                                            lineNumber: 500,
                                             columnNumber: 33
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -948,18 +988,18 @@ function CertificatesPage() {
                                                     children: type
                                                 }, type, false, {
                                                     fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                    lineNumber: 455,
+                                                    lineNumber: 507,
                                                     columnNumber: 41
                                                 }, this))
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                            lineNumber: 449,
+                                            lineNumber: 501,
                                             columnNumber: 33
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                    lineNumber: 447,
+                                    lineNumber: 499,
                                     columnNumber: 29
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -969,7 +1009,7 @@ function CertificatesPage() {
                                             children: "Issuing Body"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                            lineNumber: 463,
+                                            lineNumber: 515,
                                             columnNumber: 33
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -980,13 +1020,13 @@ function CertificatesPage() {
                                             onChange: (e)=>setIssuingBody(e.target.value)
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                            lineNumber: 464,
+                                            lineNumber: 516,
                                             columnNumber: 33
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                    lineNumber: 462,
+                                    lineNumber: 514,
                                     columnNumber: 29
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -996,7 +1036,7 @@ function CertificatesPage() {
                                             children: "Certificate Number *"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                            lineNumber: 474,
+                                            lineNumber: 526,
                                             columnNumber: 33
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1007,13 +1047,13 @@ function CertificatesPage() {
                                             onChange: (e)=>setCertNumber(e.target.value)
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                            lineNumber: 475,
+                                            lineNumber: 527,
                                             columnNumber: 33
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                    lineNumber: 473,
+                                    lineNumber: 525,
                                     columnNumber: 29
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1023,7 +1063,7 @@ function CertificatesPage() {
                                             children: "Date Issued *"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                            lineNumber: 485,
+                                            lineNumber: 537,
                                             columnNumber: 33
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1033,13 +1073,13 @@ function CertificatesPage() {
                                             onChange: (e)=>setDateIssued(e.target.value)
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                            lineNumber: 486,
+                                            lineNumber: 538,
                                             columnNumber: 33
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                    lineNumber: 484,
+                                    lineNumber: 536,
                                     columnNumber: 29
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1049,7 +1089,7 @@ function CertificatesPage() {
                                             children: "Expiry Date (optional)"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                            lineNumber: 495,
+                                            lineNumber: 547,
                                             columnNumber: 33
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1059,19 +1099,19 @@ function CertificatesPage() {
                                             onChange: (e)=>setExpiryDate(e.target.value)
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                            lineNumber: 496,
+                                            lineNumber: 548,
                                             columnNumber: 33
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                    lineNumber: 494,
+                                    lineNumber: 546,
                                     columnNumber: 29
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                            lineNumber: 430,
+                            lineNumber: 482,
                             columnNumber: 25
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1082,7 +1122,7 @@ function CertificatesPage() {
                                     children: "Description"
                                 }, void 0, false, {
                                     fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                    lineNumber: 506,
+                                    lineNumber: 558,
                                     columnNumber: 29
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
@@ -1093,13 +1133,13 @@ function CertificatesPage() {
                                     onChange: (e)=>setDescription(e.target.value)
                                 }, void 0, false, {
                                     fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                    lineNumber: 507,
+                                    lineNumber: 559,
                                     columnNumber: 29
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                            lineNumber: 505,
+                            lineNumber: 557,
                             columnNumber: 25
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1115,7 +1155,7 @@ function CertificatesPage() {
                                         className: "w-8 h-8 text-green-600"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                        lineNumber: 530,
+                                        lineNumber: 582,
                                         columnNumber: 37
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1126,7 +1166,7 @@ function CertificatesPage() {
                                                 children: selectedFile.name
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                lineNumber: 532,
+                                                lineNumber: 584,
                                                 columnNumber: 41
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1137,13 +1177,13 @@ function CertificatesPage() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                lineNumber: 535,
+                                                lineNumber: 587,
                                                 columnNumber: 41
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                        lineNumber: 531,
+                                        lineNumber: 583,
                                         columnNumber: 37
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1153,18 +1193,18 @@ function CertificatesPage() {
                                             className: "w-4 h-4"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                            lineNumber: 543,
+                                            lineNumber: 595,
                                             columnNumber: 41
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                        lineNumber: 539,
+                                        lineNumber: 591,
                                         columnNumber: 37
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                lineNumber: 529,
+                                lineNumber: 581,
                                 columnNumber: 33
                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
                                 children: [
@@ -1172,7 +1212,7 @@ function CertificatesPage() {
                                         className: "w-10 h-10 text-stone-300 mx-auto mb-3"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                        lineNumber: 548,
+                                        lineNumber: 600,
                                         columnNumber: 37
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1184,20 +1224,20 @@ function CertificatesPage() {
                                                 children: "Click to upload"
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                lineNumber: 550,
+                                                lineNumber: 602,
                                                 columnNumber: 41
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                 children: "or drag and drop"
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                lineNumber: 556,
+                                                lineNumber: 608,
                                                 columnNumber: 41
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                        lineNumber: 549,
+                                        lineNumber: 601,
                                         columnNumber: 37
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1205,7 +1245,7 @@ function CertificatesPage() {
                                         children: "PDF, PNG, JPG up to 10MB"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                        lineNumber: 558,
+                                        lineNumber: 610,
                                         columnNumber: 37
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1216,14 +1256,14 @@ function CertificatesPage() {
                                         onChange: handleFileChange
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                        lineNumber: 561,
+                                        lineNumber: 613,
                                         columnNumber: 37
                                     }, this)
                                 ]
                             }, void 0, true)
                         }, void 0, false, {
                             fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                            lineNumber: 517,
+                            lineNumber: 569,
                             columnNumber: 25
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1235,7 +1275,7 @@ function CertificatesPage() {
                                     children: "Cancel"
                                 }, void 0, false, {
                                     fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                    lineNumber: 574,
+                                    lineNumber: 626,
                                     columnNumber: 29
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1248,7 +1288,7 @@ function CertificatesPage() {
                                                 className: "w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                lineNumber: 587,
+                                                lineNumber: 639,
                                                 columnNumber: 41
                                             }, this),
                                             "Uploading..."
@@ -1259,7 +1299,7 @@ function CertificatesPage() {
                                                 className: "w-4 h-4"
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                lineNumber: 592,
+                                                lineNumber: 644,
                                                 columnNumber: 41
                                             }, this),
                                             "Upload Certificate"
@@ -1267,19 +1307,19 @@ function CertificatesPage() {
                                     }, void 0, true)
                                 }, void 0, false, {
                                     fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                    lineNumber: 580,
+                                    lineNumber: 632,
                                     columnNumber: 29
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                            lineNumber: 573,
+                            lineNumber: 625,
                             columnNumber: 25
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                    lineNumber: 414,
+                    lineNumber: 466,
                     columnNumber: 21
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1303,13 +1343,13 @@ function CertificatesPage() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                lineNumber: 608,
+                                                lineNumber: 660,
                                                 columnNumber: 33
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                        lineNumber: 606,
+                                        lineNumber: 658,
                                         columnNumber: 29
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1322,7 +1362,7 @@ function CertificatesPage() {
                                                         className: "w-4 h-4 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                        lineNumber: 616,
+                                                        lineNumber: 668,
                                                         columnNumber: 37
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1333,13 +1373,13 @@ function CertificatesPage() {
                                                         onChange: (e)=>setSearchQuery(e.target.value)
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                        lineNumber: 617,
+                                                        lineNumber: 669,
                                                         columnNumber: 37
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                lineNumber: 615,
+                                                lineNumber: 667,
                                                 columnNumber: 33
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1349,7 +1389,7 @@ function CertificatesPage() {
                                                         className: "w-3.5 h-3.5 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                        lineNumber: 628,
+                                                        lineNumber: 680,
                                                         columnNumber: 37
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -1362,7 +1402,7 @@ function CertificatesPage() {
                                                                 children: "All Categories"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                                lineNumber: 634,
+                                                                lineNumber: 686,
                                                                 columnNumber: 41
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1370,7 +1410,7 @@ function CertificatesPage() {
                                                                 children: "Training"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                                lineNumber: 635,
+                                                                lineNumber: 687,
                                                                 columnNumber: 41
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1378,7 +1418,7 @@ function CertificatesPage() {
                                                                 children: "Eligibility"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                                lineNumber: 636,
+                                                                lineNumber: 688,
                                                                 columnNumber: 41
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1386,7 +1426,7 @@ function CertificatesPage() {
                                                                 children: "Academic"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                                lineNumber: 637,
+                                                                lineNumber: 689,
                                                                 columnNumber: 41
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1394,7 +1434,7 @@ function CertificatesPage() {
                                                                 children: "Professional"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                                lineNumber: 638,
+                                                                lineNumber: 690,
                                                                 columnNumber: 41
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1402,26 +1442,26 @@ function CertificatesPage() {
                                                                 children: "Other"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                                lineNumber: 639,
+                                                                lineNumber: 691,
                                                                 columnNumber: 41
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                        lineNumber: 629,
+                                                        lineNumber: 681,
                                                         columnNumber: 37
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$down$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronDown$3e$__["ChevronDown"], {
                                                         className: "w-3.5 h-3.5 text-stone-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                        lineNumber: 641,
+                                                        lineNumber: 693,
                                                         columnNumber: 37
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                lineNumber: 627,
+                                                lineNumber: 679,
                                                 columnNumber: 33
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1437,7 +1477,7 @@ function CertificatesPage() {
                                                                 children: "All Statuses"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                                lineNumber: 651,
+                                                                lineNumber: 703,
                                                                 columnNumber: 41
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1445,7 +1485,7 @@ function CertificatesPage() {
                                                                 children: "Active"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                                lineNumber: 652,
+                                                                lineNumber: 704,
                                                                 columnNumber: 41
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1453,7 +1493,7 @@ function CertificatesPage() {
                                                                 children: "Expired"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                                lineNumber: 653,
+                                                                lineNumber: 705,
                                                                 columnNumber: 41
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1461,26 +1501,26 @@ function CertificatesPage() {
                                                                 children: "Pending"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                                lineNumber: 654,
+                                                                lineNumber: 706,
                                                                 columnNumber: 41
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                        lineNumber: 646,
+                                                        lineNumber: 698,
                                                         columnNumber: 37
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$down$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronDown$3e$__["ChevronDown"], {
                                                         className: "w-3.5 h-3.5 text-stone-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                        lineNumber: 656,
+                                                        lineNumber: 708,
                                                         columnNumber: 37
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                lineNumber: 645,
+                                                lineNumber: 697,
                                                 columnNumber: 33
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1496,51 +1536,51 @@ function CertificatesPage() {
                                                                 children: "All Employees"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                                lineNumber: 666,
+                                                                lineNumber: 718,
                                                                 columnNumber: 41
                                                             }, this),
-                                                            MOCK_EMPLOYEES.map((emp)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
-                                                                    value: emp.id,
+                                                            employeeOptions.map((emp)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                                    value: emp.employeeNo,
                                                                     children: emp.name
-                                                                }, emp.id, false, {
+                                                                }, emp.employeeNo, false, {
                                                                     fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                                    lineNumber: 668,
+                                                                    lineNumber: 720,
                                                                     columnNumber: 45
                                                                 }, this))
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                        lineNumber: 661,
+                                                        lineNumber: 713,
                                                         columnNumber: 37
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$down$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronDown$3e$__["ChevronDown"], {
                                                         className: "w-3.5 h-3.5 text-stone-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                        lineNumber: 673,
+                                                        lineNumber: 725,
                                                         columnNumber: 37
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                lineNumber: 660,
+                                                lineNumber: 712,
                                                 columnNumber: 33
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                        lineNumber: 613,
+                                        lineNumber: 665,
                                         columnNumber: 29
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                lineNumber: 605,
+                                lineNumber: 657,
                                 columnNumber: 25
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                            lineNumber: 604,
+                            lineNumber: 656,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1557,7 +1597,7 @@ function CertificatesPage() {
                                                     children: "Employee"
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                    lineNumber: 684,
+                                                    lineNumber: 736,
                                                     columnNumber: 37
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -1565,7 +1605,7 @@ function CertificatesPage() {
                                                     children: "Certificate Title"
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                    lineNumber: 687,
+                                                    lineNumber: 739,
                                                     columnNumber: 37
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -1573,7 +1613,7 @@ function CertificatesPage() {
                                                     children: "Category"
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                    lineNumber: 690,
+                                                    lineNumber: 742,
                                                     columnNumber: 37
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -1581,7 +1621,7 @@ function CertificatesPage() {
                                                     children: "Issuing Body"
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                    lineNumber: 693,
+                                                    lineNumber: 745,
                                                     columnNumber: 37
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -1589,7 +1629,7 @@ function CertificatesPage() {
                                                     children: "Date Issued"
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                    lineNumber: 696,
+                                                    lineNumber: 748,
                                                     columnNumber: 37
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -1597,7 +1637,7 @@ function CertificatesPage() {
                                                     children: "Status"
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                    lineNumber: 699,
+                                                    lineNumber: 751,
                                                     columnNumber: 37
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -1605,35 +1645,63 @@ function CertificatesPage() {
                                                     children: "Actions"
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                    lineNumber: 702,
+                                                    lineNumber: 754,
                                                     columnNumber: 37
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                            lineNumber: 683,
+                                            lineNumber: 735,
                                             columnNumber: 33
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                        lineNumber: 682,
+                                        lineNumber: 734,
                                         columnNumber: 29
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
                                         className: "divide-y divide-stone-100",
-                                        children: filteredCertificates.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
+                                        children: loading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
+                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                colSpan: 7,
+                                                className: "text-center py-12 text-stone-400 text-sm",
+                                                children: "Loading certificates..."
+                                            }, void 0, false, {
+                                                fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
+                                                lineNumber: 762,
+                                                columnNumber: 41
+                                            }, this)
+                                        }, void 0, false, {
+                                            fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
+                                            lineNumber: 761,
+                                            columnNumber: 37
+                                        }, this) : loadError ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
+                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                colSpan: 7,
+                                                className: "text-center py-12 text-red-500 text-sm",
+                                                children: loadError
+                                            }, void 0, false, {
+                                                fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
+                                                lineNumber: 771,
+                                                columnNumber: 41
+                                            }, this)
+                                        }, void 0, false, {
+                                            fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
+                                            lineNumber: 770,
+                                            columnNumber: 37
+                                        }, this) : filteredCertificates.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
                                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
                                                 colSpan: 7,
                                                 className: "text-center py-12 text-stone-400 text-sm",
                                                 children: "No certificates found matching your criteria."
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                lineNumber: 710,
+                                                lineNumber: 780,
                                                 columnNumber: 41
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                            lineNumber: 709,
+                                            lineNumber: 779,
                                             columnNumber: 37
                                         }, this) : filteredCertificates.map((cert)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
                                                 className: "hover:bg-stone-50/50 transition-colors",
@@ -1646,7 +1714,7 @@ function CertificatesPage() {
                                                                 children: cert.employeeName
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                                lineNumber: 724,
+                                                                lineNumber: 794,
                                                                 columnNumber: 49
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1654,13 +1722,13 @@ function CertificatesPage() {
                                                                 children: cert.employeeId
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                                lineNumber: 727,
+                                                                lineNumber: 797,
                                                                 columnNumber: 49
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                        lineNumber: 723,
+                                                        lineNumber: 793,
                                                         columnNumber: 45
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -1671,7 +1739,7 @@ function CertificatesPage() {
                                                                 children: cert.title
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                                lineNumber: 732,
+                                                                lineNumber: 802,
                                                                 columnNumber: 49
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1679,13 +1747,13 @@ function CertificatesPage() {
                                                                 children: cert.certificateNumber
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                                lineNumber: 735,
+                                                                lineNumber: 805,
                                                                 columnNumber: 49
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                        lineNumber: 731,
+                                                        lineNumber: 801,
                                                         columnNumber: 45
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -1695,12 +1763,12 @@ function CertificatesPage() {
                                                             children: cert.category
                                                         }, void 0, false, {
                                                             fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                            lineNumber: 740,
+                                                            lineNumber: 810,
                                                             columnNumber: 49
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                        lineNumber: 739,
+                                                        lineNumber: 809,
                                                         columnNumber: 45
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -1708,7 +1776,7 @@ function CertificatesPage() {
                                                         children: cert.issuingBody
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                        lineNumber: 744,
+                                                        lineNumber: 814,
                                                         columnNumber: 45
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -1723,13 +1791,13 @@ function CertificatesPage() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                                lineNumber: 750,
+                                                                lineNumber: 820,
                                                                 columnNumber: 53
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                        lineNumber: 747,
+                                                        lineNumber: 817,
                                                         columnNumber: 45
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -1742,12 +1810,12 @@ function CertificatesPage() {
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                            lineNumber: 756,
+                                                            lineNumber: 826,
                                                             columnNumber: 49
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                        lineNumber: 755,
+                                                        lineNumber: 825,
                                                         columnNumber: 45
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -1762,12 +1830,12 @@ function CertificatesPage() {
                                                                         className: "w-4 h-4"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                                        lineNumber: 769,
+                                                                        lineNumber: 839,
                                                                         columnNumber: 57
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                                    lineNumber: 765,
+                                                                    lineNumber: 835,
                                                                     columnNumber: 53
                                                                 }, this),
                                                                 cert.status === "Pending Verification" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1778,12 +1846,12 @@ function CertificatesPage() {
                                                                         className: "w-4 h-4"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                                        lineNumber: 777,
+                                                                        lineNumber: 847,
                                                                         columnNumber: 61
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                                    lineNumber: 772,
+                                                                    lineNumber: 842,
                                                                     columnNumber: 57
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1793,66 +1861,66 @@ function CertificatesPage() {
                                                                         className: "w-4 h-4"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                                        lineNumber: 784,
+                                                                        lineNumber: 854,
                                                                         columnNumber: 57
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                                    lineNumber: 780,
+                                                                    lineNumber: 850,
                                                                     columnNumber: 53
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                            lineNumber: 764,
+                                                            lineNumber: 834,
                                                             columnNumber: 49
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                        lineNumber: 763,
+                                                        lineNumber: 833,
                                                         columnNumber: 45
                                                     }, this)
                                                 ]
                                             }, cert.id, true, {
                                                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                                lineNumber: 719,
+                                                lineNumber: 789,
                                                 columnNumber: 41
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                        lineNumber: 707,
+                                        lineNumber: 759,
                                         columnNumber: 29
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                                lineNumber: 681,
+                                lineNumber: 733,
                                 columnNumber: 25
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                            lineNumber: 680,
+                            lineNumber: 732,
                             columnNumber: 21
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                    lineNumber: 602,
+                    lineNumber: 654,
                     columnNumber: 17
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-            lineNumber: 359,
+            lineNumber: 411,
             columnNumber: 13
         }, this)
     }, void 0, false, {
         fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-        lineNumber: 358,
+        lineNumber: 410,
         columnNumber: 9
     }, this);
 }
-_s(CertificatesPage, "9erRkAt93uHo3uRXlqszUjJT8SA=");
+_s(CertificatesPage, "9svfGIwqxuF9LSASlHt8wxVX4Is=");
 _c = CertificatesPage;
 function StatsCard({ label, value, icon, accent }) {
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1863,7 +1931,7 @@ function StatsCard({ label, value, icon, accent }) {
                 children: icon
             }, void 0, false, {
                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                lineNumber: 813,
+                lineNumber: 883,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1873,7 +1941,7 @@ function StatsCard({ label, value, icon, accent }) {
                         children: value
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                        lineNumber: 817,
+                        lineNumber: 887,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1881,19 +1949,19 @@ function StatsCard({ label, value, icon, accent }) {
                         children: label
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                        lineNumber: 818,
+                        lineNumber: 888,
                         columnNumber: 17
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-                lineNumber: 816,
+                lineNumber: 886,
                 columnNumber: 13
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/frontend/src/app/employees/certificates/page.tsx",
-        lineNumber: 812,
+        lineNumber: 882,
         columnNumber: 9
     }, this);
 }

@@ -1122,11 +1122,45 @@ function EmployeeDirectoryPage() {
     const [officeFilter, setOfficeFilter] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("");
     const [empStatusFilter, setEmpStatusFilter] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("");
     const [activeFilter, setActiveFilter] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("");
+    const [employees, setEmployees] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(true);
+    const [loadError, setLoadError] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
     const [expandedId, setExpandedId] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
     const [activeTab, setActiveTab] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("personal");
     const [showFilters, setShowFilters] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
+        let mounted = true;
+        async function loadDirectory() {
+            setLoading(true);
+            setLoadError(null);
+            try {
+                const response = await fetch("/api/employees/directory", {
+                    cache: "no-store"
+                });
+                const payload = await response.json();
+                if (!response.ok || !payload.success) {
+                    throw new Error(payload.message || "Failed to load employee directory.");
+                }
+                if (mounted) {
+                    setEmployees(payload.data || []);
+                }
+            } catch (error) {
+                if (mounted) {
+                    setLoadError(error instanceof Error ? error.message : "Failed to load employee directory.");
+                }
+            } finally{
+                if (mounted) {
+                    setLoading(false);
+                }
+            }
+        }
+        void loadDirectory();
+        return ()=>{
+            mounted = false;
+        };
+    }, []);
     const filtered = (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useMemo"])(()=>{
-        return MOCK_EMPLOYEES.filter((e)=>{
+        return employees.filter((e)=>{
             const q = search.toLowerCase();
             const matchesSearch = !q || e.fullName.toLowerCase().includes(q) || e.employeeNo.toLowerCase().includes(q);
             const matchesOffice = !officeFilter || e.office === officeFilter;
@@ -1135,17 +1169,20 @@ function EmployeeDirectoryPage() {
             return matchesSearch && matchesOffice && matchesEmpStatus && matchesActive;
         });
     }, [
+        employees,
         search,
         officeFilter,
         empStatusFilter,
         activeFilter
     ]);
     const stats = (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useMemo"])(()=>({
-            total: MOCK_EMPLOYEES.length,
-            teaching: MOCK_EMPLOYEES.filter((e)=>e.employmentStatus === "Teaching").length,
-            nonTeaching: MOCK_EMPLOYEES.filter((e)=>e.employmentStatus === "Non-Teaching").length,
-            cos: MOCK_EMPLOYEES.filter((e)=>e.employmentStatus === "COS").length
-        }), []);
+            total: employees.length,
+            teaching: employees.filter((e)=>e.employmentStatus === "Teaching").length,
+            nonTeaching: employees.filter((e)=>e.employmentStatus === "Non-Teaching").length,
+            cos: employees.filter((e)=>e.employmentStatus === "COS").length
+        }), [
+        employees
+    ]);
     const handleExpand = (id)=>{
         if (expandedId === id) {
             setExpandedId(null);
@@ -1198,12 +1235,12 @@ function EmployeeDirectoryPage() {
                                     className: "w-5 h-5 text-green-700"
                                 }, void 0, false, {
                                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                    lineNumber: 282,
+                                    lineNumber: 325,
                                     columnNumber: 29
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                lineNumber: 281,
+                                lineNumber: 324,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1213,7 +1250,7 @@ function EmployeeDirectoryPage() {
                                         children: "Employee 201 Files"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                        lineNumber: 285,
+                                        lineNumber: 328,
                                         columnNumber: 29
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1221,24 +1258,24 @@ function EmployeeDirectoryPage() {
                                         children: "Directory and personnel records management"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                        lineNumber: 286,
+                                        lineNumber: 329,
                                         columnNumber: 29
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                lineNumber: 284,
+                                lineNumber: 327,
                                 columnNumber: 25
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                        lineNumber: 280,
+                        lineNumber: 323,
                         columnNumber: 21
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                    lineNumber: 279,
+                    lineNumber: 322,
                     columnNumber: 17
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1251,7 +1288,7 @@ function EmployeeDirectoryPage() {
                             color: "green"
                         }, void 0, false, {
                             fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                            lineNumber: 293,
+                            lineNumber: 336,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(StatCard, {
@@ -1261,7 +1298,7 @@ function EmployeeDirectoryPage() {
                             color: "blue"
                         }, void 0, false, {
                             fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                            lineNumber: 294,
+                            lineNumber: 337,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(StatCard, {
@@ -1271,7 +1308,7 @@ function EmployeeDirectoryPage() {
                             color: "amber"
                         }, void 0, false, {
                             fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                            lineNumber: 295,
+                            lineNumber: 338,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(StatCard, {
@@ -1281,13 +1318,13 @@ function EmployeeDirectoryPage() {
                             color: "violet"
                         }, void 0, false, {
                             fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                            lineNumber: 296,
+                            lineNumber: 339,
                             columnNumber: 21
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                    lineNumber: 292,
+                    lineNumber: 335,
                     columnNumber: 17
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1303,7 +1340,7 @@ function EmployeeDirectoryPage() {
                                             className: "absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                            lineNumber: 303,
+                                            lineNumber: 346,
                                             columnNumber: 29
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1314,13 +1351,13 @@ function EmployeeDirectoryPage() {
                                             className: "w-full pl-9 pr-4 py-2.5 text-[13px] text-stone-800 placeholder:text-stone-400 bg-stone-50 border border-stone-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600/20 focus:border-green-600 transition"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                            lineNumber: 304,
+                                            lineNumber: 347,
                                             columnNumber: 29
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                    lineNumber: 302,
+                                    lineNumber: 345,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1331,7 +1368,7 @@ function EmployeeDirectoryPage() {
                                             className: "w-4 h-4"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                            lineNumber: 320,
+                                            lineNumber: 363,
                                             columnNumber: 29
                                         }, this),
                                         "Filters",
@@ -1344,19 +1381,19 @@ function EmployeeDirectoryPage() {
                                             ].filter(Boolean).length
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                            lineNumber: 323,
+                                            lineNumber: 366,
                                             columnNumber: 33
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                    lineNumber: 312,
+                                    lineNumber: 355,
                                     columnNumber: 25
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                            lineNumber: 301,
+                            lineNumber: 344,
                             columnNumber: 21
                         }, this),
                         showFilters && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1372,7 +1409,7 @@ function EmployeeDirectoryPage() {
                                             children: "All Offices"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                            lineNumber: 337,
+                                            lineNumber: 380,
                                             columnNumber: 33
                                         }, this),
                                         OFFICES.map((o)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1380,13 +1417,13 @@ function EmployeeDirectoryPage() {
                                                 children: o
                                             }, o, false, {
                                                 fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                lineNumber: 338,
+                                                lineNumber: 381,
                                                 columnNumber: 53
                                             }, this))
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                    lineNumber: 332,
+                                    lineNumber: 375,
                                     columnNumber: 29
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -1399,7 +1436,7 @@ function EmployeeDirectoryPage() {
                                             children: "All Employment Types"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                            lineNumber: 345,
+                                            lineNumber: 388,
                                             columnNumber: 33
                                         }, this),
                                         EMPLOYMENT_STATUSES.map((s)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1407,13 +1444,13 @@ function EmployeeDirectoryPage() {
                                                 children: s
                                             }, s, false, {
                                                 fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                lineNumber: 346,
+                                                lineNumber: 389,
                                                 columnNumber: 65
                                             }, this))
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                    lineNumber: 340,
+                                    lineNumber: 383,
                                     columnNumber: 29
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -1426,7 +1463,7 @@ function EmployeeDirectoryPage() {
                                             children: "All Status"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                            lineNumber: 353,
+                                            lineNumber: 396,
                                             columnNumber: 33
                                         }, this),
                                         ACTIVE_STATUSES.map((s)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -1434,13 +1471,13 @@ function EmployeeDirectoryPage() {
                                                 children: s
                                             }, s, false, {
                                                 fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                lineNumber: 354,
+                                                lineNumber: 397,
                                                 columnNumber: 61
                                             }, this))
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                    lineNumber: 348,
+                                    lineNumber: 391,
                                     columnNumber: 29
                                 }, this),
                                 hasActiveFilters && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1451,20 +1488,20 @@ function EmployeeDirectoryPage() {
                                             className: "w-3.5 h-3.5"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                            lineNumber: 358,
+                                            lineNumber: 401,
                                             columnNumber: 37
                                         }, this),
                                         "Clear"
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                    lineNumber: 357,
+                                    lineNumber: 400,
                                     columnNumber: 33
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                            lineNumber: 331,
+                            lineNumber: 374,
                             columnNumber: 25
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1481,7 +1518,7 @@ function EmployeeDirectoryPage() {
                                                     children: "Employee No."
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                    lineNumber: 370,
+                                                    lineNumber: 413,
                                                     columnNumber: 37
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -1489,7 +1526,7 @@ function EmployeeDirectoryPage() {
                                                     children: "Full Name"
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                    lineNumber: 371,
+                                                    lineNumber: 414,
                                                     columnNumber: 37
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -1497,7 +1534,7 @@ function EmployeeDirectoryPage() {
                                                     children: "Office"
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                    lineNumber: 372,
+                                                    lineNumber: 415,
                                                     columnNumber: 37
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -1505,7 +1542,7 @@ function EmployeeDirectoryPage() {
                                                     children: "Position"
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                    lineNumber: 373,
+                                                    lineNumber: 416,
                                                     columnNumber: 37
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -1513,7 +1550,7 @@ function EmployeeDirectoryPage() {
                                                     children: "Type"
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                    lineNumber: 374,
+                                                    lineNumber: 417,
                                                     columnNumber: 37
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -1521,7 +1558,7 @@ function EmployeeDirectoryPage() {
                                                     children: "Date Hired"
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                    lineNumber: 375,
+                                                    lineNumber: 418,
                                                     columnNumber: 37
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -1529,7 +1566,7 @@ function EmployeeDirectoryPage() {
                                                     children: "Docs"
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                    lineNumber: 376,
+                                                    lineNumber: 419,
                                                     columnNumber: 37
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -1537,7 +1574,7 @@ function EmployeeDirectoryPage() {
                                                     children: "Status"
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                    lineNumber: 377,
+                                                    lineNumber: 420,
                                                     columnNumber: 37
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -1545,23 +1582,51 @@ function EmployeeDirectoryPage() {
                                                     children: "Actions"
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                    lineNumber: 378,
+                                                    lineNumber: 421,
                                                     columnNumber: 37
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                            lineNumber: 369,
+                                            lineNumber: 412,
                                             columnNumber: 33
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                        lineNumber: 368,
+                                        lineNumber: 411,
                                         columnNumber: 29
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
                                         className: "divide-y divide-stone-100",
-                                        children: filtered.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
+                                        children: loading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
+                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                colSpan: 9,
+                                                className: "px-4 py-12 text-center text-[13px] text-stone-400",
+                                                children: "Loading employee directory..."
+                                            }, void 0, false, {
+                                                fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
+                                                lineNumber: 427,
+                                                columnNumber: 41
+                                            }, this)
+                                        }, void 0, false, {
+                                            fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
+                                            lineNumber: 426,
+                                            columnNumber: 37
+                                        }, this) : loadError ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
+                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                colSpan: 9,
+                                                className: "px-4 py-12 text-center text-[13px] text-red-500",
+                                                children: loadError
+                                            }, void 0, false, {
+                                                fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
+                                                lineNumber: 433,
+                                                columnNumber: 41
+                                            }, this)
+                                        }, void 0, false, {
+                                            fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
+                                            lineNumber: 432,
+                                            columnNumber: 37
+                                        }, this) : filtered.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
                                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
                                                 colSpan: 9,
                                                 className: "px-4 py-12 text-center",
@@ -1570,7 +1635,7 @@ function EmployeeDirectoryPage() {
                                                         className: "w-8 h-8 text-stone-300 mx-auto mb-2"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                        lineNumber: 385,
+                                                        lineNumber: 440,
                                                         columnNumber: 45
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1578,18 +1643,18 @@ function EmployeeDirectoryPage() {
                                                         children: "No employees match your criteria."
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                        lineNumber: 386,
+                                                        lineNumber: 441,
                                                         columnNumber: 45
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                lineNumber: 384,
+                                                lineNumber: 439,
                                                 columnNumber: 41
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                            lineNumber: 383,
+                                            lineNumber: 438,
                                             columnNumber: 37
                                         }, this) : filtered.map((emp)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].Fragment, {
                                                 children: [
@@ -1604,12 +1669,12 @@ function EmployeeDirectoryPage() {
                                                                     children: emp.employeeNo
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                    lineNumber: 394,
+                                                                    lineNumber: 449,
                                                                     columnNumber: 53
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                lineNumber: 393,
+                                                                lineNumber: 448,
                                                                 columnNumber: 49
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -1619,12 +1684,12 @@ function EmployeeDirectoryPage() {
                                                                     children: emp.fullName
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                    lineNumber: 397,
+                                                                    lineNumber: 452,
                                                                     columnNumber: 53
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                lineNumber: 396,
+                                                                lineNumber: 451,
                                                                 columnNumber: 49
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -1634,12 +1699,12 @@ function EmployeeDirectoryPage() {
                                                                     children: emp.office
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                    lineNumber: 400,
+                                                                    lineNumber: 455,
                                                                     columnNumber: 53
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                lineNumber: 399,
+                                                                lineNumber: 454,
                                                                 columnNumber: 49
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -1649,12 +1714,12 @@ function EmployeeDirectoryPage() {
                                                                     children: emp.position
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                    lineNumber: 403,
+                                                                    lineNumber: 458,
                                                                     columnNumber: 53
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                lineNumber: 402,
+                                                                lineNumber: 457,
                                                                 columnNumber: 49
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -1663,12 +1728,12 @@ function EmployeeDirectoryPage() {
                                                                     status: emp.employmentStatus
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                    lineNumber: 406,
+                                                                    lineNumber: 461,
                                                                     columnNumber: 53
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                lineNumber: 405,
+                                                                lineNumber: 460,
                                                                 columnNumber: 49
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -1682,12 +1747,12 @@ function EmployeeDirectoryPage() {
                                                                     })
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                    lineNumber: 409,
+                                                                    lineNumber: 464,
                                                                     columnNumber: 53
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                lineNumber: 408,
+                                                                lineNumber: 463,
                                                                 columnNumber: 49
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -1697,12 +1762,12 @@ function EmployeeDirectoryPage() {
                                                                     children: emp.documents.length
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                    lineNumber: 414,
+                                                                    lineNumber: 469,
                                                                     columnNumber: 53
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                lineNumber: 413,
+                                                                lineNumber: 468,
                                                                 columnNumber: 49
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -1711,12 +1776,12 @@ function EmployeeDirectoryPage() {
                                                                     isActive: emp.isActive
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                    lineNumber: 419,
+                                                                    lineNumber: 474,
                                                                     columnNumber: 53
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                lineNumber: 418,
+                                                                lineNumber: 473,
                                                                 columnNumber: 49
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -1732,7 +1797,7 @@ function EmployeeDirectoryPage() {
                                                                             className: "w-3.5 h-3.5"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                            lineNumber: 426,
+                                                                            lineNumber: 481,
                                                                             columnNumber: 57
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1740,37 +1805,37 @@ function EmployeeDirectoryPage() {
                                                                             children: "View 201"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                            lineNumber: 427,
+                                                                            lineNumber: 482,
                                                                             columnNumber: 57
                                                                         }, this),
                                                                         expandedId === emp.id ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$down$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronDown$3e$__["ChevronDown"], {
                                                                             className: "w-3.5 h-3.5"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                            lineNumber: 429,
+                                                                            lineNumber: 484,
                                                                             columnNumber: 63
                                                                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$right$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronRight$3e$__["ChevronRight"], {
                                                                             className: "w-3.5 h-3.5"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                            lineNumber: 430,
+                                                                            lineNumber: 485,
                                                                             columnNumber: 63
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                    lineNumber: 422,
+                                                                    lineNumber: 477,
                                                                     columnNumber: 53
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                lineNumber: 421,
+                                                                lineNumber: 476,
                                                                 columnNumber: 49
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                        lineNumber: 392,
+                                                        lineNumber: 447,
                                                         columnNumber: 45
                                                     }, this),
                                                     expandedId === emp.id && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
@@ -1794,12 +1859,12 @@ function EmployeeDirectoryPage() {
                                                                                                 className: "w-5 h-5 text-green-700"
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                                                lineNumber: 445,
+                                                                                                lineNumber: 500,
                                                                                                 columnNumber: 77
                                                                                             }, this)
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                                            lineNumber: 444,
+                                                                                            lineNumber: 499,
                                                                                             columnNumber: 73
                                                                                         }, this),
                                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1809,7 +1874,7 @@ function EmployeeDirectoryPage() {
                                                                                                     children: emp.fullName
                                                                                                 }, void 0, false, {
                                                                                                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                                                    lineNumber: 448,
+                                                                                                    lineNumber: 503,
                                                                                                     columnNumber: 77
                                                                                                 }, this),
                                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1821,19 +1886,19 @@ function EmployeeDirectoryPage() {
                                                                                                     ]
                                                                                                 }, void 0, true, {
                                                                                                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                                                    lineNumber: 449,
+                                                                                                    lineNumber: 504,
                                                                                                     columnNumber: 77
                                                                                                 }, this)
                                                                                             ]
                                                                                         }, void 0, true, {
                                                                                             fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                                            lineNumber: 447,
+                                                                                            lineNumber: 502,
                                                                                             columnNumber: 73
                                                                                         }, this)
                                                                                     ]
                                                                                 }, void 0, true, {
                                                                                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                                    lineNumber: 443,
+                                                                                    lineNumber: 498,
                                                                                     columnNumber: 69
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1843,18 +1908,18 @@ function EmployeeDirectoryPage() {
                                                                                         className: "w-4 h-4"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                                        lineNumber: 456,
+                                                                                        lineNumber: 511,
                                                                                         columnNumber: 73
                                                                                     }, this)
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                                    lineNumber: 452,
+                                                                                    lineNumber: 507,
                                                                                     columnNumber: 69
                                                                                 }, this)
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                            lineNumber: 442,
+                                                                            lineNumber: 497,
                                                                             columnNumber: 65
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1870,7 +1935,7 @@ function EmployeeDirectoryPage() {
                                                                                             className: "w-3.5 h-3.5"
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                                            lineNumber: 475,
+                                                                                            lineNumber: 530,
                                                                                             columnNumber: 81
                                                                                         }, this),
                                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1878,19 +1943,19 @@ function EmployeeDirectoryPage() {
                                                                                             children: tab.label
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                                            lineNumber: 476,
+                                                                                            lineNumber: 531,
                                                                                             columnNumber: 81
                                                                                         }, this)
                                                                                     ]
                                                                                 }, tab.key, true, {
                                                                                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                                    lineNumber: 466,
+                                                                                    lineNumber: 521,
                                                                                     columnNumber: 77
                                                                                 }, this);
                                                                             })
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                            lineNumber: 461,
+                                                                            lineNumber: 516,
                                                                             columnNumber: 65
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1900,77 +1965,77 @@ function EmployeeDirectoryPage() {
                                                                                     employee: emp
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                                    lineNumber: 484,
+                                                                                    lineNumber: 539,
                                                                                     columnNumber: 98
                                                                                 }, this),
                                                                                 activeTab === "documents" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(DocumentsTab, {
                                                                                     documents: emp.documents
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                                    lineNumber: 485,
+                                                                                    lineNumber: 540,
                                                                                     columnNumber: 99
                                                                                 }, this),
                                                                                 activeTab === "certificates" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(CertificatesTab, {
                                                                                     certificates: emp.certificates
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                                    lineNumber: 486,
+                                                                                    lineNumber: 541,
                                                                                     columnNumber: 102
                                                                                 }, this),
                                                                                 activeTab === "training" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(TrainingTab, {
                                                                                     trainings: emp.trainingsAttended
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                                    lineNumber: 487,
+                                                                                    lineNumber: 542,
                                                                                     columnNumber: 98
                                                                                 }, this)
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                            lineNumber: 483,
+                                                                            lineNumber: 538,
                                                                             columnNumber: 65
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                    lineNumber: 440,
+                                                                    lineNumber: 495,
                                                                     columnNumber: 61
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                                lineNumber: 439,
+                                                                lineNumber: 494,
                                                                 columnNumber: 57
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                            lineNumber: 438,
+                                                            lineNumber: 493,
                                                             columnNumber: 53
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                        lineNumber: 437,
+                                                        lineNumber: 492,
                                                         columnNumber: 49
                                                     }, this)
                                                 ]
                                             }, emp.id, true, {
                                                 fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                                lineNumber: 391,
+                                                lineNumber: 446,
                                                 columnNumber: 41
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                        lineNumber: 381,
+                                        lineNumber: 424,
                                         columnNumber: 29
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                lineNumber: 367,
+                                lineNumber: 410,
                                 columnNumber: 25
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                            lineNumber: 366,
+                            lineNumber: 409,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1984,7 +2049,7 @@ function EmployeeDirectoryPage() {
                                         children: filtered.length
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                        lineNumber: 504,
+                                        lineNumber: 559,
                                         columnNumber: 37
                                     }, this),
                                     " of",
@@ -1994,36 +2059,36 @@ function EmployeeDirectoryPage() {
                                         children: MOCK_EMPLOYEES.length
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                        lineNumber: 505,
+                                        lineNumber: 560,
                                         columnNumber: 29
                                     }, this),
                                     " employees"
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                                lineNumber: 503,
+                                lineNumber: 558,
                                 columnNumber: 25
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                            lineNumber: 502,
+                            lineNumber: 557,
                             columnNumber: 21
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-                    lineNumber: 300,
+                    lineNumber: 343,
                     columnNumber: 17
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-            lineNumber: 277,
+            lineNumber: 320,
             columnNumber: 13
         }, this)
     }, void 0, false, {
         fileName: "[project]/frontend/src/app/employees/directory/page.tsx",
-        lineNumber: 276,
+        lineNumber: 319,
         columnNumber: 9
     }, this);
 }

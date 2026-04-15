@@ -14,6 +14,26 @@ from models.personal_information import (
 from services.base import BaseService
 
 
+async def _get_basic_information_id_by_employee_no(
+    session: AsyncSession,
+    employee_no: str,
+) -> Optional[str]:
+    """Resolve basic information ID from employee number without lazy-loading relationships."""
+    stmt = (
+        select(BasicInformation.id)
+        .join(Employee, BasicInformation.employee_id == Employee.id)
+        .where(
+            and_(
+                Employee.employee_no == employee_no,
+                Employee.is_deleted == False,
+                BasicInformation.is_deleted == False,
+            )
+        )
+    )
+    result = await session.execute(stmt)
+    return result.scalar_one_or_none()
+
+
 class BasicInformationService(BaseService[BasicInformation]):
     """Service for managing basic information records."""
 
@@ -68,21 +88,12 @@ class GovernmentIdService(BaseService[GovernmentId]):
         Returns:
             List of government IDs for the employee.
         """
-        # Get employee by number
-        stmt = select(Employee).where(
-            and_(
-                Employee.employee_no == employee_no,
-                Employee.is_deleted == False,
-            )
-        )
-        result = await self.session.execute(stmt)
-        employee = result.scalar_one_or_none()
-        
-        if not employee:
+        basic_info_id = await _get_basic_information_id_by_employee_no(self.session, employee_no)
+        if not basic_info_id:
             return []
-        
+
         # Get government IDs
-        return await self.get_by_person(employee.basic_information_id)
+        return await self.get_by_person(basic_info_id)
 
     async def get_by_employee_no_and_type(self, employee_no: str, id_type: str) -> Optional[GovernmentId]:
         """Get a specific government ID by employee number and type.
@@ -94,21 +105,12 @@ class GovernmentIdService(BaseService[GovernmentId]):
         Returns:
             The government ID if found, None otherwise.
         """
-        # Get employee by number
-        stmt = select(Employee).where(
-            and_(
-                Employee.employee_no == employee_no,
-                Employee.is_deleted == False,
-            )
-        )
-        result = await self.session.execute(stmt)
-        employee = result.scalar_one_or_none()
-        
-        if not employee:
+        basic_info_id = await _get_basic_information_id_by_employee_no(self.session, employee_no)
+        if not basic_info_id:
             return None
-        
+
         # Get specific government ID
-        return await self.get_by_type(employee.basic_information_id, id_type)
+        return await self.get_by_type(basic_info_id, id_type)
 
     async def get_by_person(self, basic_information_id: str) -> list[GovernmentId]:
         """Get all government IDs for a specific person.
@@ -170,21 +172,12 @@ class AddressService(BaseService[Address]):
         Returns:
             List of addresses for the employee.
         """
-        # Get employee by number
-        stmt = select(Employee).where(
-            and_(
-                Employee.employee_no == employee_no,
-                Employee.is_deleted == False,
-            )
-        )
-        result = await self.session.execute(stmt)
-        employee = result.scalar_one_or_none()
-        
-        if not employee:
+        basic_info_id = await _get_basic_information_id_by_employee_no(self.session, employee_no)
+        if not basic_info_id:
             return []
-        
+
         # Get addresses
-        return await self.get_by_person(employee.basic_information_id)
+        return await self.get_by_person(basic_info_id)
 
     async def get_by_employee_no_and_type(self, employee_no: str, address_type: str) -> Optional[Address]:
         """Get a specific address by employee number and type.
@@ -196,21 +189,12 @@ class AddressService(BaseService[Address]):
         Returns:
             The address if found, None otherwise.
         """
-        # Get employee by number
-        stmt = select(Employee).where(
-            and_(
-                Employee.employee_no == employee_no,
-                Employee.is_deleted == False,
-            )
-        )
-        result = await self.session.execute(stmt)
-        employee = result.scalar_one_or_none()
-        
-        if not employee:
+        basic_info_id = await _get_basic_information_id_by_employee_no(self.session, employee_no)
+        if not basic_info_id:
             return None
-        
+
         # Get specific address
-        return await self.get_by_type(employee.basic_information_id, address_type)
+        return await self.get_by_type(basic_info_id, address_type)
 
     async def get_by_person(self, basic_information_id: str) -> list[Address]:
         """Get all addresses for a specific person.
@@ -272,21 +256,12 @@ class ContactInformationService(BaseService[ContactInformation]):
         Returns:
             The contact information if found, None otherwise.
         """
-        # Get employee by number
-        stmt = select(Employee).where(
-            and_(
-                Employee.employee_no == employee_no,
-                Employee.is_deleted == False,
-            )
-        )
-        result = await self.session.execute(stmt)
-        employee = result.scalar_one_or_none()
-        
-        if not employee:
+        basic_info_id = await _get_basic_information_id_by_employee_no(self.session, employee_no)
+        if not basic_info_id:
             return None
-        
+
         # Get contact information
-        return await self.get_by_person(employee.basic_information_id)
+        return await self.get_by_person(basic_info_id)
 
     async def get_by_person(self, basic_information_id: str) -> Optional[ContactInformation]:
         """Get contact information for a specific person.

@@ -24,9 +24,9 @@ async def create_record_completion(
 ):
     """Create record completion for an employee."""
     employee_service = EmployeeService(session)
-    employee = await employee_service.get_by_employee_no(employee_no)
+    basic_information_id = await employee_service.get_basic_information_id_by_employee_no(employee_no)
 
-    if not employee or not employee.basic_information:
+    if not basic_information_id:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Employee or basic information not found",
@@ -34,7 +34,7 @@ async def create_record_completion(
 
     # Check if record completion already exists
     service = RecordCompletionService(session)
-    existing = await service.get_by_basic_information(employee.basic_information.id)
+    existing = await service.get_by_basic_information(basic_information_id)
 
     if existing and not existing.is_deleted:
         raise HTTPException(
@@ -44,7 +44,7 @@ async def create_record_completion(
 
     # Automatically map basic_information_id from employee
     data_dict = data.model_dump()
-    data_dict["basic_information_id"] = employee.basic_information.id
+    data_dict["basic_information_id"] = basic_information_id
 
     record = RecordCompletion(**data_dict)
     session.add(record)
@@ -54,6 +54,24 @@ async def create_record_completion(
     return create_response(
         path=request.url.path,
         data=record.model_dump(),
+        success=True,
+    )
+
+
+@router.get("/all", response_model=APIResponse)
+async def list_all_record_completions(
+    request: Request,
+    skip: int = 0,
+    limit: int = 100,
+    session: AsyncSession = Depends(get_db),
+):
+    """Get all record completion entries."""
+    service = RecordCompletionService(session)
+    records = await service.get_all(skip=skip, limit=limit)
+
+    return create_response(
+        path=request.url.path,
+        data=[record.model_dump() for record in records],
         success=True,
     )
 
