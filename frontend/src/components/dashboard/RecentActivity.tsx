@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
     UserPlus,
     FileUp,
@@ -11,65 +11,29 @@ import {
     ArrowRight,
 } from "lucide-react";
 
-/* ─── Activity Data ─── */
-
 interface Activity {
-    id: number;
+    id: string;
     type: "hire" | "upload" | "training" | "evaluation" | "award";
     title: string;
     description: string;
-    time: string;
-    icon: LucideIcon;
-    color: string; // unified accent color class
+    timestamp: string;
 }
 
-const activities: Activity[] = [
-    {
-        id: 1,
-        type: "hire",
-        title: "New Employee Onboarded",
-        description: "Maria Santos — CCS, Teaching Staff",
-        time: "2h ago",
-        icon: UserPlus,
-        color: "green",
-    },
-    {
-        id: 2,
-        type: "upload",
-        title: "MOV Documents Uploaded",
-        description: "12 files uploaded by COE faculty",
-        time: "4h ago",
-        icon: FileUp,
-        color: "teal",
-    },
-    {
-        id: 3,
-        type: "training",
-        title: "Training Completed",
-        description: "Leadership Seminar — 18 participants",
-        time: "Yesterday",
-        icon: GraduationCap,
-        color: "emerald",
-    },
-    {
-        id: 4,
-        type: "evaluation",
-        title: "Performance Reviews Submitted",
-        description: "CBA department — 42 evaluations",
-        time: "Yesterday",
-        icon: ClipboardCheck,
-        color: "amber",
-    },
-    {
-        id: 5,
-        type: "award",
-        title: "Service Award Approved",
-        description: "5 employees — 10-year service milestone",
-        time: "2 days ago",
-        icon: Award,
-        color: "stone",
-    },
-];
+type ActivityPayload = {
+    activities: Activity[];
+};
+
+const DEFAULT_PAYLOAD: ActivityPayload = {
+    activities: [],
+};
+
+const iconMap: Record<Activity["type"], LucideIcon> = {
+    hire: UserPlus,
+    upload: FileUp,
+    training: GraduationCap,
+    evaluation: ClipboardCheck,
+    award: Award,
+};
 
 /* ─── Color map ─── */
 const colorMap: Record<string, { bg: string; text: string; dot: string }> = {
@@ -80,9 +44,68 @@ const colorMap: Record<string, { bg: string; text: string; dot: string }> = {
     stone: { bg: "bg-stone-100", text: "text-stone-600", dot: "bg-stone-400" },
 };
 
+const typeColor: Record<Activity["type"], keyof typeof colorMap> = {
+    hire: "green",
+    upload: "teal",
+    training: "emerald",
+    evaluation: "amber",
+    award: "stone",
+};
+
+function toRelativeTime(timestamp: string): string {
+    const date = new Date(timestamp);
+    if (Number.isNaN(date.getTime())) {
+        return "just now";
+    }
+
+    const diffMs = Date.now() - date.getTime();
+    if (diffMs < 0) {
+        return "just now";
+    }
+
+    const minutes = Math.floor(diffMs / 60000);
+    if (minutes < 1) {
+        return "just now";
+    }
+    if (minutes < 60) {
+        return `${minutes}m ago`;
+    }
+
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) {
+        return `${hours}h ago`;
+    }
+
+    const days = Math.floor(hours / 24);
+    if (days === 1) {
+        return "Yesterday";
+    }
+
+    return `${days}d ago`;
+}
+
 /* ─── Component ─── */
 
 export function RecentActivity() {
+    const [payload, setPayload] = useState<ActivityPayload>(DEFAULT_PAYLOAD);
+
+    useEffect(() => {
+        const fetchRecentActivity = async () => {
+            try {
+                const response = await fetch("/api/dashboard/recent-activity?limit=10");
+                const data = (await response.json()) as ActivityPayload;
+                setPayload({
+                    ...DEFAULT_PAYLOAD,
+                    ...data,
+                });
+            } catch (error) {
+                console.error("Failed to fetch recent activity:", error);
+            }
+        };
+
+        fetchRecentActivity();
+    }, []);
+
     return (
         <div className="bg-white rounded-2xl border border-stone-200/60 shadow-sm h-full flex flex-col">
             {/* Header */}
@@ -102,9 +125,9 @@ export function RecentActivity() {
             {/* Activity list */}
             <div className="flex-1 px-6 pb-5">
                 <div className="space-y-0.5">
-                    {activities.slice(0, 3).map((activity, idx) => {
-                        const Icon = activity.icon;
-                        const colors = colorMap[activity.color];
+                    {payload.activities.slice(0, 3).map((activity) => {
+                        const Icon = iconMap[activity.type] || Award;
+                        const colors = colorMap[typeColor[activity.type] || "stone"];
                         return (
                             <div
                                 key={activity.id}
@@ -129,7 +152,7 @@ export function RecentActivity() {
 
                                 {/* Timestamp */}
                                 <span className="text-[10px] text-stone-400 font-medium shrink-0 pt-0.5">
-                                    {activity.time}
+                                    {toRelativeTime(activity.timestamp)}
                                 </span>
                             </div>
                         );

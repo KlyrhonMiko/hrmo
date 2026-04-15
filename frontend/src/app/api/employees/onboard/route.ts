@@ -1,14 +1,79 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
+
+import type { FullPDS } from "@/types";
+import { backendRequest, BackendApiError } from "@/lib/backend-api";
+
+type EmployeeMetaPayload = {
+    employeeNo?: string;
+    positionTitle?: string;
+    dateHired?: string;
+};
+
+type OnboardRequestPayload = {
+    formData: FullPDS;
+    employeeMeta?: EmployeeMetaPayload;
+};
 
 export async function POST(request: Request) {
     try {
-        const body = await request.json();
-        // TODO: Handle employee onboarding logic (e.g., save to database)
-        console.log('Received onboarding data:', body);
+        const body = (await request.json()) as OnboardRequestPayload;
 
-        return NextResponse.json({ success: true, message: 'Employee onboarded successfully' }, { status: 200 });
+        if (!body?.formData) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    stage: "validate_payload",
+                    message: "Missing formData payload.",
+                },
+                { status: 400 }
+            );
+        }
+
+        const result = await backendRequest<{
+            employeeNo: string;
+            stages: Array<{ stage: string; created: number; skipped: number }>;
+        }>("/api/employees/onboard-atomic", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body),
+        });
+
+        return NextResponse.json(
+            {
+                success: true,
+                message: "Employee onboarding completed successfully.",
+                data: result,
+            },
+            { status: 201 }
+        );
     } catch (error) {
-        console.error('Error during employee onboarding:', error);
-        return NextResponse.json({ success: false, error: 'Failed to onboard employee' }, { status: 500 });
+        if (error instanceof BackendApiError) {
+            const details =
+                error.details && typeof error.details === "object" && "message" in (error.details as Record<string, unknown>)
+                    ? (error.details as Record<string, unknown>)
+                    : null;
+
+            return NextResponse.json(
+                {
+                    success: false,
+                    stage: "onboard_atomic",
+                    message: (details?.message as string) || error.message,
+                    details: error.details,
+                    stages: details?.stages || [],
+                },
+                { status: error.status }
+            );
+        }
+
+        return NextResponse.json(
+            {
+                success: false,
+                stage: "onboard_atomic",
+                message: "Failed to onboard employee.",
+                error: error instanceof Error ? error.message : "Unknown error",
+                stages: [],
+            },
+            { status: 500 }
+        );
     }
 }

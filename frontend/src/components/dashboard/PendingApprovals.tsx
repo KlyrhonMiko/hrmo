@@ -1,18 +1,15 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import {
+    ShieldCheck,
     GraduationCap,
-    CalendarOff,
-    FileText,
     ClipboardCheck,
-    Clock,
+    UserCircle,
     ArrowRight,
     type LucideIcon,
 } from "lucide-react";
-
-/* ─── Approval Data ─── */
 
 interface PendingItem {
     id: number;
@@ -25,45 +22,22 @@ interface PendingItem {
     urgentCount?: number;
 }
 
-const pendingItems: PendingItem[] = [
-    {
-        id: 2,
-        label: "Leave Requests",
-        description: "Pending review",
-        count: 3,
-        href: "/employees/leave",
-        icon: CalendarOff,
-        color: "amber",
-        urgentCount: 1,
-    },
-    {
-        id: 3,
-        label: "Document Submissions",
-        description: "MOV & PDS filings",
-        count: 8,
-        href: "/documents",
-        icon: FileText,
-        color: "green",
-    },
-    {
-        id: 4,
-        label: "Performance Reviews",
-        description: "Needs evaluation",
-        count: 4,
-        href: "/employees/evaluations",
-        icon: ClipboardCheck,
-        color: "emerald",
-    },
-    {
-        id: 5,
-        label: "Overtime Claims",
-        description: "Pending validation",
-        count: 6,
-        href: "/employees/overtime",
-        icon: Clock,
-        color: "indigo",
-    },
-];
+type PendingPayload = {
+    items: PendingItem[];
+    total_pending: number;
+};
+
+const DEFAULT_PAYLOAD: PendingPayload = {
+    items: [],
+    total_pending: 0,
+};
+
+const iconByLabel: Record<string, LucideIcon> = {
+    "Certificate Verifications": ShieldCheck,
+    "Training Completions": GraduationCap,
+    "PDS Record Completions": ClipboardCheck,
+    "Profile Completion": UserCircle,
+};
 
 /* ─── Color map ─── */
 const colorMap: Record<string, { bg: string; text: string; badge: string }> = {
@@ -77,7 +51,26 @@ const colorMap: Record<string, { bg: string; text: string; badge: string }> = {
 /* ─── Component ─── */
 
 export function PendingApprovals() {
-    const totalPending = pendingItems.reduce((sum, item) => sum + item.count, 0);
+    const [payload, setPayload] = useState<PendingPayload>(DEFAULT_PAYLOAD);
+
+    useEffect(() => {
+        const fetchPendingApprovals = async () => {
+            try {
+                const response = await fetch("/api/dashboard/pending-approvals");
+                const data = (await response.json()) as PendingPayload;
+                setPayload({
+                    ...DEFAULT_PAYLOAD,
+                    ...data,
+                });
+            } catch (error) {
+                console.error("Failed to fetch pending approvals:", error);
+            }
+        };
+
+        fetchPendingApprovals();
+    }, []);
+
+    const totalPending = payload.total_pending;
 
     return (
         <div className="bg-white rounded-2xl border border-stone-200/60 shadow-sm h-full flex flex-col">
@@ -102,9 +95,9 @@ export function PendingApprovals() {
 
             {/* Approval items */}
             <div className="flex-1 px-3 pb-3">
-                {pendingItems.slice(0, 3).map((item) => {
-                    const Icon = item.icon;
-                    const colors = colorMap[item.color];
+                {payload.items.slice(0, 3).map((item) => {
+                    const Icon = iconByLabel[item.label] || ShieldCheck;
+                    const colors = colorMap[item.color] || colorMap.green;
                     return (
                         <Link
                             key={item.id}

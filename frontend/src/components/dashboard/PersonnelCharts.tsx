@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     PieChart,
     Pie,
@@ -12,61 +12,54 @@ import {
     CartesianGrid,
     Tooltip,
     ResponsiveContainer,
-    Legend,
 } from "recharts";
 
-/* ═══════════════════════════════════════════════════════════
-   DATA
-   ═══════════════════════════════════════════════════════════ */
+type PieDatum = {
+    key: string;
+    label: string;
+    value: number;
+    color: string;
+};
 
-const categoryData = [
-    { name: "Teaching Staff", value: 244, color: "#1e6b45" },
-    { name: "Non-Teaching", value: 103, color: "#3b82f6" },
-    { name: "COS", value: 34, color: "#94a3b8" },
-];
+type DepartmentCategoryDatum = {
+    department: string;
+    teaching: number;
+    nonTeaching: number;
+    cos: number;
+};
 
-const statusData = [
-    { name: "Permanent", value: 146, color: "#10b981" },
-    { name: "Part-Time", value: 132, color: "#94a3b8" },
-    { name: "Contractual", value: 62, color: "#6366f1" },
-    { name: "Casual", value: 6, color: "#f59e0b" },
-    { name: "Temporary", value: 1, color: "#06b6d4" },
-    { name: "COS", value: 34, color: "#78716c" },
-];
+type DepartmentStatusDatum = {
+    department: string;
+    [key: string]: string | number;
+};
 
-const departmentData = [
-    { department: "CCS", teaching: 38, nonTeaching: 15, cos: 5 },
-    { department: "CBA", teaching: 42, nonTeaching: 18, cos: 6 },
-    { department: "CAS", teaching: 35, nonTeaching: 14, cos: 4 },
-    { department: "COE", teaching: 48, nonTeaching: 20, cos: 8 },
-    { department: "CIHM", teaching: 25, nonTeaching: 10, cos: 3 },
-    { department: "COED", teaching: 32, nonTeaching: 12, cos: 4 },
-    { department: "CON", teaching: 24, nonTeaching: 14, cos: 4 },
-];
+type StatusKey = {
+    key: string;
+    label: string;
+    color: string;
+};
 
-const deptStatusData = [
-    { department: "CCS", permanent: 25, partTime: 15, contractual: 10, casual: 1, temporary: 0, cos: 5 },
-    { department: "CBA", permanent: 30, partTime: 18, contractual: 12, casual: 1, temporary: 0, cos: 6 },
-    { department: "CAS", permanent: 22, partTime: 12, contractual: 9, casual: 1, temporary: 0, cos: 4 },
-    { department: "COE", permanent: 35, partTime: 20, contractual: 15, casual: 1, temporary: 1, cos: 8 },
-    { department: "CIHM", permanent: 12, partTime: 25, contractual: 6, casual: 1, temporary: 0, cos: 3 },
-    { department: "COED", permanent: 10, partTime: 30, contractual: 5, casual: 1, temporary: 0, cos: 4 },
-    { department: "CON", permanent: 12, partTime: 12, contractual: 5, casual: 0, temporary: 0, cos: 4 },
-];
+type PersonnelPayload = {
+    category: PieDatum[];
+    status: PieDatum[];
+    by_department_category: DepartmentCategoryDatum[];
+    by_department_status: DepartmentStatusDatum[];
+    status_keys: StatusKey[];
+};
 
-const statusBarColors: Record<string, { color: string; label: string }> = {
-    permanent: { color: "#10b981", label: "Permanent" },
-    partTime: { color: "#94a3b8", label: "Part-Time" },
-    contractual: { color: "#6366f1", label: "Contractual" },
-    casual: { color: "#f59e0b", label: "Casual" },
-    temporary: { color: "#06b6d4", label: "Temporary" },
-    cos: { color: "#78716c", label: "COS" },
+const DEFAULT_PERSONNEL: PersonnelPayload = {
+    category: [
+        { key: "teaching", label: "Teaching Staff", value: 0, color: "#1e6b45" },
+        { key: "nonTeaching", label: "Non-Teaching", value: 0, color: "#3b82f6" },
+        { key: "cos", label: "COS", value: 0, color: "#94a3b8" },
+    ],
+    status: [],
+    by_department_category: [],
+    by_department_status: [],
+    status_keys: [],
 };
 
 type TabKey = "category" | "status";
-
-const CATEGORY_TOTAL = categoryData.reduce((s, i) => s + i.value, 0);
-const STATUS_TOTAL = statusData.reduce((s, i) => s + i.value, 0);
 
 /* ═══════════════════════════════════════════════════════════
    SHARED TOOLTIP
@@ -121,12 +114,30 @@ function CenterLabel({ total }: { total: number }) {
    ═══════════════════════════════════════════════════════════ */
 
 export function PersonnelCharts() {
+    const [personnelData, setPersonnelData] = useState<PersonnelPayload>(DEFAULT_PERSONNEL);
     const [tab, setTab] = useState<TabKey>("category");
     const [hovered, setHovered] = useState<number | null>(null);
 
+    useEffect(() => {
+        const fetchPersonnelData = async () => {
+            try {
+                const response = await fetch("/api/dashboard/personnel");
+                const data = (await response.json()) as PersonnelPayload;
+                setPersonnelData({
+                    ...DEFAULT_PERSONNEL,
+                    ...data,
+                });
+            } catch (error) {
+                console.error("Failed to fetch personnel dashboard data:", error);
+            }
+        };
+
+        fetchPersonnelData();
+    }, []);
+
     const isCategory = tab === "category";
-    const donutData = isCategory ? categoryData : statusData;
-    const total = isCategory ? CATEGORY_TOTAL : STATUS_TOTAL;
+    const donutData = isCategory ? personnelData.category : personnelData.status;
+    const total = donutData.reduce((sum, item) => sum + item.value, 0);
 
     return (
         <div className="bg-white rounded-xl border border-stone-200/80 overflow-hidden">
@@ -166,6 +177,7 @@ export function PersonnelCharts() {
                         <PieChart>
                             <Pie
                                 data={donutData}
+                                nameKey="label"
                                 cx="50%"
                                 cy="50%"
                                 innerRadius={62}
@@ -196,7 +208,7 @@ export function PersonnelCharts() {
                         {donutData.map((d, i) => (
                             <div key={i} className="flex items-center gap-1.5 text-[11px]">
                                 <span className="w-2 h-2 rounded-full" style={{ backgroundColor: d.color }} />
-                                <span className="text-stone-500 font-medium">{d.name}</span>
+                                <span className="text-stone-500 font-medium">{d.label}</span>
                                 <span className="text-stone-400">({d.value})</span>
                             </div>
                         ))}
@@ -208,7 +220,7 @@ export function PersonnelCharts() {
                     <p className="text-xs font-medium text-stone-400 mb-3">By Department</p>
                     <ResponsiveContainer width="100%" height={240}>
                         <BarChart
-                            data={(isCategory ? departmentData : deptStatusData) as any[]}
+                            data={isCategory ? personnelData.by_department_category : personnelData.by_department_status}
                             layout="vertical"
                             margin={{ top: 0, right: 12, left: 0, bottom: 0 }}
                             barSize={isCategory ? undefined : 14}
@@ -233,14 +245,14 @@ export function PersonnelCharts() {
                                     <Bar dataKey="cos" name="COS" fill="#94a3b8" radius={[0, 4, 4, 0]} animationDuration={500} />
                                 </>
                             ) : (
-                                Object.entries(statusBarColors).map(([key, { color }], i) => (
+                                personnelData.status_keys.map((statusKey, i) => (
                                     <Bar
-                                        key={key}
-                                        dataKey={key}
-                                        name={statusBarColors[key].label}
+                                        key={statusKey.key}
+                                        dataKey={statusKey.key}
+                                        name={statusKey.label}
                                         stackId="status"
-                                        fill={color}
-                                        radius={i === Object.keys(statusBarColors).length - 1 ? [0, 4, 4, 0] : [0, 0, 0, 0]}
+                                        fill={statusKey.color}
+                                        radius={i === personnelData.status_keys.length - 1 ? [0, 4, 4, 0] : [0, 0, 0, 0]}
                                         animationDuration={500}
                                     />
                                 ))
@@ -266,10 +278,10 @@ export function PersonnelCharts() {
                                 </div>
                             </>
                         ) : (
-                            Object.entries(statusBarColors).map(([key, { color, label }]) => (
-                                <div key={key} className="flex items-center gap-1.5 text-[11px]">
-                                    <span className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
-                                    <span className="text-stone-500 font-medium">{label}</span>
+                            personnelData.status_keys.map((statusKey) => (
+                                <div key={statusKey.key} className="flex items-center gap-1.5 text-[11px]">
+                                    <span className="w-2 h-2 rounded-full" style={{ backgroundColor: statusKey.color }} />
+                                    <span className="text-stone-500 font-medium">{statusKey.label}</span>
                                 </div>
                             ))
                         )}

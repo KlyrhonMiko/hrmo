@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { RoleLayout } from "@/components/layout/RoleLayout";
-import type { CertificateRecord, DocumentMOV } from "@/types";
+import type { CertificateRecord, PaginationMeta } from "@/types";
 import {
     ScanLine,
     Upload,
@@ -17,6 +17,8 @@ import {
     ChevronDown,
     X,
     FileText,
+    ChevronLeft,
+    ChevronRight,
 } from "lucide-react";
 
 const MOCK_EMPLOYEES = [
@@ -209,7 +211,13 @@ const STATUS_ICONS: Record<CertificateRecord["status"], React.ReactNode> = {
 };
 
 export default function CertificatesPage() {
-    const [certificates, setCertificates] = useState<CertificateRecord[]>(MOCK_CERTIFICATES);
+    const PAGE_SIZE = 10;
+    const [certificates, setCertificates] = useState<CertificateRecord[]>([]);
+    const [employeeOptions, setEmployeeOptions] = useState<Array<{ employeeNo: string; name: string }>>([]);
+    const [loading, setLoading] = useState(true);
+    const [loadError, setLoadError] = useState<string | null>(null);
+    const [meta, setMeta] = useState<PaginationMeta | null>(null);
+    const [page, setPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
     const [filterCategory, setFilterCategory] = useState<string>("All");
     const [filterStatus, setFilterStatus] = useState<string>("All");
@@ -227,6 +235,42 @@ export default function CertificatesPage() {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [uploading, setUploading] = useState(false);
     const [showUploadForm, setShowUploadForm] = useState(false);
+    const [selectedCertificate, setSelectedCertificate] = useState<CertificateRecord | null>(null);
+    const [verifyingCertificateId, setVerifyingCertificateId] = useState<string | null>(null);
+
+    const loadCertificates = useCallback(async () => {
+        setLoading(true);
+        setLoadError(null);
+
+        try {
+            const response = await fetch(`/api/certificates?page=${page}&limit=${PAGE_SIZE}`, { cache: "no-store" });
+            const payload = (await response.json()) as {
+                success?: boolean;
+                message?: string;
+                data?: {
+                    employees?: Array<{ employeeNo: string; name: string }>;
+                    certificates?: CertificateRecord[];
+                };
+                meta?: PaginationMeta;
+            };
+
+            if (!response.ok || !payload.success) {
+                throw new Error(payload.message || "Failed to load certificates.");
+            }
+
+            setEmployeeOptions(payload.data?.employees || []);
+            setCertificates(payload.data?.certificates || []);
+            setMeta(payload.meta || null);
+        } catch (error) {
+            setLoadError(error instanceof Error ? error.message : "Failed to load certificates.");
+        } finally {
+            setLoading(false);
+        }
+    }, [page]);
+
+    useEffect(() => {
+        void loadCertificates();
+    }, [loadCertificates]);
 
     const stats = {
         total: certificates.length,
@@ -246,6 +290,10 @@ export default function CertificatesPage() {
         const matchesEmployee = filterEmployee === "All" || cert.employeeId === filterEmployee;
         return matchesSearch && matchesCategory && matchesStatus && matchesEmployee;
     });
+
+    useEffect(() => {
+        setPage(1);
+    }, [searchQuery, filterCategory, filterStatus, filterEmployee]);
 
     const handleDrag = useCallback((e: React.DragEvent) => {
         e.preventDefault();
@@ -289,7 +337,7 @@ export default function CertificatesPage() {
         return true;
     };
 
-    const handleUpload = () => {
+    const handleUpload = async () => {
         if (!selectedEmployee || !certNumber || !dateIssued || !selectedFile) {
             alert("Please fill in all required fields and select a file.");
             return;
@@ -297,27 +345,100 @@ export default function CertificatesPage() {
 
         setUploading(true);
 
-        const employee = MOCK_EMPLOYEES.find((e) => e.id === selectedEmployee);
-        const newCert: CertificateRecord = {
-            id: `CERT-${String(certificates.length + 1).padStart(3, "0")}`,
-            employeeId: selectedEmployee,
-            employeeName: employee?.name ?? "",
-            title: `${documentType}${description ? ` - ${description}` : ""}`,
-            issuingBody,
-            dateIssued,
-            expiryDate: expiryDate || undefined,
-            certificateNumber: certNumber,
-            category: CATEGORY_MAP[documentType] ?? "Other",
-            fileUrl: `/files/${selectedFile.name}`,
-            fileName: selectedFile.name,
-            status: "Pending Verification",
-        };
+        try {
+            const uploadPayload = new FormData();
+            uploadPayload.set("employeeNo", selectedEmployee);
+            uploadPayload.set("certificateType", documentType);
+            uploadPayload.set("issuingBody", issuingBody);
+            uploadPayload.set("certificateNo", certNumber);
+            uploadPayload.set("dateIssued", dateIssued);
+            uploadPayload.set("expiryDate", expiryDate);
+            uploadPayload.set("description", description);
+            uploadPayload.set("file", selectedFile, selectedFile.name);
 
-        setTimeout(() => {
-            setCertificates((prev) => [newCert, ...prev]);
+            const response = await fetch("/api/certificates", {
+                method: "POST",
+                body: uploadPayload,
+            });
+
+            const payload = (await response.json()) as {
+                success?: boolean;
+                message?: string;
+                data?: CertificateRecord;
+            };
+
+            if (!response.ok || !payload.success || !payload.data) {
+                throw new Error(payload.message || "Failed to upload certificate.");
+            }
+
+            setCertificates((prev) => [payload.data as CertificateRecord, ...prev]);
             resetForm();
+        } catch (error) {
+            alert(error instanceof Error ? error.message : "Failed to upload certificate.");
+        } finally {
             setUploading(false);
-        }, 800);
+        }
+    };
+
+    const openCertificate = (certificate: CertificateRecord) => {
+        setSelectedCertificate(certificate);
+    };
+
+    const closeCertificate = () => {
+        setSelectedCertificate(null);
+    };
+
+    const handleDownload = (certificate: CertificateRecord) => {
+        if (!certificate.fileUrl) {
+            alert("No certificate file is available for download.");
+            return;
+        }
+
+        window.open(certificate.fileUrl, "_blank", "noopener,noreferrer");
+    };
+
+    const handleVerify = async (certificate: CertificateRecord) => {
+        if (certificate.status === "Expired") {
+            alert("Expired certificates cannot be verified.");
+            return;
+        }
+
+        setVerifyingCertificateId(certificate.id);
+
+        try {
+            const verificationForm = new FormData();
+            verificationForm.set("employeeNo", certificate.employeeId);
+            verificationForm.set("certificateId", certificate.id);
+            verificationForm.set("verifiedBy", "HR Head");
+            verificationForm.set("verifiedAt", new Date().toISOString());
+
+            const response = await fetch("/api/certificates", {
+                method: "PATCH",
+                body: verificationForm,
+            });
+
+            const payload = (await response.json()) as {
+                success?: boolean;
+                message?: string;
+                data?: CertificateRecord;
+            };
+
+            if (!response.ok || !payload.success || !payload.data) {
+                throw new Error(payload.message || "Failed to verify certificate.");
+            }
+
+            setCertificates((prev) =>
+                prev.map((item) => (item.id === certificate.id ? (payload.data as CertificateRecord) : item))
+            );
+
+            setSelectedCertificate((prev) =>
+                prev && prev.id === certificate.id ? (payload.data as CertificateRecord) : prev
+            );
+        } catch (error) {
+            alert(error instanceof Error ? error.message : "Failed to verify certificate.");
+        } finally {
+            setVerifyingCertificateId(null);
+        }
     };
 
     const resetForm = () => {
@@ -332,18 +453,13 @@ export default function CertificatesPage() {
         setShowUploadForm(false);
     };
 
-    const handleVerify = (id: string) => {
-        setCertificates((prev) =>
-            prev.map((c) =>
-                c.id === id
-                    ? { ...c, status: "Active" as const, verifiedBy: "HR Head", verifiedAt: new Date().toISOString().split("T")[0] }
-                    : c
-            )
-        );
-    };
-
     const formatDate = (dateStr: string) => {
-        return new Date(dateStr).toLocaleDateString("en-US", {
+        const date = new Date(dateStr);
+        if (Number.isNaN(date.getTime())) {
+            return "—";
+        }
+
+        return date.toLocaleDateString("en-US", {
             year: "numeric",
             month: "short",
             day: "numeric",
@@ -436,8 +552,8 @@ export default function CertificatesPage() {
                                     onChange={(e) => setSelectedEmployee(e.target.value)}
                                 >
                                     <option value="">Select employee...</option>
-                                    {MOCK_EMPLOYEES.map((emp) => (
-                                        <option key={emp.id} value={emp.id}>
+                                    {employeeOptions.map((emp) => (
+                                        <option key={emp.employeeNo} value={emp.employeeNo}>
                                             {emp.name}
                                         </option>
                                     ))}
@@ -664,8 +780,8 @@ export default function CertificatesPage() {
                                         onChange={(e) => setFilterEmployee(e.target.value)}
                                     >
                                         <option value="All">All Employees</option>
-                                        {MOCK_EMPLOYEES.map((emp) => (
-                                            <option key={emp.id} value={emp.id}>
+                                        {employeeOptions.map((emp) => (
+                                            <option key={emp.employeeNo} value={emp.employeeNo}>
                                                 {emp.name}
                                             </option>
                                         ))}
@@ -705,7 +821,25 @@ export default function CertificatesPage() {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-stone-100">
-                                {filteredCertificates.length === 0 ? (
+                                {loading ? (
+                                    <tr>
+                                        <td
+                                            colSpan={7}
+                                            className="text-center py-12 text-stone-400 text-sm"
+                                        >
+                                            Loading certificates...
+                                        </td>
+                                    </tr>
+                                ) : loadError ? (
+                                    <tr>
+                                        <td
+                                            colSpan={7}
+                                            className="text-center py-12 text-red-500 text-sm"
+                                        >
+                                            {loadError}
+                                        </td>
+                                    </tr>
+                                ) : filteredCertificates.length === 0 ? (
                                     <tr>
                                         <td
                                             colSpan={7}
@@ -764,22 +898,16 @@ export default function CertificatesPage() {
                                                 <div className="flex items-center justify-end gap-1">
                                                     <button
                                                         title="View"
+                                                        onClick={() => openCertificate(cert)}
                                                         className="p-1.5 rounded-lg hover:bg-stone-100 text-stone-400 hover:text-stone-700 transition-colors"
                                                     >
                                                         <Eye className="w-4 h-4" />
                                                     </button>
-                                                    {cert.status === "Pending Verification" && (
-                                                        <button
-                                                            title="Verify"
-                                                            onClick={() => handleVerify(cert.id)}
-                                                            className="p-1.5 rounded-lg hover:bg-green-50 text-stone-400 hover:text-green-700 transition-colors"
-                                                        >
-                                                            <CheckCircle className="w-4 h-4" />
-                                                        </button>
-                                                    )}
                                                     <button
                                                         title="Download"
-                                                        className="p-1.5 rounded-lg hover:bg-stone-100 text-stone-400 hover:text-stone-700 transition-colors"
+                                                        onClick={() => handleDownload(cert)}
+                                                        disabled={!cert.fileUrl}
+                                                        className="p-1.5 rounded-lg hover:bg-stone-100 text-stone-400 hover:text-stone-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                                     >
                                                         <Download className="w-4 h-4" />
                                                     </button>
@@ -791,7 +919,154 @@ export default function CertificatesPage() {
                             </tbody>
                         </table>
                     </div>
+                    <div className="px-5 py-3 border-t border-stone-100 flex items-center justify-between">
+                        <p className="text-[12px] text-stone-400">
+                            {meta ? (
+                                <>
+                                    Showing{" "}
+                                    <span className="font-medium text-stone-600">{meta.total_records === 0 ? 0 : meta.skip + 1}</span>
+                                    -
+                                    <span className="font-medium text-stone-600">{Math.min(meta.skip + certificates.length, meta.total_records)}</span>
+                                    {" "}of{" "}
+                                    <span className="font-medium text-stone-600">{meta.total_records}</span> certificates
+                                </>
+                            ) : (
+                                <>
+                                    Showing <span className="font-medium text-stone-600">{certificates.length}</span> certificates
+                                </>
+                            )}
+                        </p>
+                        {meta && (
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                                    disabled={!meta.has_previous || loading}
+                                    className="inline-flex items-center gap-1 px-3 py-1.5 text-[12px] rounded-lg border border-stone-200 text-stone-600 hover:bg-stone-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    <ChevronLeft className="w-3.5 h-3.5" /> Prev
+                                </button>
+                                <span className="text-[12px] text-stone-500">Page {meta.current_page} of {Math.max(meta.total_pages, 1)}</span>
+                                <button
+                                    onClick={() => setPage((prev) => prev + 1)}
+                                    disabled={!meta.has_next || loading}
+                                    className="inline-flex items-center gap-1 px-3 py-1.5 text-[12px] rounded-lg border border-stone-200 text-stone-600 hover:bg-stone-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    Next <ChevronRight className="w-3.5 h-3.5" />
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
+
+                {selectedCertificate && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                        <div className="absolute inset-0 bg-black/40" onClick={closeCertificate} />
+                        <div className="relative w-full max-w-2xl max-h-[88vh] overflow-y-auto rounded-2xl bg-white shadow-xl">
+                            <div className="sticky top-0 z-10 flex items-center justify-between rounded-t-2xl border-b border-stone-100 bg-white px-6 py-4">
+                                <div>
+                                    <p className="text-[11px] uppercase tracking-wide text-stone-400">
+                                        Certificate Details
+                                    </p>
+                                    <h3 className="text-[16px] font-bold text-stone-800">
+                                        {selectedCertificate.title}
+                                    </h3>
+                                </div>
+                                <button
+                                    onClick={closeCertificate}
+                                    className="p-1.5 rounded-lg hover:bg-stone-100 transition-colors"
+                                >
+                                    <X className="w-4 h-4 text-stone-500" />
+                                </button>
+                            </div>
+
+                            <div className="px-6 py-5 space-y-5">
+                                <div className="grid grid-cols-2 gap-3 text-sm">
+                                    <div className="rounded-xl border border-stone-200 bg-stone-50 p-3">
+                                        <p className="text-[11px] uppercase tracking-wide text-stone-400">
+                                            Employee
+                                        </p>
+                                        <p className="font-medium text-stone-800">{selectedCertificate.employeeName}</p>
+                                        <p className="text-xs text-stone-500">{selectedCertificate.employeeId}</p>
+                                    </div>
+                                    <div className="rounded-xl border border-stone-200 bg-stone-50 p-3">
+                                        <p className="text-[11px] uppercase tracking-wide text-stone-400">
+                                            Status
+                                        </p>
+                                        <div
+                                            className={`mt-1 inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full ${STATUS_STYLES[selectedCertificate.status]}`}
+                                        >
+                                            {STATUS_ICONS[selectedCertificate.status]}
+                                            {selectedCertificate.status}
+                                        </div>
+                                    </div>
+                                    <div className="rounded-xl border border-stone-200 bg-stone-50 p-3">
+                                        <p className="text-[11px] uppercase tracking-wide text-stone-400">
+                                            Issuing Body
+                                        </p>
+                                        <p className="font-medium text-stone-800">{selectedCertificate.issuingBody}</p>
+                                    </div>
+                                    <div className="rounded-xl border border-stone-200 bg-stone-50 p-3">
+                                        <p className="text-[11px] uppercase tracking-wide text-stone-400">
+                                            Certificate Number
+                                        </p>
+                                        <p className="font-medium text-stone-800">{selectedCertificate.certificateNumber}</p>
+                                    </div>
+                                    <div className="rounded-xl border border-stone-200 bg-stone-50 p-3">
+                                        <p className="text-[11px] uppercase tracking-wide text-stone-400">
+                                            Date Issued
+                                        </p>
+                                        <p className="font-medium text-stone-800">{formatDate(selectedCertificate.dateIssued)}</p>
+                                    </div>
+                                    <div className="rounded-xl border border-stone-200 bg-stone-50 p-3">
+                                        <p className="text-[11px] uppercase tracking-wide text-stone-400">
+                                            Expiry Date
+                                        </p>
+                                        <p className="font-medium text-stone-800">
+                                            {selectedCertificate.expiryDate ? formatDate(selectedCertificate.expiryDate) : "—"}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                                    <div className="rounded-xl border border-stone-200 p-4">
+                                        <p className="text-[11px] uppercase tracking-wide text-stone-400 mb-2">
+                                            Verification
+                                        </p>
+                                        <p className="font-medium text-stone-800">
+                                            {selectedCertificate.verifiedBy || "Not verified yet"}
+                                        </p>
+                                        <p className="text-xs text-stone-500">
+                                            {selectedCertificate.verifiedAt ? formatDate(selectedCertificate.verifiedAt) : "No verification date"}
+                                        </p>
+                                    </div>
+                                    <div className="rounded-xl border border-stone-200 p-4">
+                                        <p className="text-[11px] uppercase tracking-wide text-stone-400 mb-2">
+                                            File
+                                        </p>
+                                        <p className="font-medium text-stone-800 truncate">
+                                            {selectedCertificate.fileName || "No file attached"}
+                                        </p>
+                                        <p className="text-xs text-stone-500 truncate">
+                                            {selectedCertificate.fileUrl || "No file URL available"}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-wrap items-center justify-end gap-3 pt-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => handleDownload(selectedCertificate)}
+                                        disabled={!selectedCertificate.fileUrl}
+                                        className="inline-flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-stone-600 bg-stone-100 rounded-lg hover:bg-stone-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        <Download className="w-4 h-4" />
+                                        Download
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </RoleLayout>
     );
