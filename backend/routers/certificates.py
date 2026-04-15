@@ -10,7 +10,7 @@ from schemas.employees import (
     CertificateRecordUpdate,
 )
 from services.employees import CertificateRecordService, EmployeeService
-from utils.response import APIResponse, create_response
+from utils.response import APIResponse, build_pagination_meta, create_response
 from utils.file_handler import save_certificate_file, delete_certificate_file, FileUploadError
 from datetime import date
 
@@ -78,16 +78,18 @@ async def create_certificate(
 async def list_all_certificates(
     request: Request,
     skip: int = 0,
-    limit: int = 100,
+    limit: int = 10,
     session: AsyncSession = Depends(get_db),
 ):
     """Get all certificate records."""
     service = CertificateRecordService(session)
     records = await service.get_all(skip=skip, limit=limit)
+    total_records = await service.count_all()
 
     return create_response(
         path=request.url.path,
         data=[record.model_dump() for record in records],
+        meta=build_pagination_meta(skip=skip, limit=limit, total_records=total_records),
         success=True,
     )
 

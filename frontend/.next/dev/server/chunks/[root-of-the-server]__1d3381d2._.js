@@ -215,9 +215,24 @@ async function optionalRequest(path, fallback) {
         throw error;
     }
 }
-async function GET() {
+async function GET(request) {
     try {
-        const employees = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$src$2f$lib$2f$backend$2d$api$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["backendRequest"])("/api/employees?skip=0&limit=500");
+        const url = new URL(request.url);
+        const page = Math.max(Number(url.searchParams.get("page") || "1") || 1, 1);
+        const limit = Math.max(Number(url.searchParams.get("limit") || "10") || 10, 1);
+        const skip = (page - 1) * limit;
+        const employeesResponse = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$src$2f$lib$2f$backend$2d$api$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["backendRequest"])(`/api/employees?skip=${skip}&limit=${limit}`);
+        const employees = employeesResponse.data || [];
+        const defaultMeta = {
+            skip,
+            limit,
+            current_page: page,
+            total_pages: 0,
+            total_records: employees.length,
+            has_previous: page > 1,
+            has_next: false
+        };
+        const meta = employeesResponse.meta || defaultMeta;
         const mappedEmployees = await Promise.all(employees.map(async (employee)=>{
             const employeeNo = employee.employee_no;
             const [basicInfo, contactInfo, certificates, trainingRecords] = await Promise.all([
@@ -279,7 +294,8 @@ async function GET() {
         }));
         return __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
             success: true,
-            data: mappedEmployees
+            data: mappedEmployees,
+            meta
         }, {
             status: 200
         });

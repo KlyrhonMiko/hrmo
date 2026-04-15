@@ -10,7 +10,7 @@ from schemas.professional_background import (
 )
 from services.professional_background import WorkExperienceService
 from services.employees import EmployeeService
-from utils.response import APIResponse, create_response
+from utils.response import APIResponse, build_pagination_meta, create_response
 
 router = APIRouter(prefix="/api/work-experience", tags=["Work Experience"])
 
@@ -52,16 +52,18 @@ async def create_work_experience(
 async def list_all_work_experience_records(
     request: Request,
     skip: int = 0,
-    limit: int = 100,
+    limit: int = 10,
     session: AsyncSession = Depends(get_db),
 ):
     """Get all work experience records."""
     service = WorkExperienceService(session)
     records = await service.get_all(skip=skip, limit=limit)
+    total_records = await service.count_all()
 
     return create_response(
         path=request.url.path,
         data=[record.model_dump() for record in records],
+        meta=build_pagination_meta(skip=skip, limit=limit, total_records=total_records),
         success=True,
     )
 

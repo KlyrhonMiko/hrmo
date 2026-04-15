@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
-import type { Employee201, CertificateRecord, TrainingRecord } from "@/types";
-import { backendRequest, BackendApiError, getBackendApiBaseUrl } from "@/lib/backend-api";
+import type { Employee201, CertificateRecord, TrainingRecord, PaginationMeta } from "@/types";
+import { backendEnvelopeRequest, backendRequest, BackendApiError, getBackendApiBaseUrl } from "@/lib/backend-api";
 
 type BackendEmployee = {
     id: string;
@@ -122,9 +122,28 @@ async function optionalRequest<T>(path: string, fallback: T): Promise<T> {
     }
 }
 
-export async function GET() {
+export async function GET(request: Request) {
     try {
-        const employees = await backendRequest<BackendEmployee[]>("/api/employees?skip=0&limit=500");
+        const url = new URL(request.url);
+        const page = Math.max(Number(url.searchParams.get("page") || "1") || 1, 1);
+        const limit = Math.max(Number(url.searchParams.get("limit") || "10") || 10, 1);
+        const skip = (page - 1) * limit;
+
+        const employeesResponse = await backendEnvelopeRequest<BackendEmployee[]>(
+            `/api/employees?skip=${skip}&limit=${limit}`
+        );
+        const employees = employeesResponse.data || [];
+
+        const defaultMeta: PaginationMeta = {
+            skip,
+            limit,
+            current_page: page,
+            total_pages: 0,
+            total_records: employees.length,
+            has_previous: page > 1,
+            has_next: false,
+        };
+        const meta = (employeesResponse.meta as PaginationMeta | undefined) || defaultMeta;
 
         const mappedEmployees = await Promise.all(
             employees.map(async (employee): Promise<Employee201> => {
@@ -205,7 +224,7 @@ export async function GET() {
             })
         );
 
-        return NextResponse.json({ success: true, data: mappedEmployees }, { status: 200 });
+        return NextResponse.json({ success: true, data: mappedEmployees, meta }, { status: 200 });
     } catch (error) {
         const status = error instanceof BackendApiError ? error.status : 500;
         const message = error instanceof Error ? error.message : "Failed to load employee directory data.";

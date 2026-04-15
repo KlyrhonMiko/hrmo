@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useMemo } from "react";
 import { RoleLayout } from "@/components/layout/RoleLayout";
-import type { Employee201, DocumentMOV, CertificateRecord, TrainingRecord } from "@/types";
+import type { Employee201, PaginationMeta } from "@/types";
 import {
     Search,
     Filter,
@@ -22,41 +22,12 @@ import {
     Calendar,
     MapPin,
     Briefcase,
+    ChevronLeft,
 } from "lucide-react";
 
 const OFFICES = ["CCS", "COE", "CBA", "CHAS", "CAS", "Admin"] as const;
 const EMPLOYMENT_STATUSES = ["Teaching", "Non-Teaching", "COS"] as const;
 const ACTIVE_STATUSES = ["Active", "Inactive"] as const;
-
-const MOCK_DOCUMENTS: DocumentMOV[] = [
-    { id: "d1", documentType: "Appointment Paper", serialNumber: "AP-2024-001", fileUrl: "#", fileName: "appointment.pdf", category: "Appointment", status: "Verified", uploadedAt: "2024-01-15" },
-    { id: "d2", documentType: "Service Record", serialNumber: "SR-2024-001", fileUrl: "#", fileName: "service_record.pdf", category: "Service Record", status: "Verified", uploadedAt: "2024-02-10" },
-    { id: "d3", documentType: "PDS (CS Form 212)", serialNumber: "PDS-2024-001", fileUrl: "#", fileName: "pds_form.pdf", category: "Other", status: "Verified", uploadedAt: "2024-03-01" },
-];
-
-const MOCK_CERTIFICATES: CertificateRecord[] = [
-    { id: "c1", employeeId: "1", employeeName: "", title: "Civil Service Professional", issuingBody: "CSC", dateIssued: "2020-06-15", certificateNumber: "CSP-2020-1234", category: "Eligibility", fileUrl: "#", fileName: "cs_prof.pdf", status: "Active" },
-    { id: "c2", employeeId: "1", employeeName: "", title: "TESDA NC II - Computer Systems", issuingBody: "TESDA", dateIssued: "2019-11-20", certificateNumber: "NC2-2019-5678", category: "Professional", fileUrl: "#", fileName: "tesda_nc2.pdf", status: "Active" },
-];
-
-const MOCK_TRAININGS: TrainingRecord[] = [
-    { id: "t1", title: "GAD Sensitivity Training", type: "Seminar", conductedBy: "CSC Regional Office", venue: "Convention Center", dateFrom: "2025-03-10", dateTo: "2025-03-12", numberOfHours: 24, status: "Completed" },
-    { id: "t2", title: "Records Management Workshop", type: "Workshop", conductedBy: "CHED Region V", venue: "CHED Office", dateFrom: "2025-06-05", dateTo: "2025-06-06", numberOfHours: 16, status: "Completed" },
-    { id: "t3", title: "Leadership Development Program", type: "Seminar", conductedBy: "DOST", venue: "Online via Zoom", dateFrom: "2026-04-01", dateTo: "2026-04-03", numberOfHours: 24, status: "Upcoming" },
-];
-
-const MOCK_EMPLOYEES: Employee201[] = [
-    { id: "1", employeeNo: "EMP-2018-0042", fullName: "Dela Cruz, Juan Miguel A.", surname: "Dela Cruz", firstName: "Juan Miguel", middleName: "Alvarez", office: "CCS", position: "Instructor I", employmentStatus: "Teaching", dateHired: "2018-06-15", email: "jm.delacruz@university.edu.ph", mobileNo: "0917-123-4567", documents: MOCK_DOCUMENTS, certificates: MOCK_CERTIFICATES, trainingsAttended: MOCK_TRAININGS, isActive: true },
-    { id: "2", employeeNo: "EMP-2019-0078", fullName: "Santos, Maria Clara B.", surname: "Santos", firstName: "Maria Clara", middleName: "Bautista", office: "COE", position: "Associate Professor III", employmentStatus: "Teaching", dateHired: "2019-01-10", email: "mc.santos@university.edu.ph", mobileNo: "0918-234-5678", documents: MOCK_DOCUMENTS.slice(0, 2), certificates: MOCK_CERTIFICATES, trainingsAttended: MOCK_TRAININGS.slice(0, 2), isActive: true },
-    { id: "3", employeeNo: "EMP-2020-0103", fullName: "Reyes, Jose Antonio C.", surname: "Reyes", firstName: "Jose Antonio", middleName: "Cruz", office: "CBA", position: "Instructor II", employmentStatus: "Teaching", dateHired: "2020-08-01", email: "ja.reyes@university.edu.ph", mobileNo: "0919-345-6789", documents: MOCK_DOCUMENTS, certificates: MOCK_CERTIFICATES.slice(0, 1), trainingsAttended: MOCK_TRAININGS, isActive: true },
-    { id: "4", employeeNo: "EMP-2017-0025", fullName: "Garcia, Ana Patricia D.", surname: "Garcia", firstName: "Ana Patricia", middleName: "Dimaculangan", office: "Admin", position: "Administrative Officer IV", employmentStatus: "Non-Teaching", dateHired: "2017-03-20", email: "ap.garcia@university.edu.ph", mobileNo: "0920-456-7890", documents: MOCK_DOCUMENTS, certificates: MOCK_CERTIFICATES, trainingsAttended: MOCK_TRAININGS.slice(0, 1), isActive: true },
-    { id: "5", employeeNo: "EMP-2021-0156", fullName: "Bautista, Ricardo E.", surname: "Bautista", firstName: "Ricardo", middleName: "Espinosa", office: "CHAS", position: "Instructor I", employmentStatus: "Teaching", dateHired: "2021-06-01", email: "r.bautista@university.edu.ph", mobileNo: "0921-567-8901", documents: MOCK_DOCUMENTS.slice(0, 1), certificates: [], trainingsAttended: MOCK_TRAININGS.slice(0, 2), isActive: true },
-    { id: "6", employeeNo: "EMP-2016-0012", fullName: "Villanueva, Carmela F.", surname: "Villanueva", firstName: "Carmela", middleName: "Flores", office: "CAS", position: "Professor V", employmentStatus: "Teaching", dateHired: "2016-01-05", email: "c.villanueva@university.edu.ph", mobileNo: "0922-678-9012", documents: MOCK_DOCUMENTS, certificates: MOCK_CERTIFICATES, trainingsAttended: MOCK_TRAININGS, isActive: true },
-    { id: "7", employeeNo: "EMP-2022-0189", fullName: "Ramos, Mark Angelo G.", surname: "Ramos", firstName: "Mark Angelo", middleName: "Gonzales", office: "CCS", position: "Project Technical Staff", employmentStatus: "COS", dateHired: "2022-09-15", email: "ma.ramos@university.edu.ph", mobileNo: "0923-789-0123", documents: MOCK_DOCUMENTS.slice(0, 2), certificates: [], trainingsAttended: MOCK_TRAININGS.slice(0, 1), isActive: true },
-    { id: "8", employeeNo: "EMP-2015-0008", fullName: "Mendoza, Lourdes H.", surname: "Mendoza", firstName: "Lourdes", middleName: "Hernandez", office: "Admin", position: "Administrative Aide VI", employmentStatus: "Non-Teaching", dateHired: "2015-07-10", email: "l.mendoza@university.edu.ph", mobileNo: "0924-890-1234", documents: MOCK_DOCUMENTS, certificates: MOCK_CERTIFICATES.slice(0, 1), trainingsAttended: MOCK_TRAININGS, isActive: false },
-    { id: "9", employeeNo: "EMP-2023-0201", fullName: "Aquino, Paolo I.", surname: "Aquino", firstName: "Paolo", middleName: "Ignacio", office: "COE", position: "Lab Technician II", employmentStatus: "Non-Teaching", dateHired: "2023-02-01", email: "p.aquino@university.edu.ph", mobileNo: "0925-901-2345", documents: MOCK_DOCUMENTS.slice(0, 1), certificates: MOCK_CERTIFICATES, trainingsAttended: [], isActive: true },
-    { id: "10", employeeNo: "EMP-2024-0220", fullName: "Fernandez, Sofia J.", surname: "Fernandez", firstName: "Sofia", middleName: "Jimenez", office: "CBA", position: "Research Assistant", employmentStatus: "COS", dateHired: "2024-01-15", email: "s.fernandez@university.edu.ph", mobileNo: "0926-012-3456", documents: MOCK_DOCUMENTS.slice(0, 2), certificates: [], trainingsAttended: MOCK_TRAININGS.slice(0, 1), isActive: true },
-];
 
 type DetailTab = "personal" | "documents" | "certificates" | "training";
 
@@ -222,6 +193,7 @@ function TrainingTab({ trainings }: { trainings: TrainingRecord[] }) {
 }
 
 export default function EmployeeDirectoryPage() {
+    const PAGE_SIZE = 10;
     const [search, setSearch] = useState("");
     const [officeFilter, setOfficeFilter] = useState("");
     const [empStatusFilter, setEmpStatusFilter] = useState("");
@@ -229,6 +201,8 @@ export default function EmployeeDirectoryPage() {
     const [employees, setEmployees] = useState<Employee201[]>([]);
     const [loading, setLoading] = useState(true);
     const [loadError, setLoadError] = useState<string | null>(null);
+    const [page, setPage] = useState(1);
+    const [meta, setMeta] = useState<PaginationMeta | null>(null);
     const [expandedId, setExpandedId] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<DetailTab>("personal");
     const [showFilters, setShowFilters] = useState(false);
@@ -241,11 +215,12 @@ export default function EmployeeDirectoryPage() {
             setLoadError(null);
 
             try {
-                const response = await fetch("/api/employees/directory", { cache: "no-store" });
+                const response = await fetch(`/api/employees/directory?page=${page}&limit=${PAGE_SIZE}`, { cache: "no-store" });
                 const payload = (await response.json()) as {
                     success?: boolean;
                     message?: string;
                     data?: Employee201[];
+                    meta?: PaginationMeta;
                 };
 
                 if (!response.ok || !payload.success) {
@@ -254,6 +229,7 @@ export default function EmployeeDirectoryPage() {
 
                 if (mounted) {
                     setEmployees(payload.data || []);
+                    setMeta(payload.meta || null);
                 }
             } catch (error) {
                 if (mounted) {
@@ -271,7 +247,7 @@ export default function EmployeeDirectoryPage() {
         return () => {
             mounted = false;
         };
-    }, []);
+    }, [page]);
 
     const filtered = useMemo(() => {
         return employees.filter((e) => {
@@ -306,6 +282,7 @@ export default function EmployeeDirectoryPage() {
         setOfficeFilter("");
         setEmpStatusFilter("");
         setActiveFilter("");
+        setPage(1);
     };
 
     const tabs: { key: DetailTab; label: string; icon: React.ElementType }[] = [
@@ -348,7 +325,10 @@ export default function EmployeeDirectoryPage() {
                                 type="text"
                                 placeholder="Search by name or employee number..."
                                 value={search}
-                                onChange={(e) => setSearch(e.target.value)}
+                                onChange={(e) => {
+                                    setSearch(e.target.value);
+                                    setPage(1);
+                                }}
                                 className="w-full pl-9 pr-4 py-2.5 text-[13px] text-stone-800 placeholder:text-stone-400 bg-stone-50 border border-stone-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600/20 focus:border-green-600 transition"
                             />
                         </div>
@@ -374,7 +354,10 @@ export default function EmployeeDirectoryPage() {
                         <div className="px-4 pb-4 pt-0 flex flex-wrap items-center gap-3 border-t border-stone-100 pt-3">
                             <select
                                 value={officeFilter}
-                                onChange={(e) => setOfficeFilter(e.target.value)}
+                                onChange={(e) => {
+                                    setOfficeFilter(e.target.value);
+                                    setPage(1);
+                                }}
                                 className="px-3 py-2 text-[12px] text-stone-700 bg-stone-50 border border-stone-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600/20 focus:border-green-600 transition"
                             >
                                 <option value="">All Offices</option>
@@ -382,7 +365,10 @@ export default function EmployeeDirectoryPage() {
                             </select>
                             <select
                                 value={empStatusFilter}
-                                onChange={(e) => setEmpStatusFilter(e.target.value)}
+                                onChange={(e) => {
+                                    setEmpStatusFilter(e.target.value);
+                                    setPage(1);
+                                }}
                                 className="px-3 py-2 text-[12px] text-stone-700 bg-stone-50 border border-stone-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600/20 focus:border-green-600 transition"
                             >
                                 <option value="">All Employment Types</option>
@@ -390,7 +376,10 @@ export default function EmployeeDirectoryPage() {
                             </select>
                             <select
                                 value={activeFilter}
-                                onChange={(e) => setActiveFilter(e.target.value)}
+                                onChange={(e) => {
+                                    setActiveFilter(e.target.value);
+                                    setPage(1);
+                                }}
                                 className="px-3 py-2 text-[12px] text-stone-700 bg-stone-50 border border-stone-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600/20 focus:border-green-600 transition"
                             >
                                 <option value="">All Status</option>
@@ -556,9 +545,40 @@ export default function EmployeeDirectoryPage() {
                     {/* Footer */}
                     <div className="px-4 py-3 border-t border-stone-100 flex items-center justify-between">
                         <p className="text-[12px] text-stone-400">
-                            Showing <span className="font-medium text-stone-600">{filtered.length}</span> of{" "}
-                            <span className="font-medium text-stone-600">{MOCK_EMPLOYEES.length}</span> employees
+                            {meta ? (
+                                <>
+                                    Showing{" "}
+                                    <span className="font-medium text-stone-600">{meta.total_records === 0 ? 0 : meta.skip + 1}</span>
+                                    -
+                                    <span className="font-medium text-stone-600">{Math.min(meta.skip + filtered.length, meta.total_records)}</span>
+                                    {" "}of{" "}
+                                    <span className="font-medium text-stone-600">{meta.total_records}</span> employees
+                                </>
+                            ) : (
+                                <>
+                                    Showing <span className="font-medium text-stone-600">{filtered.length}</span> employees
+                                </>
+                            )}
                         </p>
+                        {meta && (
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                                    disabled={!meta.has_previous || loading}
+                                    className="inline-flex items-center gap-1 px-3 py-1.5 text-[12px] rounded-lg border border-stone-200 text-stone-600 hover:bg-stone-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    <ChevronLeft className="w-3.5 h-3.5" /> Prev
+                                </button>
+                                <span className="text-[12px] text-stone-500">Page {meta.current_page} of {Math.max(meta.total_pages, 1)}</span>
+                                <button
+                                    onClick={() => setPage((prev) => prev + 1)}
+                                    disabled={!meta.has_next || loading}
+                                    className="inline-flex items-center gap-1 px-3 py-1.5 text-[12px] rounded-lg border border-stone-200 text-stone-600 hover:bg-stone-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    Next <ChevronRight className="w-3.5 h-3.5" />
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

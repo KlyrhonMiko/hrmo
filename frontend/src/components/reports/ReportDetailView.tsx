@@ -23,6 +23,8 @@ const GROUPBY_LABELS: Record<string, { label: string; color: string }> = {
 };
 
 export function ReportDetailView({ report, onBack }: ReportDetailViewProps) {
+    const PAGE_SIZE = 10;
+    const [page, setPage] = React.useState(1);
     const groupInfo = GROUPBY_LABELS[report.groupBy] || {
         label: report.groupBy,
         color: "bg-slate-50 text-slate-600",
@@ -35,6 +37,14 @@ export function ReportDetailView({ report, onBack }: ReportDetailViewProps) {
     });
     const totalCount = report.results.reduce((sum, r) => sum + r.value, 0);
     const maxValue = Math.max(...report.results.map((r) => r.value));
+    const totalRows = report.results.length;
+    const totalPages = totalRows > 0 ? Math.ceil(totalRows / PAGE_SIZE) : 1;
+    const startIndex = (page - 1) * PAGE_SIZE;
+    const pagedResults = report.results.slice(startIndex, startIndex + PAGE_SIZE);
+
+    React.useEffect(() => {
+        setPage(1);
+    }, [report.id]);
 
     const exportCSV = () => {
         const header = `${groupInfo.label},Headcount\n`;
@@ -133,7 +143,7 @@ export function ReportDetailView({ report, onBack }: ReportDetailViewProps) {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
-                            {report.results.map((item, idx) => {
+                            {pagedResults.map((item, idx) => {
                                 const percentage = Math.round(
                                     (item.value / totalCount) * 100
                                 );
@@ -174,6 +184,30 @@ export function ReportDetailView({ report, onBack }: ReportDetailViewProps) {
                         </tbody>
                     </table>
                 </div>
+                {totalRows > 0 && (
+                    <div className="px-6 py-3 border-t border-slate-200 flex items-center justify-between">
+                        <p className="text-[12px] text-slate-400">
+                            Showing <span className="font-medium text-slate-600">{startIndex + 1}</span>-<span className="font-medium text-slate-600">{Math.min(startIndex + pagedResults.length, totalRows)}</span> of <span className="font-medium text-slate-600">{totalRows}</span> rows
+                        </p>
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                                disabled={page <= 1}
+                                className="px-3 py-1.5 text-[12px] rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                Prev
+                            </button>
+                            <span className="text-[12px] text-slate-500">Page {page} of {totalPages}</span>
+                            <button
+                                onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+                                disabled={page >= totalPages}
+                                className="px-3 py-1.5 text-[12px] rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                Next
+                            </button>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

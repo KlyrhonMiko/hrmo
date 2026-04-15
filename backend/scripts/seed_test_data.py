@@ -36,6 +36,16 @@ FIRST_NAMES_MALE = [
     "Carl",
     "Noel",
     "Anthony",
+    "Daniel",
+    "Jerome",
+    "Vincent",
+    "Elijah",
+    "Francis",
+    "Marvin",
+    "Nathan",
+    "Adrian",
+    "Brian",
+    "Kenneth",
 ]
 
 FIRST_NAMES_FEMALE = [
@@ -49,6 +59,16 @@ FIRST_NAMES_FEMALE = [
     "Therese",
     "Grace",
     "Catherine",
+    "Danica",
+    "Bianca",
+    "Clarisse",
+    "Mariel",
+    "Kristine",
+    "Jasmine",
+    "Rachelle",
+    "Bea",
+    "Nina",
+    "Joy",
 ]
 
 LAST_NAMES = [
@@ -66,6 +86,14 @@ LAST_NAMES = [
     "Bautista",
     "Ramos",
     "Diaz",
+    "Gutierrez",
+    "Domingo",
+    "Manalo",
+    "Soriano",
+    "Salazar",
+    "Pineda",
+    "Yap",
+    "Lim",
 ]
 
 MIDDLE_NAMES = [
@@ -79,6 +107,11 @@ MIDDLE_NAMES = [
     "Pascual",
     "Santiago",
     "Rivera",
+    "Flores",
+    "Delos Santos",
+    "Gonzales",
+    "Manansala",
+    "Domingo",
 ]
 
 OFFICES = [
@@ -105,8 +138,21 @@ ELIGIBILITY_TYPES = [
     "Career Service Subprofessional",
     "RA 1080",
     "BAR/Board Eligibility",
+    "Barangay Official Eligibility",
+    "PD 907 (Honor Graduate Eligibility)",
+    "Sanggunian Member Eligibility",
 ]
-GOV_ID_TYPES = ["Passport", "GSIS", "SSS", "PRC", "Postal ID", "Driver's License"]
+GOV_ID_TYPES = [
+    "Passport",
+    "GSIS",
+    "SSS",
+    "PRC",
+    "Postal ID",
+    "Driver's License",
+    "National ID",
+    "Voter's ID",
+    "UMID",
+]
 
 BARANGAYS = [
     "Poblacion",
@@ -116,6 +162,11 @@ BARANGAYS = [
     "Santa Maria",
     "Mabini",
     "Talon",
+    "San Jose",
+    "Balintawak",
+    "Lawang Bato",
+    "Pandan",
+    "San Antonio",
 ]
 
 CITIES = [
@@ -126,9 +177,25 @@ CITIES = [
     "Iloilo City",
     "Davao City",
     "Cebu City",
+    "Bacolod City",
+    "Cagayan de Oro City",
+    "General Santos City",
+    "Baguio City",
+    "Iligan City",
 ]
 
-PROVINCES = ["Metro Manila", "Cebu", "Davao del Sur", "Iloilo", "Laguna", "Batangas"]
+PROVINCES = [
+    "Metro Manila",
+    "Cebu",
+    "Davao del Sur",
+    "Iloilo",
+    "Laguna",
+    "Batangas",
+    "Bulacan",
+    "Cavite",
+    "Pangasinan",
+    "Misamis Oriental",
+]
 
 DEPARTMENTS = [
     "Human Resource Management Office",
@@ -137,6 +204,23 @@ DEPARTMENTS = [
     "Administrative Services",
     "Procurement Office",
     "General Services Office",
+    "Internal Audit",
+    "Information Systems Unit",
+    "Legal Affairs Office",
+    "Academic Affairs Office",
+]
+
+POSITION_TITLES = [
+    "Administrative Officer I",
+    "Administrative Assistant II",
+    "HR Assistant",
+    "Planning Officer",
+    "Planning Officer I",
+    "Records Officer",
+    "Budget Analyst",
+    "Project Development Officer I",
+    "Management Information Systems Officer",
+    "Administrative Aide VI",
 ]
 
 TRAINING_TITLES = [
@@ -146,14 +230,28 @@ TRAINING_TITLES = [
     "Financial Management for Public Officers",
     "Digital Governance and e-Services",
     "Basic Leadership and Supervision",
+    "Strategic Human Resource Development",
+    "Gender and Development Mainstreaming",
+    "Performance Management System Orientation",
+    "Procurement Planning and Compliance",
+    "Customer Service Excellence in Government",
 ]
+
+TRAINING_TYPES = ["Managerial", "Supervisory", "Technical", "Foundational", "Leadership"]
+TRAINING_SPONSORS = ["CSC", "DILG", "TESDA", "DBM", "DOLE", "CHED", "COA", "NEDA"]
 
 VOLUNTARY_ORGS = [
     "Philippine Red Cross",
     "Barangay Disaster Response Team",
     "Community Outreach Volunteers",
     "Local Environmental Action Group",
+    "Senior Citizen Welfare Council",
+    "Youth Development Network",
+    "City Health Advocacy Group",
+    "Women in Public Service Coalition",
 ]
+
+NATURE_OF_WORK = ["Volunteer", "Coordinator", "Facilitator", "Documenter", "Organizer", "Trainer"]
 
 SCHOOL_PREFIXES = [
     "San Isidro",
@@ -163,6 +261,10 @@ SCHOOL_PREFIXES = [
     "Central",
     "National",
     "City",
+    "Ramon",
+    "Andres",
+    "Magsaysay",
+    "Bonifacio",
 ]
 
 SCHOOL_SUFFIXES = [
@@ -171,6 +273,95 @@ SCHOOL_SUFFIXES = [
     "Science High School",
     "State University",
     "Polytechnic University",
+    "College of Technology",
+    "Integrated School",
+    "Institute of Management",
+]
+
+COLLEGE_COURSES = [
+    "Bachelor of Science in Public Administration",
+    "Bachelor of Science in Information Technology",
+    "Bachelor of Science in Accountancy",
+    "Bachelor of Arts in Communication",
+    "Bachelor of Science in Office Administration",
+    "Bachelor of Science in Business Administration",
+]
+
+GRADUATE_COURSES = [
+    "Master in Public Management",
+    "Master in Business Administration",
+    "Master of Arts in Education",
+    "Master of Information Systems",
+]
+
+ADDRESS_STREETS = [
+    "Rizal",
+    "Bonifacio",
+    "Mabini",
+    "Luna",
+    "Quezon",
+    "Del Pilar",
+    "Aguinaldo",
+    "Burgos",
+]
+
+ADDRESS_SUBDIVISIONS = [
+    "Sunrise",
+    "Greenfield",
+    "Riverbend",
+    "Grandview",
+    "Palm Grove",
+    "Northgate",
+    "Southridge",
+]
+
+BLOOD_TYPES = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]
+
+SPOUSE_OCCUPATIONS = [
+    "Teacher",
+    "Nurse",
+    "Engineer",
+    "Accountant",
+    "Administrative Staff",
+    "Entrepreneur",
+]
+
+SPOUSE_EMPLOYERS = [
+    "City Schools Division",
+    "Provincial Government Office",
+    "Regional Hospital",
+    "Private Logistics Company",
+    "Local Cooperative",
+]
+
+HONORS = ["", "With Honors", "With High Honors", "Dean's List", "Cum Laude"]
+
+SPECIAL_SKILLS_HOBBIES = [
+    "Public speaking",
+    "Excel analytics",
+    "Report writing",
+    "Community facilitation",
+    "Project coordination",
+    "Policy drafting",
+    "Database management",
+    "Event planning",
+    "Team mentoring",
+]
+
+NON_ACADEMIC_DISTINCTIONS = [
+    "Employee of the Month",
+    "Service Excellence Award",
+    "Leadership Award",
+    "Outstanding Community Service",
+    "Innovation in Public Service",
+]
+
+ASSOCIATIONS = [
+    "Philippine Society for Public Administration",
+    "HR Practitioners Association",
+    "Local Government Officers Guild",
+    "Philippine Institute of Civil Service Professionals",
+    "Public Sector Records Management Network",
 ]
 
 
@@ -227,8 +418,8 @@ def _address(rng: random.Random) -> dict[str, str]:
     """Generate a realistic address object based on onboard form structure."""
     return {
         "houseBlockLot": f"Blk {rng.randint(1, 18)} Lot {rng.randint(1, 45)}",
-        "street": f"{rng.choice(['Rizal', 'Bonifacio', 'Mabini', 'Luna', 'Quezon'])} Street",
-        "subdivision": f"{rng.choice(['Sunrise', 'Greenfield', 'Riverbend', 'Grandview'])} Subdivision",
+        "street": f"{rng.choice(ADDRESS_STREETS)} Street",
+        "subdivision": f"{rng.choice(ADDRESS_SUBDIVISIONS)} Subdivision",
         "barangay": rng.choice(BARANGAYS),
         "cityMunicipality": rng.choice(CITIES),
         "province": rng.choice(PROVINCES),
@@ -252,34 +443,37 @@ def _build_education(rng: random.Random, birth_year: int) -> list[dict[str, str]
     ]
 
     for level, start, end, attainment in ranges:
+        degree_or_course = (
+            rng.choice(COLLEGE_COURSES)
+            if level == "College"
+            else "General Curriculum"
+        )
         entries.append(
             {
                 "level": level,
                 "schoolName": _school_name(rng),
-                "basicEducationDegreeCourse": "Bachelor of Science in Public Administration"
-                if level == "College"
-                else "General Curriculum",
+                "basicEducationDegreeCourse": degree_or_course,
                 "periodFrom": str(start),
                 "periodTo": str(end),
                 "highestLevelUnitsEarned": attainment,
                 "yearGraduated": str(end),
-                "scholarshipAcademicHonorsReceived": rng.choice(["", "With Honors", "Dean's List"]),
+                "scholarshipAcademicHonorsReceived": rng.choice(HONORS),
             }
         )
 
-    if rng.random() < 0.35:
+    if rng.random() < 0.45:
         grad_from = college_from + 6
         grad_to = grad_from + 2
         entries.append(
             {
                 "level": "Graduate Studies",
                 "schoolName": _school_name(rng),
-                "basicEducationDegreeCourse": "Master in Public Management",
+                "basicEducationDegreeCourse": rng.choice(GRADUATE_COURSES),
                 "periodFrom": str(grad_from),
                 "periodTo": str(grad_to),
                 "highestLevelUnitsEarned": "Graduated",
                 "yearGraduated": str(grad_to),
-                "scholarshipAcademicHonorsReceived": "",
+                "scholarshipAcademicHonorsReceived": rng.choice(HONORS),
             }
         )
 
@@ -299,9 +493,8 @@ def _build_payload(index: int, batch_tag: int, rng: random.Random) -> tuple[str,
 
     date_of_birth = _random_date(rng, 1979, 2000)
     date_hired = _random_date(rng, max(date_of_birth.year + 20, 2001), 2026)
-    work_date_from = _random_date(rng, max(date_hired.year, 2005), 2026)
 
-    civil_status = rng.choice(["Single", "Married", "Married", "Separated"])
+    civil_status = rng.choice(["Single", "Married", "Married", "Separated", "Widowed"])
     has_spouse = civil_status == "Married"
 
     father_first = rng.choice(FIRST_NAMES_MALE)
@@ -309,7 +502,7 @@ def _build_payload(index: int, batch_tag: int, rng: random.Random) -> tuple[str,
 
     children: list[dict[str, str]] = []
     if has_spouse and rng.random() < 0.65:
-        for _ in range(rng.randint(1, 2)):
+        for _ in range(rng.randint(1, 4)):
             child_first = rng.choice(FIRST_NAMES_MALE + FIRST_NAMES_FEMALE)
             child_middle = rng.choice(MIDDLE_NAMES)
             child_birth = _random_date(rng, max(date_hired.year, 2010), 2024)
@@ -324,25 +517,88 @@ def _build_payload(index: int, batch_tag: int, rng: random.Random) -> tuple[str,
                 }
             )
 
-    work_salary = str(rng.randint(28000, 62000))
-    training_from = _random_date(rng, 2020, 2025)
-    training_to = training_from + timedelta(days=rng.randint(1, 4))
-    voluntary_from = _random_date(rng, 2018, 2024)
-    voluntary_to = voluntary_from + timedelta(days=rng.randint(200, 620))
-    eligibility_exam = _random_date(rng, 2010, 2024)
+    eligibility_records: list[dict[str, str]] = []
+    for _ in range(rng.randint(1, 2)):
+        eligibility_exam = _random_date(rng, 2010, 2024)
+        eligibility_records.append(
+            {
+                "careerService": rng.choice(ELIGIBILITY_TYPES),
+                "rating": str(rng.randint(78, 98)),
+                "dateOfExamination": _fmt(eligibility_exam),
+                "placeOfExamination": rng.choice(CITIES),
+                "licenseNumber": f"ELG-{_digits(rng, 7)}",
+                "dateOfValidity": _fmt(eligibility_exam + timedelta(days=365 * rng.randint(3, 7))),
+            }
+        )
+
+    work_experience: list[dict[str, Any]] = []
+    experience_count = rng.randint(1, 3)
+    work_start_anchor = max(date_hired.year - 10, 2005)
+    for experience_idx in range(experience_count):
+        date_from = _random_date(rng, work_start_anchor + experience_idx, 2025)
+        is_latest = experience_idx == experience_count - 1
+        date_to = "" if is_latest or rng.random() < 0.55 else _fmt(date_from + timedelta(days=rng.randint(360, 1200)))
+        work_experience.append(
+            {
+                "dateFrom": _fmt(date_from),
+                "dateTo": date_to,
+                "positionTitle": rng.choice(POSITION_TITLES),
+                "department": rng.choice(DEPARTMENTS),
+                "monthlySalary": str(rng.randint(20000, 85000)),
+                "salaryGrade": rng.choice(["8", "10", "11", "12", "13", "15", "18"]),
+                "statusOfAppointment": rng.choice(WORK_STATUSES),
+                "isGovernmentService": rng.random() < 0.85,
+            }
+        )
+
+    voluntary_work: list[dict[str, str]] = []
+    for _ in range(rng.randint(1, 3)):
+        voluntary_from = _random_date(rng, 2016, 2024)
+        voluntary_to = voluntary_from + timedelta(days=rng.randint(120, 900))
+        voluntary_work.append(
+            {
+                "organizationName": rng.choice(VOLUNTARY_ORGS),
+                "organizationAddress": f"{rng.choice(CITIES)}, {rng.choice(PROVINCES)}",
+                "dateFrom": _fmt(voluntary_from),
+                "dateTo": _fmt(voluntary_to),
+                "numberOfHours": str(rng.randint(24, 420)),
+                "positionNatureOfWork": rng.choice(NATURE_OF_WORK),
+            }
+        )
+
+    learning_development: list[dict[str, str]] = []
+    for _ in range(rng.randint(1, 4)):
+        training_from = _random_date(rng, 2019, 2025)
+        training_to = training_from + timedelta(days=rng.randint(1, 7))
+        learning_development.append(
+            {
+                "title": rng.choice(TRAINING_TITLES),
+                "dateFrom": _fmt(training_from),
+                "dateTo": _fmt(training_to),
+                "numberOfHours": str(rng.choice([4, 8, 12, 16, 24, 32, 40, 56])),
+                "type": rng.choice(TRAINING_TYPES),
+                "conductedSponsoredBy": rng.choice(TRAINING_SPONSORS),
+            }
+        )
+
+    references: list[dict[str, str]] = []
+    for _ in range(rng.randint(3, 5)):
+        references.append(
+            {
+                "name": f"{rng.choice(FIRST_NAMES_MALE + FIRST_NAMES_FEMALE)} {rng.choice(LAST_NAMES)}",
+                "address": f"{rng.choice(CITIES)}, {rng.choice(PROVINCES)}",
+                "telephoneNo": f"09{_digits(rng, 9)}",
+            }
+        )
+
+    selected_skills = rng.sample(SPECIAL_SKILLS_HOBBIES, k=rng.randint(2, 4))
+    selected_distinctions = rng.sample(NON_ACADEMIC_DISTINCTIONS, k=rng.randint(1, 3))
+    selected_associations = rng.sample(ASSOCIATIONS, k=rng.randint(1, 2))
 
     payload: dict[str, Any] = {
         "employeeMeta": {
             "employeeNo": employee_no,
-            "positionTitle": rng.choice(
-                [
-                    "Administrative Officer I",
-                    "HR Assistant",
-                    "Planning Officer",
-                    "Records Officer",
-                    "Budget Analyst",
-                ]
-            ),
+            "positionTitle": rng.choice(POSITION_TITLES),
             "dateHired": _fmt(date_hired),
         },
         "formData": {
@@ -360,7 +616,7 @@ def _build_payload(index: int, batch_tag: int, rng: random.Random) -> tuple[str,
                 "civilStatus": civil_status,
                 "height": f"{rng.uniform(1.52, 1.83):.2f}",
                 "weight": str(rng.randint(50, 88)),
-                "bloodType": rng.choice(["A+", "A-", "B+", "B-", "AB+", "O+"]),
+                "bloodType": rng.choice(BLOOD_TYPES),
                 "gsisIdNo": f"{_digits(rng, 4)}-{_digits(rng, 7)}-{_digits(rng, 1)}",
                 "pagIbigIdNo": _digits(rng, 12),
                 "philhealthNo": f"{_digits(rng, 2)}-{_digits(rng, 9)}-{_digits(rng, 1)}",
@@ -381,102 +637,30 @@ def _build_payload(index: int, batch_tag: int, rng: random.Random) -> tuple[str,
                 else "",
                 "spouseMiddleName": rng.choice(MIDDLE_NAMES) if has_spouse else "",
                 "spouseNameExtension": "",
-                "spouseOccupation": "Teacher" if has_spouse else "",
-                "spouseEmployerBusinessName": "City Schools Division" if has_spouse else "",
+                "spouseOccupation": rng.choice(SPOUSE_OCCUPATIONS) if has_spouse else "",
+                "spouseEmployerBusinessName": rng.choice(SPOUSE_EMPLOYERS) if has_spouse else "",
                 "spouseBusinessAddress": rng.choice(CITIES) if has_spouse else "",
                 "spouseTelephoneNo": f"(02) 8{_digits(rng, 6)}" if has_spouse else "",
                 "fatherSurname": surname,
                 "fatherFirstName": father_first,
                 "fatherMiddleName": rng.choice(MIDDLE_NAMES),
-                "fatherNameExtension": "Sr.",
+                "fatherNameExtension": rng.choice(["", "Sr.", "Jr.", "III"]),
                 "motherMaidenSurname": rng.choice(LAST_NAMES),
                 "motherFirstName": mother_first,
                 "motherMiddleName": rng.choice(MIDDLE_NAMES),
                 "children": children,
             },
             "education": _build_education(rng, date_of_birth.year),
-            "civilServiceEligibility": [
-                {
-                    "careerService": rng.choice(ELIGIBILITY_TYPES),
-                    "rating": str(rng.randint(80, 95)),
-                    "dateOfExamination": _fmt(eligibility_exam),
-                    "placeOfExamination": rng.choice(CITIES),
-                    "licenseNumber": f"ELG-{_digits(rng, 7)}",
-                    "dateOfValidity": _fmt(eligibility_exam + timedelta(days=365 * 5)),
-                }
-            ],
-            "workExperience": [
-                {
-                    "dateFrom": _fmt(work_date_from),
-                    "dateTo": "",
-                    "positionTitle": rng.choice(
-                        [
-                            "Administrative Officer I",
-                            "Administrative Assistant II",
-                            "Records Officer",
-                            "Planning Officer I",
-                        ]
-                    ),
-                    "department": rng.choice(DEPARTMENTS),
-                    "monthlySalary": work_salary,
-                    "salaryGrade": rng.choice(["10", "11", "12", "13", "15"]),
-                    "statusOfAppointment": rng.choice(WORK_STATUSES),
-                    "isGovernmentService": True,
-                }
-            ],
-            "voluntaryWork": [
-                {
-                    "organizationName": rng.choice(VOLUNTARY_ORGS),
-                    "organizationAddress": f"{rng.choice(CITIES)}, {rng.choice(PROVINCES)}",
-                    "dateFrom": _fmt(voluntary_from),
-                    "dateTo": _fmt(voluntary_to),
-                    "numberOfHours": str(rng.randint(40, 320)),
-                    "positionNatureOfWork": rng.choice(["Volunteer", "Coordinator", "Facilitator"]),
-                }
-            ],
-            "learningDevelopment": [
-                {
-                    "title": rng.choice(TRAINING_TITLES),
-                    "dateFrom": _fmt(training_from),
-                    "dateTo": _fmt(training_to),
-                    "numberOfHours": str(rng.choice([8, 12, 16, 24, 40])),
-                    "type": rng.choice(["Managerial", "Supervisory", "Technical"]),
-                    "conductedSponsoredBy": rng.choice(["CSC", "DILG", "TESDA", "DBM", "DOLE"]),
-                }
-            ],
+            "civilServiceEligibility": eligibility_records,
+            "workExperience": work_experience,
+            "voluntaryWork": voluntary_work,
+            "learningDevelopment": learning_development,
             "otherInfo": {
-                "specialSkillsHobbies": [
-                    rng.choice(["Public speaking", "Excel analytics", "Report writing", "Community facilitation"]),
-                    rng.choice(["Data encoding", "Records management", "Budget tracking", "Meeting facilitation"]),
-                ],
-                "nonAcademicDistinctions": [rng.choice(["Employee of the Month", "Service Excellence Award", "Leadership Award"])],
-                "membershipInAssociations": [
-                    rng.choice(
-                        [
-                            "Philippine Society for Public Administration",
-                            "HR Practitioners Association",
-                            "Local Government Officers Guild",
-                        ]
-                    )
-                ],
+                "specialSkillsHobbies": selected_skills,
+                "nonAcademicDistinctions": selected_distinctions,
+                "membershipInAssociations": selected_associations,
             },
-            "references": [
-                {
-                    "name": f"{rng.choice(FIRST_NAMES_MALE + FIRST_NAMES_FEMALE)} {rng.choice(LAST_NAMES)}",
-                    "address": f"{rng.choice(CITIES)}, {rng.choice(PROVINCES)}",
-                    "telephoneNo": f"09{_digits(rng, 9)}",
-                },
-                {
-                    "name": f"{rng.choice(FIRST_NAMES_MALE + FIRST_NAMES_FEMALE)} {rng.choice(LAST_NAMES)}",
-                    "address": f"{rng.choice(CITIES)}, {rng.choice(PROVINCES)}",
-                    "telephoneNo": f"09{_digits(rng, 9)}",
-                },
-                {
-                    "name": f"{rng.choice(FIRST_NAMES_MALE + FIRST_NAMES_FEMALE)} {rng.choice(LAST_NAMES)}",
-                    "address": f"{rng.choice(CITIES)}, {rng.choice(PROVINCES)}",
-                    "telephoneNo": f"09{_digits(rng, 9)}",
-                },
-            ],
+            "references": references,
             "governmentIssuedId": {
                 "idType": rng.choice(GOV_ID_TYPES),
                 "idNumber": f"ID-{_digits(rng, 10)}",

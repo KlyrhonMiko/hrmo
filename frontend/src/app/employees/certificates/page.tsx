@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, useEffect } from "react";
 import { RoleLayout } from "@/components/layout/RoleLayout";
-import type { CertificateRecord } from "@/types";
+import type { CertificateRecord, PaginationMeta } from "@/types";
 import {
     ScanLine,
     Upload,
@@ -17,6 +17,8 @@ import {
     ChevronDown,
     X,
     FileText,
+    ChevronLeft,
+    ChevronRight,
 } from "lucide-react";
 
 const MOCK_EMPLOYEES = [
@@ -209,10 +211,13 @@ const STATUS_ICONS: Record<CertificateRecord["status"], React.ReactNode> = {
 };
 
 export default function CertificatesPage() {
+    const PAGE_SIZE = 10;
     const [certificates, setCertificates] = useState<CertificateRecord[]>([]);
     const [employeeOptions, setEmployeeOptions] = useState<Array<{ employeeNo: string; name: string }>>([]);
     const [loading, setLoading] = useState(true);
     const [loadError, setLoadError] = useState<string | null>(null);
+    const [meta, setMeta] = useState<PaginationMeta | null>(null);
+    const [page, setPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
     const [filterCategory, setFilterCategory] = useState<string>("All");
     const [filterStatus, setFilterStatus] = useState<string>("All");
@@ -236,7 +241,7 @@ export default function CertificatesPage() {
         setLoadError(null);
 
         try {
-            const response = await fetch("/api/certificates", { cache: "no-store" });
+            const response = await fetch(`/api/certificates?page=${page}&limit=${PAGE_SIZE}`, { cache: "no-store" });
             const payload = (await response.json()) as {
                 success?: boolean;
                 message?: string;
@@ -244,6 +249,7 @@ export default function CertificatesPage() {
                     employees?: Array<{ employeeNo: string; name: string }>;
                     certificates?: CertificateRecord[];
                 };
+                meta?: PaginationMeta;
             };
 
             if (!response.ok || !payload.success) {
@@ -252,12 +258,13 @@ export default function CertificatesPage() {
 
             setEmployeeOptions(payload.data?.employees || []);
             setCertificates(payload.data?.certificates || []);
+            setMeta(payload.meta || null);
         } catch (error) {
             setLoadError(error instanceof Error ? error.message : "Failed to load certificates.");
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [page]);
 
     useEffect(() => {
         void loadCertificates();
@@ -281,6 +288,10 @@ export default function CertificatesPage() {
         const matchesEmployee = filterEmployee === "All" || cert.employeeId === filterEmployee;
         return matchesSearch && matchesCategory && matchesStatus && matchesEmployee;
     });
+
+    useEffect(() => {
+        setPage(1);
+    }, [searchQuery, filterCategory, filterStatus, filterEmployee]);
 
     const handleDrag = useCallback((e: React.DragEvent) => {
         e.preventDefault();
@@ -860,6 +871,43 @@ export default function CertificatesPage() {
                                 )}
                             </tbody>
                         </table>
+                    </div>
+                    <div className="px-5 py-3 border-t border-stone-100 flex items-center justify-between">
+                        <p className="text-[12px] text-stone-400">
+                            {meta ? (
+                                <>
+                                    Showing{" "}
+                                    <span className="font-medium text-stone-600">{meta.total_records === 0 ? 0 : meta.skip + 1}</span>
+                                    -
+                                    <span className="font-medium text-stone-600">{Math.min(meta.skip + certificates.length, meta.total_records)}</span>
+                                    {" "}of{" "}
+                                    <span className="font-medium text-stone-600">{meta.total_records}</span> certificates
+                                </>
+                            ) : (
+                                <>
+                                    Showing <span className="font-medium text-stone-600">{certificates.length}</span> certificates
+                                </>
+                            )}
+                        </p>
+                        {meta && (
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                                    disabled={!meta.has_previous || loading}
+                                    className="inline-flex items-center gap-1 px-3 py-1.5 text-[12px] rounded-lg border border-stone-200 text-stone-600 hover:bg-stone-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    <ChevronLeft className="w-3.5 h-3.5" /> Prev
+                                </button>
+                                <span className="text-[12px] text-stone-500">Page {meta.current_page} of {Math.max(meta.total_pages, 1)}</span>
+                                <button
+                                    onClick={() => setPage((prev) => prev + 1)}
+                                    disabled={!meta.has_next || loading}
+                                    className="inline-flex items-center gap-1 px-3 py-1.5 text-[12px] rounded-lg border border-stone-200 text-stone-600 hover:bg-stone-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    Next <ChevronRight className="w-3.5 h-3.5" />
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

@@ -2,7 +2,7 @@
 from datetime import datetime
 from typing import Any, Generic, Optional, Type, TypeVar
 
-from sqlalchemy import and_, select, update
+from sqlalchemy import and_, func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import SQLModel
 
@@ -70,6 +70,12 @@ class BaseService(Generic[T]):
         )
         result = await self.session.execute(stmt)
         return result.scalars().all()
+
+    async def count_all(self) -> int:
+        """Count all active (non-deleted) records for this model."""
+        stmt = select(func.count()).select_from(self.model_class).where(self.model_class.is_deleted == False)
+        result = await self.session.execute(stmt)
+        return int(result.scalar_one() or 0)
 
     async def remove(self, id: str) -> bool:
         """Soft delete a record.

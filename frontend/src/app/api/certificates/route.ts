@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
-import type { CertificateRecord } from "@/types";
-import { backendRequest, backendFormRequest, BackendApiError, getBackendApiBaseUrl } from "@/lib/backend-api";
+import type { CertificateRecord, PaginationMeta } from "@/types";
+import { backendEnvelopeRequest, backendRequest, backendFormRequest, BackendApiError, getBackendApiBaseUrl } from "@/lib/backend-api";
 
 type BackendEmployee = {
     employee_no: string;
@@ -102,7 +102,8 @@ async function optionalRequest<T>(path: string, fallback: T): Promise<T> {
 }
 
 async function loadEmployees(): Promise<CertificateEmployeeOption[]> {
-    const employees = await backendRequest<BackendEmployee[]>("/api/employees?skip=0&limit=500");
+    const response = await backendEnvelopeRequest<BackendEmployee[]>("/api/employees?skip=0&limit=500");
+    const employees = response.data || [];
 
     const options = await Promise.all(
         employees.map(async (employee) => {
@@ -159,18 +160,39 @@ async function loadCertificates(employeeOptions: CertificateEmployeeOption[]): P
     return byEmployee.flat();
 }
 
-export async function GET() {
+export async function GET(request: Request) {
     try {
+        const url = new URL(request.url);
+        const page = Math.max(Number(url.searchParams.get("page") || "1") || 1, 1);
+        const limit = Math.max(Number(url.searchParams.get("limit") || "10") || 10, 1);
+
         const employees = await loadEmployees();
         const certificates = await loadCertificates(employees);
+
+        const totalRecords = certificates.length;
+        const totalPages = totalRecords > 0 ? Math.ceil(totalRecords / limit) : 0;
+        const safePage = totalPages > 0 ? Math.min(page, totalPages) : 1;
+        const skip = (safePage - 1) * limit;
+        const pagedCertificates = certificates.slice(skip, skip + limit);
+
+        const meta: PaginationMeta = {
+            skip,
+            limit,
+            current_page: safePage,
+            total_pages: totalPages,
+            total_records: totalRecords,
+            has_previous: safePage > 1,
+            has_next: safePage < totalPages,
+        };
 
         return NextResponse.json(
             {
                 success: true,
                 data: {
                     employees,
-                    certificates,
+                    certificates: pagedCertificates,
                 },
+                meta,
             },
             { status: 200 }
         );

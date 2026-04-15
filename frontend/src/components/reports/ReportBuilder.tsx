@@ -12,9 +12,11 @@ import {
 } from "@/components/ui/select";
 
 export function ReportBuilder() {
+    const PAGE_SIZE = 10;
     const [loading, setLoading] = useState(false);
     const [groupBy, setGroupBy] = useState('department');
     const [results, setResults] = useState<ReportResult[] | null>(null);
+    const [page, setPage] = useState(1);
 
     const generateReport = async () => {
         setLoading(true);
@@ -23,6 +25,7 @@ export function ReportBuilder() {
             if (!response.ok) throw new Error('Network response not ok');
             const data = await response.json();
             setResults(data.data);
+            setPage(1);
         } catch (error) {
             console.error('Failed to fetch report', error);
             alert('Error fetching report data');
@@ -30,6 +33,11 @@ export function ReportBuilder() {
             setLoading(false);
         }
     };
+
+    const totalRows = results?.length || 0;
+    const totalPages = totalRows > 0 ? Math.ceil(totalRows / PAGE_SIZE) : 1;
+    const startIndex = (page - 1) * PAGE_SIZE;
+    const pagedResults = (results || []).slice(startIndex, startIndex + PAGE_SIZE);
 
     return (
         <div className="bg-white rounded-xl border border-slate-200/80 overflow-hidden">
@@ -88,7 +96,7 @@ export function ReportBuilder() {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-100">
-                                {results.map((item, idx) => (
+                                {pagedResults.map((item, idx) => (
                                     <tr key={idx} className={`transition-colors hover:bg-slate-50 ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}`}>
                                         <td className="px-5 py-3.5 text-[13px] font-medium text-slate-800">
                                             {item.group}
@@ -109,6 +117,30 @@ export function ReportBuilder() {
                                 )}
                             </tbody>
                         </table>
+                        {totalRows > 0 && (
+                            <div className="px-5 py-3 border-t border-slate-200 flex items-center justify-between">
+                                <p className="text-[12px] text-slate-400">
+                                    Showing <span className="font-medium text-slate-600">{startIndex + 1}</span>-<span className="font-medium text-slate-600">{Math.min(startIndex + pagedResults.length, totalRows)}</span> of <span className="font-medium text-slate-600">{totalRows}</span> rows
+                                </p>
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                                        disabled={page <= 1}
+                                        className="px-3 py-1.5 text-[12px] rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        Prev
+                                    </button>
+                                    <span className="text-[12px] text-slate-500">Page {page} of {totalPages}</span>
+                                    <button
+                                        onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+                                        disabled={page >= totalPages}
+                                        className="px-3 py-1.5 text-[12px] rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        Next
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 ) : (
                     <div className="flex flex-col items-center justify-center py-16 text-center">

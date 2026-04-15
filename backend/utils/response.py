@@ -1,5 +1,6 @@
 """Utilities for response handling and error wrapping."""
 from datetime import datetime
+from math import ceil
 from typing import Any, Optional
 
 from fastapi import Request
@@ -19,12 +20,14 @@ class APIResponse(BaseModel):
     success: bool
     path: str
     data: Optional[Any] = None
+    meta: Optional[Any] = None
     timestamp: str  # ISO 8601 format
 
 
 def create_response(
     path: str,
     data: Optional[Any] = None,
+    meta: Optional[Any] = None,
     success: bool = True,
     timestamp: Optional[datetime] = None,
 ) -> APIResponse:
@@ -46,8 +49,28 @@ def create_response(
         success=success,
         path=path,
         data=data,
+        meta=meta,
         timestamp=timestamp.isoformat() + "Z",
     )
+
+
+def build_pagination_meta(skip: int, limit: int, total_records: int) -> dict[str, Any]:
+    """Build a consistent pagination metadata object for list responses."""
+    safe_limit = max(limit, 1)
+    safe_skip = max(skip, 0)
+    safe_total = max(total_records, 0)
+    current_page = (safe_skip // safe_limit) + 1
+    total_pages = ceil(safe_total / safe_limit) if safe_total > 0 else 0
+
+    return {
+        "skip": safe_skip,
+        "limit": safe_limit,
+        "current_page": current_page,
+        "total_pages": total_pages,
+        "total_records": safe_total,
+        "has_previous": safe_skip > 0,
+        "has_next": safe_skip + safe_limit < safe_total,
+    }
 
 
 def wrap_response(request: Request, data: Optional[Any] = None) -> APIResponse:

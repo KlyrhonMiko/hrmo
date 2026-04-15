@@ -10,7 +10,7 @@ from schemas.personal_background import (
 )
 from services.personal_background import FamilyDetailService
 from services.employees import EmployeeService
-from utils.response import APIResponse, create_response
+from utils.response import APIResponse, build_pagination_meta, create_response
 
 router = APIRouter(prefix="/api/family-details", tags=["Family Details"])
 
@@ -52,16 +52,18 @@ async def create_family_detail(
 async def list_all_family_details(
     request: Request,
     skip: int = 0,
-    limit: int = 100,
+    limit: int = 10,
     session: AsyncSession = Depends(get_db),
 ):
     """Get all family detail records."""
     service = FamilyDetailService(session)
     records = await service.get_all(skip=skip, limit=limit)
+    total_records = await service.count_all()
 
     return create_response(
         path=request.url.path,
         data=[record.model_dump() for record in records],
+        meta=build_pagination_meta(skip=skip, limit=limit, total_records=total_records),
         success=True,
     )
 

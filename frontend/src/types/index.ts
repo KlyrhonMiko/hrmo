@@ -303,3 +303,18 @@ export interface EmployeePDS {
     status: 'Teaching' | 'Non-Teaching' | 'COS';
     documents: DocumentMOV[];
 }
+
+export interface PaginationMeta {
+    skip: number;
+    limit: number;
+    current_page: number;
+    total_pages: number;
+    total_records: number;
+    has_previous: boolean;
+    has_next: boolean;
+}
+
+export interface PaginatedResult<T> {
+    data: T[];
+    meta: PaginationMeta;
+}

@@ -10,7 +10,7 @@ from schemas.personal_information import (
 )
 from services.personal_information import BasicInformationService
 from services.employees import EmployeeService
-from utils.response import APIResponse, create_response
+from utils.response import APIResponse, build_pagination_meta, create_response
 
 router = APIRouter(prefix="/api/basic-information", tags=["Basic Information"])
 
@@ -52,16 +52,18 @@ async def create_basic_information(
 async def list_all_basic_information(
     request: Request,
     skip: int = 0,
-    limit: int = 100,
+    limit: int = 10,
     session: AsyncSession = Depends(get_db),
 ):
     """Get all basic information records."""
     service = BasicInformationService(session)
     records = await service.get_all(skip=skip, limit=limit)
+    total_records = await service.count_all()
 
     return create_response(
         path=request.url.path,
         data=[record.model_dump() for record in records],
+        meta=build_pagination_meta(skip=skip, limit=limit, total_records=total_records),
         success=True,
     )
 
