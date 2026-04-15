@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import type { Employee201, CertificateRecord, TrainingRecord, PaginationMeta } from "@/types";
-import { backendEnvelopeRequest, backendRequest, BackendApiError, getBackendApiBaseUrl } from "@/lib/backend-api";
+import { backendEnvelopeRequest, BackendApiError, getBackendApiBaseUrl } from "@/lib/backend-api";
 
 type BackendEmployee = {
     id: string;
@@ -11,21 +11,26 @@ type BackendEmployee = {
     employment_status: Employee201["employmentStatus"];
     date_hired: string;
     is_deleted: boolean;
+    basic_information?: BackendBasicInformation | null;
+    contact_information?: BackendContactInformation | null;
 };
 
 type BackendBasicInformation = {
+    id: string;
     surname: string;
     first_name: string;
     middle_name?: string | null;
+    full_name?: string | null;
 };
 
 type BackendContactInformation = {
-    email_address: string;
-    mobile_no: string;
+    email_address?: string | null;
+    mobile_no?: string | null;
 };
 
 type BackendCertificate = {
     id: string;
+    employee_id: string;
     certificate_type: string;
     issuing_body: string;
     date_issued: string;
@@ -36,6 +41,7 @@ type BackendCertificate = {
 
 type BackendTraining = {
     id: string;
+    basic_information_id: string;
     training_title: string;
     training_type: string;
     conducted_by: string;
@@ -57,6 +63,10 @@ function toTrainingType(value: string): TrainingRecord["type"] {
     const normalized = value.trim().toLowerCase();
     const match = TRAINING_TYPES.find((type) => type.toLowerCase() === normalized);
     return match || "Other";
+}
+
+function clean(value?: string | null): string {
+    return (value || "").trim();
 }
 
 function buildFullName(basicInfo?: BackendBasicInformation | null): string {
@@ -111,17 +121,6 @@ function toCertificateFileUrl(relativePath?: string | null): string {
     return `${getBackendApiBaseUrl()}/uploads/${normalized}`;
 }
 
-async function optionalRequest<T>(path: string, fallback: T): Promise<T> {
-    try {
-        return await backendRequest<T>(path);
-    } catch (error) {
-        if (error instanceof BackendApiError && error.status === 404) {
-            return fallback;
-        }
-        throw error;
-    }
-}
-
 export async function GET(request: Request) {
     try {
         const url = new URL(request.url);
@@ -130,9 +129,41 @@ export async function GET(request: Request) {
         const skip = (page - 1) * limit;
 
         const employeesResponse = await backendEnvelopeRequest<BackendEmployee[]>(
-            `/api/employees?skip=${skip}&limit=${limit}`
+            `/api/employees/all?skip=${skip}&limit=${limit}`
         );
         const employees = employeesResponse.data || [];
+
+        const [certificatesResponse, trainingsResponse] = await Promise.all([
+            backendEnvelopeRequest<BackendCertificate[]>("/api/certificates/all?skip=0&limit=10000"),
+            backendEnvelopeRequest<BackendTraining[]>("/api/training/all?skip=0&limit=10000"),
+        ]);
+
+        const currentEmployeeIds = new Set(employees.map((employee) => employee.id));
+        const currentBasicInfoIds = new Set(
+            employees
+                .map((employee) => employee.basic_information?.id)
+                .filter((id): id is string => Boolean(id))
+        );
+
+        const certificatesByEmployeeId = new Map<string, BackendCertificate[]>();
+        for (const certificate of certificatesResponse.data || []) {
+            if (!currentEmployeeIds.has(certificate.employee_id)) {
+                continue;
+            }
+            const existing = certificatesByEmployeeId.get(certificate.employee_id) || [];
+            existing.push(certificate);
+            certificatesByEmployeeId.set(certificate.employee_id, existing);
+        }
+
+        const trainingsByBasicInfoId = new Map<string, BackendTraining[]>();
+        for (const training of trainingsResponse.data || []) {
+            if (!currentBasicInfoIds.has(training.basic_information_id)) {
+                continue;
+            }
+            const existing = trainingsByBasicInfoId.get(training.basic_information_id) || [];
+            existing.push(training);
+            trainingsByBasicInfoId.set(training.basic_information_id, existing);
+        }
 
         const defaultMeta: PaginationMeta = {
             skip,
@@ -145,84 +176,69 @@ export async function GET(request: Request) {
         };
         const meta = (employeesResponse.meta as PaginationMeta | undefined) || defaultMeta;
 
-        const mappedEmployees = await Promise.all(
-            employees.map(async (employee): Promise<Employee201> => {
-                const employeeNo = employee.employee_no;
+        const mappedEmployees = employees.map((employee): Employee201 => {
+            const employeeNo = employee.employee_no;
+            const basicInfo = employee.basic_information || null;
+            const contactInfo = employee.contact_information || null;
+            const employeeCertificates = certificatesByEmployeeId.get(employee.id) || [];
+            const employeeTrainingRecords = basicInfo?.id
+                ? trainingsByBasicInfoId.get(basicInfo.id) || []
+                : [];
 
-                const [basicInfo, contactInfo, certificates, trainingRecords] = await Promise.all([
-                    optionalRequest<BackendBasicInformation | null>(
-                        `/api/basic-information/${encodeURIComponent(employeeNo)}`,
-                        null
-                    ),
-                    optionalRequest<BackendContactInformation | null>(
-                        `/api/contact-information/${encodeURIComponent(employeeNo)}`,
-                        null
-                    ),
-                    optionalRequest<BackendCertificate[]>(
-                        `/api/certificates/${encodeURIComponent(employeeNo)}?skip=0&limit=200`,
-                        []
-                    ),
-                    optionalRequest<BackendTraining[]>(
-                        `/api/training/${encodeURIComponent(employeeNo)}`,
-                        []
-                    ),
-                ]);
+            const fullName = clean(basicInfo?.full_name) || buildFullName(basicInfo);
 
-                const fullName = buildFullName(basicInfo);
-
-                const mappedCertificates: CertificateRecord[] = certificates.map((certificate) => {
-                    const fileUrl = toCertificateFileUrl(certificate.file);
-                    return {
-                        id: certificate.id,
-                        employeeId: employeeNo,
-                        employeeName: fullName,
-                        title: certificate.certificate_type,
-                        issuingBody: certificate.issuing_body,
-                        dateIssued: certificate.date_issued,
-                        expiryDate: certificate.expiry_date || undefined,
-                        certificateNumber: certificate.certificate_no,
-                        category: inferCertificateCategory(certificate.certificate_type),
-                        fileUrl,
-                        fileName: certificate.file?.split("/").pop() || `${certificate.certificate_no}.pdf`,
-                        status: inferCertificateStatus(certificate.expiry_date),
-                    };
-                });
-
-                const mappedTraining: TrainingRecord[] = trainingRecords.map((training) => ({
-                    id: training.id,
-                    title: training.training_title,
-                    type: toTrainingType(training.training_type),
-                    conductedBy: training.conducted_by,
-                    venue: "",
-                    dateFrom: training.date_from,
-                    dateTo: training.date_to,
-                    numberOfHours: Number(training.number_of_hours) || 0,
-                    status: "Completed",
+            const mappedCertificates: CertificateRecord[] = employeeCertificates.map((certificate) => {
+                const fileUrl = toCertificateFileUrl(certificate.file);
+                return {
+                    id: certificate.id,
                     employeeId: employeeNo,
                     employeeName: fullName,
-                    office: employee.office_department,
-                }));
-
-                return {
-                    id: employee.id,
-                    employeeNo,
-                    fullName,
-                    surname: basicInfo?.surname || "",
-                    firstName: basicInfo?.first_name || "",
-                    middleName: basicInfo?.middle_name || "",
-                    office: employee.office_department,
-                    position: employee.position_title,
-                    employmentStatus: employee.employment_status,
-                    dateHired: employee.date_hired,
-                    email: contactInfo?.email_address || "",
-                    mobileNo: contactInfo?.mobile_no || "",
-                    documents: [],
-                    certificates: mappedCertificates,
-                    trainingsAttended: mappedTraining,
-                    isActive: !employee.is_deleted,
+                    title: certificate.certificate_type,
+                    issuingBody: certificate.issuing_body,
+                    dateIssued: certificate.date_issued,
+                    expiryDate: certificate.expiry_date || undefined,
+                    certificateNumber: certificate.certificate_no,
+                    category: inferCertificateCategory(certificate.certificate_type),
+                    fileUrl,
+                    fileName: certificate.file?.split("/").pop() || `${certificate.certificate_no}.pdf`,
+                    status: inferCertificateStatus(certificate.expiry_date),
                 };
-            })
-        );
+            });
+
+            const mappedTraining: TrainingRecord[] = employeeTrainingRecords.map((training) => ({
+                id: training.id,
+                title: training.training_title,
+                type: toTrainingType(training.training_type),
+                conductedBy: training.conducted_by,
+                venue: "",
+                dateFrom: training.date_from,
+                dateTo: training.date_to,
+                numberOfHours: Number(training.number_of_hours) || 0,
+                status: "Completed",
+                employeeId: employeeNo,
+                employeeName: fullName,
+                office: employee.office_department,
+            }));
+
+            return {
+                id: employee.id,
+                employeeNo,
+                fullName,
+                surname: basicInfo?.surname || "",
+                firstName: basicInfo?.first_name || "",
+                middleName: basicInfo?.middle_name || "",
+                office: employee.office_department,
+                position: employee.position_title,
+                employmentStatus: employee.employment_status,
+                dateHired: employee.date_hired,
+                email: contactInfo?.email_address || "",
+                mobileNo: contactInfo?.mobile_no || "",
+                documents: [],
+                certificates: mappedCertificates,
+                trainingsAttended: mappedTraining,
+                isActive: !employee.is_deleted,
+            };
+        });
 
         return NextResponse.json({ success: true, data: mappedEmployees, meta }, { status: 200 });
     } catch (error) {

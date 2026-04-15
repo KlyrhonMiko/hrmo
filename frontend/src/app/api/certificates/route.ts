@@ -4,7 +4,14 @@ import type { CertificateRecord, PaginationMeta } from "@/types";
 import { backendEnvelopeRequest, backendRequest, backendFormRequest, BackendApiError, getBackendApiBaseUrl } from "@/lib/backend-api";
 
 type BackendEmployee = {
+    id: string;
     employee_no: string;
+    basic_information?: {
+        full_name?: string | null;
+        surname?: string | null;
+        first_name?: string | null;
+        middle_name?: string | null;
+    } | null;
 };
 
 type BackendBasicInformation = {
@@ -26,6 +33,7 @@ type BackendCertificate = {
 };
 
 type CertificateEmployeeOption = {
+    employeeId: string;
     employeeNo: string;
     name: string;
 };
@@ -102,24 +110,29 @@ async function optionalRequest<T>(path: string, fallback: T): Promise<T> {
 }
 
 async function loadEmployees(): Promise<CertificateEmployeeOption[]> {
-    const response = await backendEnvelopeRequest<BackendEmployee[]>("/api/employees?skip=0&limit=500");
+    const response = await backendEnvelopeRequest<BackendEmployee[]>("/api/employees/all?skip=0&limit=500");
     const employees = response.data || [];
 
-    const options = await Promise.all(
-        employees.map(async (employee) => {
-            const basicInfo = await optionalRequest<BackendBasicInformation | null>(
-                `/api/basic-information/${encodeURIComponent(employee.employee_no)}`,
-                null
+    return employees.map((employee) => {
+        const basicInfo = employee.basic_information;
+        const name =
+            clean(basicInfo?.full_name) ||
+            buildEmployeeName(
+                basicInfo
+                    ? {
+                        surname: basicInfo.surname || "",
+                        first_name: basicInfo.first_name || "",
+                        middle_name: basicInfo.middle_name,
+                    }
+                    : null
             );
 
-            return {
-                employeeNo: employee.employee_no,
-                name: buildEmployeeName(basicInfo),
-            };
-        })
-    );
-
-    return options;
+        return {
+            employeeId: employee.id,
+            employeeNo: employee.employee_no,
+            name,
+        };
+    });
 }
 
 function mapCertificate(
@@ -143,21 +156,41 @@ function mapCertificate(
     };
 }
 
-async function loadCertificates(employeeOptions: CertificateEmployeeOption[]): Promise<CertificateRecord[]> {
-    const byEmployee = await Promise.all(
-        employeeOptions.map(async (employee) => {
-            const certificates = await optionalRequest<BackendCertificate[]>(
-                `/api/certificates/${encodeURIComponent(employee.employeeNo)}?skip=0&limit=200`,
-                []
-            );
+async function loadCertificates(
+    employeeOptions: CertificateEmployeeOption[],
+    page: number,
+    limit: number
+): Promise<{ certificates: CertificateRecord[]; meta: PaginationMeta }> {
+    const skip = (page - 1) * limit;
+    const response = await backendEnvelopeRequest<BackendCertificate[]>(`/api/certificates/all?skip=${skip}&limit=${limit}`);
+    const certificates = response.data || [];
+    const responseMeta = (response.meta || {}) as Partial<PaginationMeta>;
 
-            return certificates.map((certificate) =>
-                mapCertificate(certificate, employee.employeeNo, employee.name)
-            );
-        })
-    );
+    const employeeById = new Map(employeeOptions.map((employee) => [employee.employeeId, employee]));
 
-    return byEmployee.flat();
+    const mappedCertificates = certificates.map((certificate) => {
+        const employee = employeeById.get(certificate.employee_id);
+        const employeeNo = employee?.employeeNo || certificate.employee_id;
+        const employeeName = employee?.name || "Unnamed Employee";
+        return mapCertificate(certificate, employeeNo, employeeName);
+    });
+
+    const currentPage = responseMeta.current_page || page;
+    const totalPages = responseMeta.total_pages || 0;
+    const totalRecords = responseMeta.total_records || mappedCertificates.length;
+
+    return {
+        certificates: mappedCertificates,
+        meta: {
+            skip: responseMeta.skip ?? skip,
+            limit: responseMeta.limit ?? limit,
+            current_page: currentPage,
+            total_pages: totalPages,
+            total_records: totalRecords,
+            has_previous: responseMeta.has_previous ?? currentPage > 1,
+            has_next: responseMeta.has_next ?? (totalPages > 0 ? currentPage < totalPages : false),
+        },
+    };
 }
 
 export async function GET(request: Request) {
@@ -167,30 +200,14 @@ export async function GET(request: Request) {
         const limit = Math.max(Number(url.searchParams.get("limit") || "10") || 10, 1);
 
         const employees = await loadEmployees();
-        const certificates = await loadCertificates(employees);
-
-        const totalRecords = certificates.length;
-        const totalPages = totalRecords > 0 ? Math.ceil(totalRecords / limit) : 0;
-        const safePage = totalPages > 0 ? Math.min(page, totalPages) : 1;
-        const skip = (safePage - 1) * limit;
-        const pagedCertificates = certificates.slice(skip, skip + limit);
-
-        const meta: PaginationMeta = {
-            skip,
-            limit,
-            current_page: safePage,
-            total_pages: totalPages,
-            total_records: totalRecords,
-            has_previous: safePage > 1,
-            has_next: safePage < totalPages,
-        };
+        const { certificates, meta } = await loadCertificates(employees, page, limit);
 
         return NextResponse.json(
             {
                 success: true,
                 data: {
                     employees,
-                    certificates: pagedCertificates,
+                    certificates,
                 },
                 meta,
             },
