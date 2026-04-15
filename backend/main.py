@@ -27,6 +27,7 @@ from routers import (
     record_completions,
     employees,
     certificates,
+    dashboard,
 )
 from utils.response import APIResponse
 
@@ -76,6 +77,7 @@ def create_app() -> FastAPI:
     app.include_router(record_completions.router)
     app.include_router(employees.router)
     app.include_router(certificates.router)
+    app.include_router(dashboard.router)
 
     uploads_dir = os.path.join(os.path.dirname(__file__), "uploads")
     os.makedirs(uploads_dir, exist_ok=True)

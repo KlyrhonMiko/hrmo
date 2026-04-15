@@ -1,52 +1,56 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 
-/* ─── Metrics ─── */
-const metrics = [
-    {
-        name: "PDS Completion",
-        current: 82,
-        target: 95,
-        color: "#15803d",
-        bg: "bg-green-50",
-        barBg: "bg-green-100",
-        barFill: "bg-green-600",
-    },
-    {
-        name: "Training Hours",
-        current: 68,
-        target: 80,
-        color: "#0d9488",
-        bg: "bg-teal-50",
-        barBg: "bg-teal-100",
-        barFill: "bg-teal-500",
-    },
-    {
-        name: "MOV Uploads",
-        current: 91,
-        target: 100,
-        color: "#16a34a",
-        bg: "bg-emerald-50",
-        barBg: "bg-emerald-100",
-        barFill: "bg-emerald-500",
-    },
-    {
-        name: "Perf. Evaluation",
-        current: 74,
-        target: 90,
-        color: "#f59e0b",
-        bg: "bg-amber-50",
-        barBg: "bg-amber-100",
-        barFill: "bg-amber-500",
-    },
-];
+type ComplianceMetric = {
+    key: string;
+    name: string;
+    current: number;
+    target: number;
+};
+
+type CompliancePayload = {
+    metrics: ComplianceMetric[];
+    overall_current: number;
+};
+
+const METRIC_COLORS: Record<string, { barBg: string; barFill: string }> = {
+    pds_completion: { barBg: "bg-green-100", barFill: "bg-green-600" },
+    training_hours: { barBg: "bg-teal-100", barFill: "bg-teal-500" },
+    mov_uploads: { barBg: "bg-emerald-100", barFill: "bg-emerald-500" },
+    profile_completion: { barBg: "bg-amber-100", barFill: "bg-amber-500" },
+};
+
+const DEFAULT_PAYLOAD: CompliancePayload = {
+    metrics: [],
+    overall_current: 0,
+};
 
 export function ComplianceSummary() {
-    const overallCurrent = Math.round(
-        metrics.reduce((s, m) => s + m.current, 0) / metrics.length
-    );
+    const [payload, setPayload] = useState<CompliancePayload>(DEFAULT_PAYLOAD);
+
+    useEffect(() => {
+        const fetchCompliance = async () => {
+            try {
+                const response = await fetch("/api/dashboard/compliance");
+                const data = (await response.json()) as CompliancePayload;
+                setPayload({
+                    ...DEFAULT_PAYLOAD,
+                    ...data,
+                });
+            } catch (error) {
+                console.error("Failed to fetch compliance summary:", error);
+            }
+        };
+
+        fetchCompliance();
+    }, []);
+
+    const metrics = payload.metrics;
+    const overallCurrent = metrics.length > 0
+        ? payload.overall_current
+        : 0;
 
     return (
         <div className="bg-white rounded-xl border border-stone-200/80 p-5">
@@ -63,6 +67,7 @@ export function ComplianceSummary() {
             {/* Progress Bars */}
             <div className="space-y-3.5">
                 {metrics.map((m) => {
+                    const metricColor = METRIC_COLORS[m.key] || METRIC_COLORS.pds_completion;
                     const gap = m.target - m.current;
                     const isOnTrack = gap <= 5;
                     const isClose = gap > 5 && gap <= 15;
@@ -89,9 +94,9 @@ export function ComplianceSummary() {
                                     )}
                                 </div>
                             </div>
-                            <div className={`w-full h-1.5 rounded-full ${m.barBg}`}>
+                            <div className={`w-full h-1.5 rounded-full ${metricColor.barBg}`}>
                                 <div
-                                    className={`h-1.5 rounded-full ${m.barFill} transition-all duration-700 ease-out`}
+                                    className={`h-1.5 rounded-full ${metricColor.barFill} transition-all duration-700 ease-out`}
                                     style={{ width: `${m.current}%` }}
                                 />
                             </div>

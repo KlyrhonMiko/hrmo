@@ -24,49 +24,88 @@ interface StatCard {
     iconColor: string;
 }
 
-const stats: StatCard[] = [
-    {
-        label: "Total Employees",
-        value: "381",
-        change: "+12 this year",
-        changeType: "positive",
-        icon: <Users className="w-4 h-4" />,
-        iconBg: "bg-green-50",
-        iconColor: "text-green-700",
-    },
-    {
-        label: "Teaching Staff",
-        value: "244",
-        change: "64% of total",
-        changeType: "neutral",
-        icon: <GraduationCap className="w-4 h-4" />,
-        iconBg: "bg-teal-50",
-        iconColor: "text-teal-600",
-    },
-    {
-        label: "Non-Teaching",
-        value: "103",
-        change: "27% of total",
-        changeType: "neutral",
-        icon: <Briefcase className="w-4 h-4" />,
-        iconBg: "bg-emerald-50",
-        iconColor: "text-emerald-600",
-    },
-    {
-        label: "Pending Requests",
-        value: "45",
-        change: "Action needed",
-        changeType: "negative",
-        icon: <Clock className="w-4 h-4" />,
-        iconBg: "bg-amber-50",
-        iconColor: "text-amber-600",
-    },
-];
+type DashboardStatsPayload = {
+    total_employees: number;
+    teaching_staff: number;
+    non_teaching: number;
+    pending_requests: number;
+    hired_this_year: number;
+    teaching_pct: number;
+    non_teaching_pct: number;
+};
+
+const DEFAULT_STATS: DashboardStatsPayload = {
+    total_employees: 0,
+    teaching_staff: 0,
+    non_teaching: 0,
+    pending_requests: 0,
+    hired_this_year: 0,
+    teaching_pct: 0,
+    non_teaching_pct: 0,
+};
 
 export function DashboardStats() {
+    const [stats, setStats] = useState<DashboardStatsPayload>(DEFAULT_STATS);
+
+    useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                const response = await fetch("/api/dashboard/stats");
+                const data = (await response.json()) as DashboardStatsPayload;
+                setStats({
+                    ...DEFAULT_STATS,
+                    ...data,
+                });
+            } catch (error) {
+                console.error("Failed to fetch dashboard stats:", error);
+            }
+        };
+
+        fetchStats();
+    }, []);
+
+    const cards: StatCard[] = [
+        {
+            label: "Total Employees",
+            value: String(stats.total_employees),
+            change: `+${stats.hired_this_year} this year`,
+            changeType: "positive",
+            icon: <Users className="w-4 h-4" />,
+            iconBg: "bg-green-50",
+            iconColor: "text-green-700",
+        },
+        {
+            label: "Teaching Staff",
+            value: String(stats.teaching_staff),
+            change: `${stats.teaching_pct}% of total`,
+            changeType: "neutral",
+            icon: <GraduationCap className="w-4 h-4" />,
+            iconBg: "bg-teal-50",
+            iconColor: "text-teal-600",
+        },
+        {
+            label: "Non-Teaching",
+            value: String(stats.non_teaching),
+            change: `${stats.non_teaching_pct}% of total`,
+            changeType: "neutral",
+            icon: <Briefcase className="w-4 h-4" />,
+            iconBg: "bg-emerald-50",
+            iconColor: "text-emerald-600",
+        },
+        {
+            label: "Pending Requests",
+            value: String(stats.pending_requests),
+            change: "Action needed",
+            changeType: "negative",
+            icon: <Clock className="w-4 h-4" />,
+            iconBg: "bg-amber-50",
+            iconColor: "text-amber-600",
+        },
+    ];
+
     return (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            {stats.map((stat, idx) => (
+            {cards.map((stat, idx) => (
                 <div
                     key={idx}
                     className="bg-white rounded-xl border border-stone-200/80 p-4 hover:shadow-sm transition-shadow duration-200"
@@ -131,7 +170,7 @@ export function BudgetCard() {
         fetchBudget();
     }, []);
 
-    const pct = budget
+    const pct = budget && budget.allocated > 0
         ? Math.round((budget.utilized / budget.allocated) * 100)
         : 0;
 
