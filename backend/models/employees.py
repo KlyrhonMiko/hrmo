@@ -36,6 +36,8 @@ class CertificateRecord(BaseModel, table=True):
     expiry_date: Optional[date] = Field(default=None, description="Expiration date of certificate")
     description: Optional[str] = Field(default=None, description="Additional description or notes")
     file: Optional[str] = Field(default=None, max_length=255, description="File path or URL to certificate document")
+    verified_by: Optional[str] = Field(default=None, max_length=100, description="User or role that verified the certificate")
+    verified_at: Optional[datetime] = Field(default=None, description="Timestamp when the certificate was verified")
 
     # Relationships
     employee: Employee = Relationship(back_populates="certificate_records")

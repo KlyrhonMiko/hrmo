@@ -1,4 +1,6 @@
 """Router for Certificate Record endpoints."""
+from datetime import date, datetime
+
 from fastapi import APIRouter, Depends, HTTPException, status, Request, UploadFile, File, Form
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional
@@ -27,6 +29,8 @@ async def create_certificate(
     date_issued: date = Form(...),
     expiry_date: Optional[date] = Form(None),
     description: Optional[str] = Form(None),
+    verified_by: Optional[str] = Form(None),
+    verified_at: Optional[datetime] = Form(None),
     file: Optional[UploadFile] = File(None),
     session: AsyncSession = Depends(get_db),
 ):
@@ -60,6 +64,8 @@ async def create_certificate(
         date_issued=date_issued,
         expiry_date=expiry_date,
         description=description,
+        verified_by=verified_by,
+        verified_at=verified_at,
         file=file_path,
     )
     
@@ -219,6 +225,8 @@ async def update_certificate(
     date_issued: Optional[date] = Form(None),
     expiry_date: Optional[date] = Form(None),
     description: Optional[str] = Form(None),
+    verified_by: Optional[str] = Form(None),
+    verified_at: Optional[datetime] = Form(None),
     file: Optional[UploadFile] = File(None),
     session: AsyncSession = Depends(get_db),
 ):
@@ -255,6 +263,10 @@ async def update_certificate(
         record.expiry_date = expiry_date
     if description is not None:
         record.description = description
+    if verified_by is not None:
+        record.verified_by = verified_by
+    if verified_at is not None:
+        record.verified_at = verified_at
     
     # Handle file upload/replacement if provided
     if file:

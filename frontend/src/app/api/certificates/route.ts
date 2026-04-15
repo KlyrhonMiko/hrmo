@@ -30,6 +30,8 @@ type BackendCertificate = {
     expiry_date?: string | null;
     description?: string | null;
     file?: string | null;
+    verified_by?: string | null;
+    verified_at?: string | null;
 };
 
 type CertificateEmployeeOption = {
@@ -76,17 +78,19 @@ function inferCertificateCategory(value: string): CertificateRecord["category"] 
     return "Other";
 }
 
-function inferCertificateStatus(expiryDate?: string | null): CertificateRecord["status"] {
-    if (!expiryDate) {
+function inferCertificateStatus(expiryDate?: string | null, verifiedAt?: string | null): CertificateRecord["status"] {
+    if (expiryDate) {
+        const expiry = new Date(expiryDate);
+        if (!Number.isNaN(expiry.getTime()) && expiry < new Date()) {
+            return "Expired";
+        }
+    }
+
+    if (verifiedAt) {
         return "Active";
     }
 
-    const expiry = new Date(expiryDate);
-    if (Number.isNaN(expiry.getTime())) {
-        return "Active";
-    }
-
-    return expiry < new Date() ? "Expired" : "Active";
+    return "Pending Verification";
 }
 
 function toCertificateFileUrl(relativePath?: string | null): string {
@@ -152,7 +156,9 @@ function mapCertificate(
         category: inferCertificateCategory(certificate.certificate_type),
         fileUrl: toCertificateFileUrl(certificate.file),
         fileName: certificate.file?.split("/").pop() || `${certificate.certificate_no}.pdf`,
-        status: inferCertificateStatus(certificate.expiry_date),
+        status: inferCertificateStatus(certificate.expiry_date, certificate.verified_at),
+        verifiedBy: certificate.verified_by || undefined,
+        verifiedAt: certificate.verified_at || undefined,
     };
 }
 
@@ -290,6 +296,96 @@ export async function POST(request: Request) {
     } catch (error) {
         const status = error instanceof BackendApiError ? error.status : 500;
         const message = error instanceof Error ? error.message : "Failed to upload certificate.";
+
+        return NextResponse.json(
+            {
+                success: false,
+                message,
+                details: error instanceof BackendApiError ? error.details : undefined,
+            },
+            { status }
+        );
+    }
+}
+
+export async function PATCH(request: Request) {
+    try {
+        const incomingFormData = await request.formData();
+
+        const employeeNo = clean(incomingFormData.get("employeeNo") as string | null);
+        const certificateId = clean(incomingFormData.get("certificateId") as string | null);
+        const certificateType = incomingFormData.get("certificateType");
+        const issuingBody = incomingFormData.get("issuingBody");
+        const certificateNo = incomingFormData.get("certificateNo");
+        const dateIssued = incomingFormData.get("dateIssued");
+        const expiryDate = incomingFormData.get("expiryDate");
+        const description = incomingFormData.get("description");
+        const verifiedBy = incomingFormData.get("verifiedBy");
+        const verifiedAt = incomingFormData.get("verifiedAt");
+        const file = incomingFormData.get("file");
+
+        if (!hasValue(employeeNo) || !hasValue(certificateId)) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: "Missing required fields: employeeNo, certificateId.",
+                },
+                { status: 400 }
+            );
+        }
+
+        const backendFormData = new FormData();
+
+        if (hasValue(certificateType as string | null)) {
+            backendFormData.set("certificate_type", certificateType as string);
+        }
+        if (hasValue(issuingBody as string | null)) {
+            backendFormData.set("issuing_body", issuingBody as string);
+        }
+        if (hasValue(certificateNo as string | null)) {
+            backendFormData.set("certificate_no", certificateNo as string);
+        }
+        if (hasValue(dateIssued as string | null)) {
+            backendFormData.set("date_issued", dateIssued as string);
+        }
+        if (hasValue(expiryDate as string | null)) {
+            backendFormData.set("expiry_date", expiryDate as string);
+        }
+        if (hasValue(description as string | null)) {
+            backendFormData.set("description", description as string);
+        }
+        if (hasValue(verifiedBy as string | null)) {
+            backendFormData.set("verified_by", verifiedBy as string);
+        }
+        if (hasValue(verifiedAt as string | null)) {
+            backendFormData.set("verified_at", verifiedAt as string);
+        }
+
+        if (file instanceof File) {
+            backendFormData.set("file", file, file.name);
+        }
+
+        const updated = await backendFormRequest<BackendCertificate>(
+            `/api/certificates/${encodeURIComponent(employeeNo)}/${encodeURIComponent(certificateId)}`,
+            backendFormData,
+            { method: "PATCH" }
+        );
+
+        const basicInfo = await optionalRequest<BackendBasicInformation | null>(
+            `/api/basic-information/${encodeURIComponent(employeeNo)}`,
+            null
+        );
+
+        return NextResponse.json(
+            {
+                success: true,
+                data: mapCertificate(updated, employeeNo, buildEmployeeName(basicInfo)),
+            },
+            { status: 200 }
+        );
+    } catch (error) {
+        const status = error instanceof BackendApiError ? error.status : 500;
+        const message = error instanceof Error ? error.message : "Failed to update certificate.";
 
         return NextResponse.json(
             {

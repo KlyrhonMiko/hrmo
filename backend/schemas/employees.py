@@ -67,6 +67,8 @@ class CertificateRecordBase(BaseModel):
     expiry_date: Optional[date] = None
     description: Optional[str] = None
     file: Optional[str] = Field(None, max_length=255)
+    verified_by: Optional[str] = Field(None, max_length=100)
+    verified_at: Optional[datetime] = None
 
 
 class CertificateRecordCreate(CertificateRecordBase):
@@ -85,6 +87,8 @@ class CertificateRecordUpdate(BaseModel):
     expiry_date: Optional[date] = None
     description: Optional[str] = None
     file: Optional[str] = Field(None, max_length=255)
+    verified_by: Optional[str] = Field(None, max_length=100)
+    verified_at: Optional[datetime] = None
 
 
 class CertificateRecordResponse(CertificateRecordBase):

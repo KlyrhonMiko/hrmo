@@ -235,6 +235,8 @@ export default function CertificatesPage() {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [uploading, setUploading] = useState(false);
     const [showUploadForm, setShowUploadForm] = useState(false);
+    const [selectedCertificate, setSelectedCertificate] = useState<CertificateRecord | null>(null);
+    const [verifyingCertificateId, setVerifyingCertificateId] = useState<string | null>(null);
 
     const loadCertificates = useCallback(async () => {
         setLoading(true);
@@ -378,6 +380,67 @@ export default function CertificatesPage() {
         }
     };
 
+    const openCertificate = (certificate: CertificateRecord) => {
+        setSelectedCertificate(certificate);
+    };
+
+    const closeCertificate = () => {
+        setSelectedCertificate(null);
+    };
+
+    const handleDownload = (certificate: CertificateRecord) => {
+        if (!certificate.fileUrl) {
+            alert("No certificate file is available for download.");
+            return;
+        }
+
+        window.open(certificate.fileUrl, "_blank", "noopener,noreferrer");
+    };
+
+    const handleVerify = async (certificate: CertificateRecord) => {
+        if (certificate.status === "Expired") {
+            alert("Expired certificates cannot be verified.");
+            return;
+        }
+
+        setVerifyingCertificateId(certificate.id);
+
+        try {
+            const verificationForm = new FormData();
+            verificationForm.set("employeeNo", certificate.employeeId);
+            verificationForm.set("certificateId", certificate.id);
+            verificationForm.set("verifiedBy", "HR Head");
+            verificationForm.set("verifiedAt", new Date().toISOString());
+
+            const response = await fetch("/api/certificates", {
+                method: "PATCH",
+                body: verificationForm,
+            });
+
+            const payload = (await response.json()) as {
+                success?: boolean;
+                message?: string;
+                data?: CertificateRecord;
+            };
+
+            if (!response.ok || !payload.success || !payload.data) {
+                throw new Error(payload.message || "Failed to verify certificate.");
+            }
+
+            setCertificates((prev) =>
+                prev.map((item) => (item.id === certificate.id ? (payload.data as CertificateRecord) : item))
+            );
+
+            setSelectedCertificate((prev) =>
+                prev && prev.id === certificate.id ? (payload.data as CertificateRecord) : prev
+            );
+        } catch (error) {
+            alert(error instanceof Error ? error.message : "Failed to verify certificate.");
+        } finally {
+            setVerifyingCertificateId(null);
+        }
+    };
+
     const resetForm = () => {
         setSelectedEmployee("");
         setDocumentType(DOCUMENT_TYPES[0]);
@@ -388,16 +451,6 @@ export default function CertificatesPage() {
         setDescription("");
         setSelectedFile(null);
         setShowUploadForm(false);
-    };
-
-    const handleVerify = (id: string) => {
-        setCertificates((prev) =>
-            prev.map((c) =>
-                c.id === id
-                    ? { ...c, status: "Active" as const, verifiedBy: "HR Head", verifiedAt: new Date().toISOString().split("T")[0] }
-                    : c
-            )
-        );
     };
 
     const formatDate = (dateStr: string) => {
@@ -845,22 +898,16 @@ export default function CertificatesPage() {
                                                 <div className="flex items-center justify-end gap-1">
                                                     <button
                                                         title="View"
+                                                        onClick={() => openCertificate(cert)}
                                                         className="p-1.5 rounded-lg hover:bg-stone-100 text-stone-400 hover:text-stone-700 transition-colors"
                                                     >
                                                         <Eye className="w-4 h-4" />
                                                     </button>
-                                                    {cert.status === "Pending Verification" && (
-                                                        <button
-                                                            title="Verify"
-                                                            onClick={() => handleVerify(cert.id)}
-                                                            className="p-1.5 rounded-lg hover:bg-green-50 text-stone-400 hover:text-green-700 transition-colors"
-                                                        >
-                                                            <CheckCircle className="w-4 h-4" />
-                                                        </button>
-                                                    )}
                                                     <button
                                                         title="Download"
-                                                        className="p-1.5 rounded-lg hover:bg-stone-100 text-stone-400 hover:text-stone-700 transition-colors"
+                                                        onClick={() => handleDownload(cert)}
+                                                        disabled={!cert.fileUrl}
+                                                        className="p-1.5 rounded-lg hover:bg-stone-100 text-stone-400 hover:text-stone-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                                     >
                                                         <Download className="w-4 h-4" />
                                                     </button>
@@ -910,6 +957,116 @@ export default function CertificatesPage() {
                         )}
                     </div>
                 </div>
+
+                {selectedCertificate && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                        <div className="absolute inset-0 bg-black/40" onClick={closeCertificate} />
+                        <div className="relative w-full max-w-2xl max-h-[88vh] overflow-y-auto rounded-2xl bg-white shadow-xl">
+                            <div className="sticky top-0 z-10 flex items-center justify-between rounded-t-2xl border-b border-stone-100 bg-white px-6 py-4">
+                                <div>
+                                    <p className="text-[11px] uppercase tracking-wide text-stone-400">
+                                        Certificate Details
+                                    </p>
+                                    <h3 className="text-[16px] font-bold text-stone-800">
+                                        {selectedCertificate.title}
+                                    </h3>
+                                </div>
+                                <button
+                                    onClick={closeCertificate}
+                                    className="p-1.5 rounded-lg hover:bg-stone-100 transition-colors"
+                                >
+                                    <X className="w-4 h-4 text-stone-500" />
+                                </button>
+                            </div>
+
+                            <div className="px-6 py-5 space-y-5">
+                                <div className="grid grid-cols-2 gap-3 text-sm">
+                                    <div className="rounded-xl border border-stone-200 bg-stone-50 p-3">
+                                        <p className="text-[11px] uppercase tracking-wide text-stone-400">
+                                            Employee
+                                        </p>
+                                        <p className="font-medium text-stone-800">{selectedCertificate.employeeName}</p>
+                                        <p className="text-xs text-stone-500">{selectedCertificate.employeeId}</p>
+                                    </div>
+                                    <div className="rounded-xl border border-stone-200 bg-stone-50 p-3">
+                                        <p className="text-[11px] uppercase tracking-wide text-stone-400">
+                                            Status
+                                        </p>
+                                        <div
+                                            className={`mt-1 inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full ${STATUS_STYLES[selectedCertificate.status]}`}
+                                        >
+                                            {STATUS_ICONS[selectedCertificate.status]}
+                                            {selectedCertificate.status}
+                                        </div>
+                                    </div>
+                                    <div className="rounded-xl border border-stone-200 bg-stone-50 p-3">
+                                        <p className="text-[11px] uppercase tracking-wide text-stone-400">
+                                            Issuing Body
+                                        </p>
+                                        <p className="font-medium text-stone-800">{selectedCertificate.issuingBody}</p>
+                                    </div>
+                                    <div className="rounded-xl border border-stone-200 bg-stone-50 p-3">
+                                        <p className="text-[11px] uppercase tracking-wide text-stone-400">
+                                            Certificate Number
+                                        </p>
+                                        <p className="font-medium text-stone-800">{selectedCertificate.certificateNumber}</p>
+                                    </div>
+                                    <div className="rounded-xl border border-stone-200 bg-stone-50 p-3">
+                                        <p className="text-[11px] uppercase tracking-wide text-stone-400">
+                                            Date Issued
+                                        </p>
+                                        <p className="font-medium text-stone-800">{formatDate(selectedCertificate.dateIssued)}</p>
+                                    </div>
+                                    <div className="rounded-xl border border-stone-200 bg-stone-50 p-3">
+                                        <p className="text-[11px] uppercase tracking-wide text-stone-400">
+                                            Expiry Date
+                                        </p>
+                                        <p className="font-medium text-stone-800">
+                                            {selectedCertificate.expiryDate ? formatDate(selectedCertificate.expiryDate) : "—"}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                                    <div className="rounded-xl border border-stone-200 p-4">
+                                        <p className="text-[11px] uppercase tracking-wide text-stone-400 mb-2">
+                                            Verification
+                                        </p>
+                                        <p className="font-medium text-stone-800">
+                                            {selectedCertificate.verifiedBy || "Not verified yet"}
+                                        </p>
+                                        <p className="text-xs text-stone-500">
+                                            {selectedCertificate.verifiedAt ? formatDate(selectedCertificate.verifiedAt) : "No verification date"}
+                                        </p>
+                                    </div>
+                                    <div className="rounded-xl border border-stone-200 p-4">
+                                        <p className="text-[11px] uppercase tracking-wide text-stone-400 mb-2">
+                                            File
+                                        </p>
+                                        <p className="font-medium text-stone-800 truncate">
+                                            {selectedCertificate.fileName || "No file attached"}
+                                        </p>
+                                        <p className="text-xs text-stone-500 truncate">
+                                            {selectedCertificate.fileUrl || "No file URL available"}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-wrap items-center justify-end gap-3 pt-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => handleDownload(selectedCertificate)}
+                                        disabled={!selectedCertificate.fileUrl}
+                                        className="inline-flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-stone-600 bg-stone-100 rounded-lg hover:bg-stone-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        <Download className="w-4 h-4" />
+                                        Download
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </RoleLayout>
     );

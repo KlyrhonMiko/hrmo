@@ -20,6 +20,7 @@ from routers import (
     work_experience,
     voluntary_work,
     training,
+    training_tracking,
     other_information,
     reference_records,
     primary_government_ids,
@@ -68,6 +69,7 @@ def create_app() -> FastAPI:
     app.include_router(work_experience.router)
     app.include_router(voluntary_work.router)
     app.include_router(training.router)
+    app.include_router(training_tracking.router)
     app.include_router(other_information.router)
     app.include_router(reference_records.router)
     app.include_router(primary_government_ids.router)
