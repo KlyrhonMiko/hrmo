@@ -107,6 +107,9 @@ alembic/versions/__pycache__/
 *.tsbuildinfo
 next-env.d.ts
 
+# Uploaded files (certificates, documents, etc.)
+backend/uploads/
+
 # Vercel
 .vercel/
 
