@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import type { Employee201, CertificateRecord, TrainingRecord, PaginationMeta } from "@/types";
-import { backendEnvelopeRequest, BackendApiError, getBackendApiBaseUrl } from "@/lib/backend-api";
+import { backendEnvelopeRequest, BackendApiError } from "@/lib/backend-api";
 
 type BackendEmployee = {
     id: string;
@@ -112,13 +112,16 @@ function inferCertificateStatus(expiryDate?: string | null): CertificateRecord["
     return expiry < new Date() ? "Expired" : "Active";
 }
 
-function toCertificateFileUrl(relativePath?: string | null): string {
-    if (!relativePath) {
+function toCertificateFileUrl(employeeNo: string, certificateId: string, filePath?: string | null): string {
+    if (!filePath) {
         return "";
     }
 
-    const normalized = relativePath.replace(/^\/+/, "");
-    return `${getBackendApiBaseUrl()}/uploads/${normalized}`;
+    const params = new URLSearchParams({
+        employeeNo,
+        certificateId,
+    });
+    return `/api/certificates/download?${params.toString()}`;
 }
 
 export async function GET(request: Request) {
@@ -188,7 +191,7 @@ export async function GET(request: Request) {
             const fullName = clean(basicInfo?.full_name) || buildFullName(basicInfo);
 
             const mappedCertificates: CertificateRecord[] = employeeCertificates.map((certificate) => {
-                const fileUrl = toCertificateFileUrl(certificate.file);
+                const fileUrl = toCertificateFileUrl(employeeNo, certificate.id, certificate.file);
                 return {
                     id: certificate.id,
                     employeeId: employeeNo,

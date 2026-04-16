@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import type { CertificateRecord, PaginationMeta } from "@/types";
-import { backendEnvelopeRequest, backendRequest, backendFormRequest, BackendApiError, getBackendApiBaseUrl } from "@/lib/backend-api";
+import { backendEnvelopeRequest, backendRequest, backendFormRequest, BackendApiError } from "@/lib/backend-api";
 
 type BackendEmployee = {
     id: string;
@@ -93,13 +93,16 @@ function inferCertificateStatus(expiryDate?: string | null, verifiedAt?: string 
     return "Pending Verification";
 }
 
-function toCertificateFileUrl(relativePath?: string | null): string {
-    if (!relativePath) {
+function toCertificateFileUrl(employeeNo: string, certificateId: string, filePath?: string | null): string {
+    if (!filePath) {
         return "";
     }
 
-    const normalized = relativePath.replace(/^\/+/, "");
-    return `${getBackendApiBaseUrl()}/uploads/${normalized}`;
+    const params = new URLSearchParams({
+        employeeNo,
+        certificateId,
+    });
+    return `/api/certificates/download?${params.toString()}`;
 }
 
 async function optionalRequest<T>(path: string, fallback: T): Promise<T> {
@@ -154,7 +157,7 @@ function mapCertificate(
         expiryDate: certificate.expiry_date || undefined,
         certificateNumber: certificate.certificate_no,
         category: inferCertificateCategory(certificate.certificate_type),
-        fileUrl: toCertificateFileUrl(certificate.file),
+        fileUrl: toCertificateFileUrl(employeeNo, certificate.id, certificate.file),
         fileName: certificate.file?.split("/").pop() || `${certificate.certificate_no}.pdf`,
         status: inferCertificateStatus(certificate.expiry_date, certificate.verified_at),
         verifiedBy: certificate.verified_by || undefined,

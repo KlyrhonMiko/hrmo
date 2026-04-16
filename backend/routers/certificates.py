@@ -1,22 +1,31 @@
 """Router for Certificate Record endpoints."""
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
+from typing import Any, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, status, Request, UploadFile, File, Form
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Request, UploadFile, status
+from fastapi.responses import Response
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import Optional
 
 from core.database import get_db
 from models.employees import CertificateRecord
-from schemas.employees import (
-    CertificateRecordCreate,
-    CertificateRecordUpdate,
-)
 from services.employees import CertificateRecordService, EmployeeService
 from utils.response import APIResponse, build_pagination_meta, create_response
-from utils.file_handler import save_certificate_file, delete_certificate_file, FileUploadError
-from datetime import date
+from utils.file_handler import (
+    FileUploadError,
+    download_certificate_file,
+    delete_certificate_file,
+    get_certificate_file_url,
+    save_certificate_file,
+)
 
 router = APIRouter(prefix="/api/certificates", tags=["Certificates"])
+
+
+def _serialize_certificate(record: CertificateRecord) -> dict[str, Any]:
+    """Serialize certificate records with a client-openable file URL."""
+    data = record.model_dump()
+    data["file"] = get_certificate_file_url(record.file)
+    return data
 
 
 @router.post("/{employee_no}", response_model=APIResponse, status_code=status.HTTP_201_CREATED)
@@ -75,7 +84,7 @@ async def create_certificate(
     
     return create_response(
         path=request.url.path,
-        data=record.model_dump(),
+        data=_serialize_certificate(record),
         success=True,
     )
 
@@ -94,7 +103,7 @@ async def list_all_certificates(
 
     return create_response(
         path=request.url.path,
-        data=[record.model_dump() for record in records],
+        data=[_serialize_certificate(record) for record in records],
         meta=build_pagination_meta(skip=skip, limit=limit, total_records=total_records),
         success=True,
     )
@@ -114,7 +123,7 @@ async def get_certificates(
     
     return create_response(
         path=request.url.path,
-        data=[record.model_dump() for record in records],
+        data=[_serialize_certificate(record) for record in records],
         success=True,
     )
 
@@ -148,9 +157,49 @@ async def get_certificate(
     
     return create_response(
         path=request.url.path,
-        data=record.model_dump(),
+        data=_serialize_certificate(record),
         success=True,
     )
+
+
+@router.get("/{employee_no}/{certificate_id}/download")
+async def download_certificate(
+    employee_no: str,
+    certificate_id: str,
+    session: AsyncSession = Depends(get_db),
+):
+    """Download the certificate file as an attachment without redirecting to external URLs."""
+    service = CertificateRecordService(session)
+    record = await service.get(certificate_id)
+
+    if not record:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Certificate not found",
+        )
+
+    employee_service = EmployeeService(session)
+    employee = await employee_service.get_by_employee_no(employee_no)
+
+    if not employee or record.employee_id != employee.id:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Certificate not found for this employee",
+        )
+
+    try:
+        content, content_type, filename = await download_certificate_file(record.file)
+    except FileUploadError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(exc),
+        ) from exc
+
+    headers = {
+        "Content-Disposition": f'attachment; filename="{filename}"',
+        "Cache-Control": "no-store",
+    }
+    return Response(content=content, media_type=content_type, headers=headers)
 
 
 @router.get("/{employee_no}/type/{certificate_type}", response_model=APIResponse)
@@ -177,7 +226,7 @@ async def get_certificates_by_type(
     
     return create_response(
         path=request.url.path,
-        data=[cert.model_dump() for cert in filtered],
+        data=[_serialize_certificate(cert) for cert in filtered],
         success=True,
     )
 
@@ -203,7 +252,6 @@ async def get_expiring_certificates(
     service = CertificateRecordService(session)
     all_certs = await service.get_by_employee(employee.id)
     
-    from datetime import datetime, timedelta
     expiry_threshold = datetime.utcnow().date() + timedelta(days=days)
     
     expiring = [
@@ -211,7 +259,11 @@ async def get_expiring_certificates(
         if cert.expiry_date and cert.expiry_date <= expiry_threshold and cert.expiry_date >= datetime.utcnow().date()
     ]
     
-    return expiring
+    return create_response(
+        path=request.url.path,
+        data=[_serialize_certificate(cert) for cert in expiring],
+        success=True,
+    )
 
 
 @router.patch("/{employee_no}/{certificate_id}", response_model=APIResponse)
@@ -290,7 +342,7 @@ async def update_certificate(
 
     return create_response(
         path=request.url.path,
-        data=record.model_dump(),
+        data=_serialize_certificate(record),
         success=True,
     )
 
@@ -376,6 +428,6 @@ async def restore_certificate(
     restored = await service.get(certificate_id)
     return create_response(
         path=request.url.path,
-        data=restored.model_dump(),
+        data=_serialize_certificate(restored),
         success=True,
     )

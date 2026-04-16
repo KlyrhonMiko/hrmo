@@ -30,6 +30,7 @@ DATABASE_URL=postgresql://postgres:YOUR_PASSWORD@YOUR_PROJECT_ID.supabase.co:543
 SUPABASE_URL=https://YOUR_PROJECT_ID.supabase.co
 SUPABASE_KEY=YOUR_ANON_KEY
 SUPABASE_SERVICE_ROLE_KEY=YOUR_SERVICE_ROLE_KEY
+SUPABASE_STORAGE_BUCKET=certificates
 ```
 
 ### 3. Install Dependencies
@@ -191,6 +192,7 @@ pytest --cov=app tests/
 | `SUPABASE_URL` | Supabase project URL | `https://xxx.supabase.co` |
 | `SUPABASE_KEY` | Supabase anonymous key | `eyJ0eXAi...` |
 | `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key | `eyJ0eXAi...` |
+| `SUPABASE_STORAGE_BUCKET` | Supabase Storage bucket for certificate files | `certificates` |
 | `ENV` | Environment (development/production) | `development` |
 | `PORT` | Server port | `5000` |
 | `HOST` | Server host | `0.0.0.0` |
@@ -242,6 +244,20 @@ flake8 app/
 ```
 
 ## Troubleshooting
+
+### Supabase Storage setup for certificate files
+
+1. Create a Storage bucket named `certificates` (or set `SUPABASE_STORAGE_BUCKET` to your bucket name).
+2. Set bucket visibility to **Public** if files must be directly viewable by all collaborators.
+3. Keep `SUPABASE_SERVICE_ROLE_KEY` only on backend/server environments.
+4. For existing local files in `backend/uploads/certificates`, upload them once:
+
+```bash
+cd backend
+python scripts/upload_certificate_files_to_supabase.py
+```
+
+Use `--dry-run` first to verify what will be uploaded.
 
 ### Connection refused to Supabase
 
