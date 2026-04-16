@@ -106,7 +106,7 @@ async def get_dashboard_stats(
         Employee.id,
         Employee.employment_status,
         Employee.date_hired,
-    ).where(Employee.is_deleted == False)
+    ).where(Employee.is_deleted.is_(False))
     employee_rows = (await session.execute(employee_stmt)).all()
 
     total_employees = len(employee_rows)
@@ -123,14 +123,14 @@ async def get_dashboard_stats(
 
     pending_cert_stmt = select(CertificateRecord.id).where(
         and_(
-            CertificateRecord.is_deleted == False,
+            CertificateRecord.is_deleted.is_(False),
             CertificateRecord.verified_at.is_(None),
         )
     )
     pending_certificates = len((await session.execute(pending_cert_stmt)).all())
 
     pending_training_stmt = select(TrainingEventParticipant.completion_status).where(
-        TrainingEventParticipant.is_deleted == False
+        TrainingEventParticipant.is_deleted.is_(False)
     )
     pending_training = sum(
         1
@@ -144,10 +144,10 @@ async def get_dashboard_stats(
             RecordCompletion,
             and_(
                 RecordCompletion.basic_information_id == BasicInformation.id,
-                RecordCompletion.is_deleted == False,
+                RecordCompletion.is_deleted.is_(False),
             ),
         )
-        .where(BasicInformation.is_deleted == False)
+        .where(BasicInformation.is_deleted.is_(False))
     )
     completed_pds_employee_ids = {
         row.employee_id
@@ -185,7 +185,7 @@ async def get_personnel_distribution(
     employee_stmt = select(
         Employee.office_department,
         Employee.employment_status,
-    ).where(Employee.is_deleted == False)
+    ).where(Employee.is_deleted.is_(False))
     employee_rows = (await session.execute(employee_stmt)).all()
 
     category_counts = {
@@ -310,17 +310,17 @@ async def get_training_budget(
             TrainingEvent,
             and_(
                 TrainingEvent.id == TrainingEventParticipant.training_event_id,
-                TrainingEvent.is_deleted == False,
+                TrainingEvent.is_deleted.is_(False),
             ),
         )
         .join(
             Employee,
             and_(
                 Employee.id == TrainingEventParticipant.employee_id,
-                Employee.is_deleted == False,
+                Employee.is_deleted.is_(False),
             ),
         )
-        .where(TrainingEventParticipant.is_deleted == False)
+        .where(TrainingEventParticipant.is_deleted.is_(False))
     )
     rows = (await session.execute(stmt)).all()
 
@@ -388,7 +388,7 @@ async def get_compliance_summary(
     session: AsyncSession = Depends(get_db),
 ):
     """Return compliance metrics derived from existing records."""
-    employee_stmt = select(Employee.id).where(Employee.is_deleted == False)
+    employee_stmt = select(Employee.id).where(Employee.is_deleted.is_(False))
     active_employee_ids = [row.id for row in (await session.execute(employee_stmt)).all() if row.id]
     active_employee_id_set = set(active_employee_ids)
     total_employees = len(active_employee_ids)
@@ -396,7 +396,7 @@ async def get_compliance_summary(
     if active_employee_ids:
         basic_info_stmt = select(BasicInformation.employee_id).where(
             and_(
-                BasicInformation.is_deleted == False,
+                BasicInformation.is_deleted.is_(False),
                 BasicInformation.employee_id.in_(active_employee_ids),
             )
         )
@@ -415,12 +415,12 @@ async def get_compliance_summary(
                 RecordCompletion,
                 and_(
                     RecordCompletion.basic_information_id == BasicInformation.id,
-                    RecordCompletion.is_deleted == False,
+                    RecordCompletion.is_deleted.is_(False),
                 ),
             )
             .where(
                 and_(
-                    BasicInformation.is_deleted == False,
+                    BasicInformation.is_deleted.is_(False),
                     BasicInformation.employee_id.in_(active_employee_ids),
                 )
             )
@@ -436,7 +436,7 @@ async def get_compliance_summary(
     certificate_stmt = select(
         CertificateRecord.employee_id,
         CertificateRecord.verified_at,
-    ).where(CertificateRecord.is_deleted == False)
+    ).where(CertificateRecord.is_deleted.is_(False))
     certificate_rows = (await session.execute(certificate_stmt)).all()
 
     certificate_employee_ids = {
@@ -453,10 +453,10 @@ async def get_compliance_summary(
             TrainingEvent,
             and_(
                 TrainingEvent.id == TrainingEventParticipant.training_event_id,
-                TrainingEvent.is_deleted == False,
+                TrainingEvent.is_deleted.is_(False),
             ),
         )
-        .where(TrainingEventParticipant.is_deleted == False)
+        .where(TrainingEventParticipant.is_deleted.is_(False))
     )
     training_rows = (await session.execute(training_stmt)).all()
 
@@ -540,10 +540,10 @@ async def get_recent_activity(
             BasicInformation,
             and_(
                 BasicInformation.employee_id == Employee.id,
-                BasicInformation.is_deleted == False,
+                BasicInformation.is_deleted.is_(False),
             ),
         )
-        .where(Employee.is_deleted == False)
+        .where(Employee.is_deleted.is_(False))
         .order_by(Employee.created_at.desc())
         .limit(15)
     )
@@ -561,10 +561,10 @@ async def get_recent_activity(
             Employee,
             and_(
                 Employee.id == CertificateRecord.employee_id,
-                Employee.is_deleted == False,
+                Employee.is_deleted.is_(False),
             ),
         )
-        .where(CertificateRecord.is_deleted == False)
+        .where(CertificateRecord.is_deleted.is_(False))
         .order_by(CertificateRecord.created_at.desc())
         .limit(15)
     )
@@ -583,19 +583,19 @@ async def get_recent_activity(
             TrainingEvent,
             and_(
                 TrainingEvent.id == TrainingEventParticipant.training_event_id,
-                TrainingEvent.is_deleted == False,
+                TrainingEvent.is_deleted.is_(False),
             ),
         )
         .join(
             Employee,
             and_(
                 Employee.id == TrainingEventParticipant.employee_id,
-                Employee.is_deleted == False,
+                Employee.is_deleted.is_(False),
             ),
         )
         .where(
             and_(
-                TrainingEventParticipant.is_deleted == False,
+                TrainingEventParticipant.is_deleted.is_(False),
                 TrainingEventParticipant.completion_status.is_not(None),
             )
         )
@@ -619,17 +619,17 @@ async def get_recent_activity(
             BasicInformation,
             and_(
                 BasicInformation.id == RecordCompletion.basic_information_id,
-                BasicInformation.is_deleted == False,
+                BasicInformation.is_deleted.is_(False),
             ),
         )
         .join(
             Employee,
             and_(
                 Employee.id == BasicInformation.employee_id,
-                Employee.is_deleted == False,
+                Employee.is_deleted.is_(False),
             ),
         )
-        .where(RecordCompletion.is_deleted == False)
+        .where(RecordCompletion.is_deleted.is_(False))
         .order_by(RecordCompletion.created_at.desc())
         .limit(15)
     )
@@ -714,7 +714,7 @@ async def get_pending_approvals(
         CertificateRecord.expiry_date,
     ).where(
         and_(
-            CertificateRecord.is_deleted == False,
+            CertificateRecord.is_deleted.is_(False),
             CertificateRecord.verified_at.is_(None),
         )
     )
@@ -736,10 +736,10 @@ async def get_pending_approvals(
             TrainingEvent,
             and_(
                 TrainingEvent.id == TrainingEventParticipant.training_event_id,
-                TrainingEvent.is_deleted == False,
+                TrainingEvent.is_deleted.is_(False),
             ),
         )
-        .where(TrainingEventParticipant.is_deleted == False)
+        .where(TrainingEventParticipant.is_deleted.is_(False))
     )
     pending_training_rows = [
         row
@@ -756,14 +756,14 @@ async def get_pending_approvals(
     employee_stmt = select(
         Employee.id,
         Employee.date_hired,
-    ).where(Employee.is_deleted == False)
+    ).where(Employee.is_deleted.is_(False))
     employee_rows = (await session.execute(employee_stmt)).all()
     employee_ids = [row.id for row in employee_rows if row.id]
 
     if employee_ids:
         basic_info_stmt = select(BasicInformation.id, BasicInformation.employee_id).where(
             and_(
-                BasicInformation.is_deleted == False,
+                BasicInformation.is_deleted.is_(False),
                 BasicInformation.employee_id.in_(employee_ids),
             )
         )
@@ -777,7 +777,7 @@ async def get_pending_approvals(
     }
 
     completed_record_stmt = select(RecordCompletion.basic_information_id).where(
-        RecordCompletion.is_deleted == False
+        RecordCompletion.is_deleted.is_(False)
     )
     completed_basic_info_ids = {
         row.basic_information_id

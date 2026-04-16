@@ -249,7 +249,7 @@ async def onboard_employee_atomic(
         async with session.begin():
             existing_stmt = select(Employee).where(
                 Employee.employee_no == employee_no,
-                Employee.is_deleted == False,
+                Employee.is_deleted.is_(False),
             )
             existing = (await session.execute(existing_stmt)).scalar_one_or_none()
             if existing:

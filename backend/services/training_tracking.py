@@ -25,7 +25,7 @@ class TrainingEventService(BaseService[TrainingEvent]):
         search: str | None = None,
     ) -> list[TrainingEvent]:
         """List training events with optional filters."""
-        stmt = select(TrainingEvent).where(TrainingEvent.is_deleted == False)
+        stmt = select(TrainingEvent).where(TrainingEvent.is_deleted.is_(False))
 
         if status:
             stmt = stmt.where(TrainingEvent.status == status)
@@ -63,7 +63,7 @@ class TrainingEventParticipantService(BaseService[TrainingEventParticipant]):
         stmt = select(Employee.id).where(
             and_(
                 Employee.id.in_(ids),
-                Employee.is_deleted == False,
+                Employee.is_deleted.is_(False),
             )
         )
         result = await self.session.execute(stmt)
@@ -80,20 +80,20 @@ class TrainingEventParticipantService(BaseService[TrainingEventParticipant]):
                 Employee,
                 and_(
                     TrainingEventParticipant.employee_id == Employee.id,
-                    Employee.is_deleted == False,
+                    Employee.is_deleted.is_(False),
                 ),
             )
             .outerjoin(
                 BasicInformation,
                 and_(
                     BasicInformation.employee_id == Employee.id,
-                    BasicInformation.is_deleted == False,
+                    BasicInformation.is_deleted.is_(False),
                 ),
             )
             .where(
                 and_(
                     TrainingEventParticipant.training_event_id.in_(event_ids),
-                    TrainingEventParticipant.is_deleted == False,
+                    TrainingEventParticipant.is_deleted.is_(False),
                 )
             )
             .order_by(Employee.employee_no.asc())
@@ -166,7 +166,7 @@ class TrainingEventParticipantService(BaseService[TrainingEventParticipant]):
             .where(
                 and_(
                     TrainingEventParticipant.training_event_id == training_event_id,
-                    TrainingEventParticipant.is_deleted == False,
+                    TrainingEventParticipant.is_deleted.is_(False),
                 )
             )
             .values(
@@ -183,7 +183,7 @@ class TrainingEventParticipantService(BaseService[TrainingEventParticipant]):
             and_(
                 TrainingEventParticipant.training_event_id == training_event_id,
                 TrainingEventParticipant.employee_id == employee_id,
-                TrainingEventParticipant.is_deleted == False,
+                TrainingEventParticipant.is_deleted.is_(False),
             )
         )
         result = await self.session.execute(stmt)

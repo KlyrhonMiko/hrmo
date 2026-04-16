@@ -1,10 +1,28 @@
 """Personal Information Models - Basic Information."""
-from datetime import date
-from typing import Optional
 
-from sqlmodel import SQLModel, Field, Relationship
+from datetime import date
+from typing import TYPE_CHECKING, Optional
+
+from sqlmodel import Field, Relationship
 
 from models.base import BaseModel
+
+if TYPE_CHECKING:
+    from models.employees import Employee
+    from models.personal_background import (
+        EducationalBackground,
+        FamilyDetail,
+        OtherInformation,
+        PrimaryGovernmentId,
+        RecordCompletion,
+        ReferenceRecord,
+    )
+    from models.professional_background import (
+        CivilServiceEligibility,
+        TrainingRecord,
+        VoluntaryRecord,
+        WorkExperienceRecord,
+    )
 
 
 class BasicInformation(BaseModel, table=True):
