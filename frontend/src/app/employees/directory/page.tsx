@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useMemo } from "react";
 import { RoleLayout } from "@/components/layout/RoleLayout";
-import type { Employee201, PaginationMeta } from "@/types";
+import type { Employee201, PaginationMeta, DocumentMOV, CertificateRecord, TrainingRecord } from "@/types";
 import {
     Search,
     Filter,
