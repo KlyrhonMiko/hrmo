@@ -35,7 +35,6 @@ async def create_training_event(
             detail="date_to must be on or after date_from",
         )
 
-    event_service = TrainingEventService(session)
     participant_service = TrainingEventParticipantService(session)
 
     participant_ids = sorted(set(data.participant_employee_ids))

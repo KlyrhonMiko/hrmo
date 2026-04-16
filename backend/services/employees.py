@@ -45,8 +45,8 @@ class EmployeeService(BaseService[Employee]):
             .where(
                 and_(
                     Employee.employee_no == employee_no,
-                    Employee.is_deleted == False,
-                    BasicInformation.is_deleted == False,
+                    Employee.is_deleted.is_(False),
+                    BasicInformation.is_deleted.is_(False),
                 )
             )
         )
@@ -68,7 +68,7 @@ class EmployeeService(BaseService[Employee]):
             .where(
                 and_(
                     Employee.employee_no == employee_no,
-                    Employee.is_deleted == False,
+                    Employee.is_deleted.is_(False),
                 )
             )
         )
@@ -91,7 +91,7 @@ class EmployeeService(BaseService[Employee]):
             .where(
                 and_(
                     Employee.office_department == office,
-                    Employee.is_deleted == False,
+                    Employee.is_deleted.is_(False),
                 )
             )
             .offset(skip)
@@ -116,7 +116,7 @@ class EmployeeService(BaseService[Employee]):
             .where(
                 and_(
                     Employee.employment_status == status,
-                    Employee.is_deleted == False,
+                    Employee.is_deleted.is_(False),
                 )
             )
             .offset(skip)
@@ -133,17 +133,17 @@ class EmployeeService(BaseService[Employee]):
                 BasicInformation,
                 and_(
                     BasicInformation.employee_id == Employee.id,
-                    BasicInformation.is_deleted == False,
+                    BasicInformation.is_deleted.is_(False),
                 ),
             )
             .outerjoin(
                 ContactInformation,
                 and_(
                     ContactInformation.basic_information_id == BasicInformation.id,
-                    ContactInformation.is_deleted == False,
+                    ContactInformation.is_deleted.is_(False),
                 ),
             )
-            .where(Employee.is_deleted == False)
+            .where(Employee.is_deleted.is_(False))
             .offset(skip)
             .limit(limit)
         )
@@ -214,7 +214,7 @@ class CertificateRecordService(BaseService[CertificateRecord]):
         stmt = select(Employee).where(
             and_(
                 Employee.employee_no == employee_no,
-                Employee.is_deleted == False,
+                Employee.is_deleted.is_(False),
             )
         )
         result = await self.session.execute(stmt)
@@ -242,7 +242,7 @@ class CertificateRecordService(BaseService[CertificateRecord]):
             .where(
                 and_(
                     CertificateRecord.employee_id == employee_id,
-                    CertificateRecord.is_deleted == False,
+                    CertificateRecord.is_deleted.is_(False),
                 )
             )
             .offset(skip)
@@ -267,7 +267,7 @@ class CertificateRecordService(BaseService[CertificateRecord]):
             .where(
                 and_(
                     CertificateRecord.certificate_type == certificate_type,
-                    CertificateRecord.is_deleted == False,
+                    CertificateRecord.is_deleted.is_(False),
                 )
             )
             .offset(skip)
@@ -297,7 +297,7 @@ class CertificateRecordService(BaseService[CertificateRecord]):
                 and_(
                     CertificateRecord.expiry_date <= expiry_threshold,
                     CertificateRecord.expiry_date >= datetime.utcnow().date(),
-                    CertificateRecord.is_deleted == False,
+                    CertificateRecord.is_deleted.is_(False),
                 )
             )
             .offset(skip)

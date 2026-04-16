@@ -1,6 +1,6 @@
 """Base service that all services inherit from."""
 from datetime import datetime
-from typing import Any, Generic, Optional, Type, TypeVar
+from typing import Generic, Optional, Type, TypeVar
 
 from sqlalchemy import and_, func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -44,7 +44,7 @@ class BaseService(Generic[T]):
         stmt = select(self.model_class).where(
             and_(
                 self.model_class.id == id,
-                self.model_class.is_deleted == False,
+                self.model_class.is_deleted.is_(False),
             )
         )
         result = await self.session.execute(stmt)
@@ -64,7 +64,7 @@ class BaseService(Generic[T]):
         """
         stmt = (
             select(self.model_class)
-            .where(self.model_class.is_deleted == False)
+            .where(self.model_class.is_deleted.is_(False))
             .offset(skip)
             .limit(limit)
         )
@@ -73,7 +73,7 @@ class BaseService(Generic[T]):
 
     async def count_all(self) -> int:
         """Count all active (non-deleted) records for this model."""
-        stmt = select(func.count()).select_from(self.model_class).where(self.model_class.is_deleted == False)
+        stmt = select(func.count()).select_from(self.model_class).where(self.model_class.is_deleted.is_(False))
         result = await self.session.execute(stmt)
         return int(result.scalar_one() or 0)
 

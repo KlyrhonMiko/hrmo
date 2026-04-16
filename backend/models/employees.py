@@ -1,10 +1,14 @@
 """Employee and Certificate Models."""
-from datetime import date, datetime
-from typing import Optional
 
-from sqlmodel import SQLModel, Field, Relationship
+from datetime import date, datetime
+from typing import TYPE_CHECKING, Optional
+
+from sqlmodel import Field, Relationship
 
 from models.base import BaseModel
+
+if TYPE_CHECKING:
+    from models.personal_information import BasicInformation
 
 
 class Employee(BaseModel, table=True):

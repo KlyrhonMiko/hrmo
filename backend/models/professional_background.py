@@ -1,10 +1,14 @@
 """Professional Background Models - Work Experience, Training, Civil Service Eligibility."""
-from datetime import date
-from typing import Optional
 
-from sqlmodel import SQLModel, Field, Relationship
+from datetime import date
+from typing import TYPE_CHECKING, Optional
+
+from sqlmodel import Field, Relationship
 
 from models.base import BaseModel
+
+if TYPE_CHECKING:
+    from models.personal_information import BasicInformation
 
 
 class WorkExperienceRecord(BaseModel, table=True):

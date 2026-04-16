@@ -25,8 +25,8 @@ async def _get_basic_information_id_by_employee_no(
         .where(
             and_(
                 Employee.employee_no == employee_no,
-                Employee.is_deleted == False,
-                BasicInformation.is_deleted == False,
+                Employee.is_deleted.is_(False),
+                BasicInformation.is_deleted.is_(False),
             )
         )
     )
@@ -53,7 +53,7 @@ class BasicInformationService(BaseService[BasicInformation]):
         stmt = select(Employee).where(
             and_(
                 Employee.employee_no == employee_no,
-                Employee.is_deleted == False,
+                Employee.is_deleted.is_(False),
             )
         )
         result = await self.session.execute(stmt)
@@ -66,7 +66,7 @@ class BasicInformationService(BaseService[BasicInformation]):
         stmt = select(BasicInformation).where(
             and_(
                 BasicInformation.employee_id == employee.id,
-                BasicInformation.is_deleted == False,
+                BasicInformation.is_deleted.is_(False),
             )
         )
         result = await self.session.execute(stmt)
@@ -126,7 +126,7 @@ class GovernmentIdService(BaseService[GovernmentId]):
             .where(
                 and_(
                     GovernmentId.basic_information_id == basic_information_id,
-                    GovernmentId.is_deleted == False,
+                    GovernmentId.is_deleted.is_(False),
                 )
             )
         )
@@ -149,7 +149,7 @@ class GovernmentIdService(BaseService[GovernmentId]):
                 and_(
                     GovernmentId.basic_information_id == basic_information_id,
                     GovernmentId.id_type == id_type,
-                    GovernmentId.is_deleted == False,
+                    GovernmentId.is_deleted.is_(False),
                 )
             )
         )
@@ -210,7 +210,7 @@ class AddressService(BaseService[Address]):
             .where(
                 and_(
                     Address.basic_information_id == basic_information_id,
-                    Address.is_deleted == False,
+                    Address.is_deleted.is_(False),
                 )
             )
         )
@@ -233,7 +233,7 @@ class AddressService(BaseService[Address]):
                 and_(
                     Address.basic_information_id == basic_information_id,
                     Address.address_type == address_type,
-                    Address.is_deleted == False,
+                    Address.is_deleted.is_(False),
                 )
             )
         )
@@ -277,7 +277,7 @@ class ContactInformationService(BaseService[ContactInformation]):
             .where(
                 and_(
                     ContactInformation.basic_information_id == basic_information_id,
-                    ContactInformation.is_deleted == False,
+                    ContactInformation.is_deleted.is_(False),
                 )
             )
         )

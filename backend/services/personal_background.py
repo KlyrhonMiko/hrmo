@@ -28,8 +28,8 @@ async def _get_basic_information_id_by_employee_no(
         .where(
             and_(
                 Employee.employee_no == employee_no,
-                Employee.is_deleted == False,
-                BasicInformation.is_deleted == False,
+                Employee.is_deleted.is_(False),
+                BasicInformation.is_deleted.is_(False),
             )
         )
     )
@@ -62,7 +62,7 @@ class FamilyDetailService(BaseService[FamilyDetail]):
             .where(
                 and_(
                     FamilyDetail.basic_information_id == basic_information_id,
-                    FamilyDetail.is_deleted == False,
+                    FamilyDetail.is_deleted.is_(False),
                 )
             )
         )
@@ -95,7 +95,7 @@ class EducationalBackgroundService(BaseService[EducationalBackground]):
             .where(
                 and_(
                     EducationalBackground.basic_information_id == basic_information_id,
-                    EducationalBackground.is_deleted == False,
+                    EducationalBackground.is_deleted.is_(False),
                 )
             )
         )
@@ -128,7 +128,7 @@ class OtherInformationService(BaseService[OtherInformation]):
             .where(
                 and_(
                     OtherInformation.basic_information_id == basic_information_id,
-                    OtherInformation.is_deleted == False,
+                    OtherInformation.is_deleted.is_(False),
                 )
             )
         )
@@ -143,7 +143,7 @@ class OtherInformationService(BaseService[OtherInformation]):
                 and_(
                     OtherInformation.basic_information_id == basic_information_id,
                     OtherInformation.info_type == info_type,
-                    OtherInformation.is_deleted == False,
+                    OtherInformation.is_deleted.is_(False),
                 )
             )
         )
@@ -176,7 +176,7 @@ class ReferenceRecordService(BaseService[ReferenceRecord]):
             .where(
                 and_(
                     ReferenceRecord.basic_information_id == basic_information_id,
-                    ReferenceRecord.is_deleted == False,
+                    ReferenceRecord.is_deleted.is_(False),
                 )
             )
         )
@@ -209,7 +209,7 @@ class PrimaryGovernmentIdService(BaseService[PrimaryGovernmentId]):
             .where(
                 and_(
                     PrimaryGovernmentId.basic_information_id == basic_information_id,
-                    PrimaryGovernmentId.is_deleted == False,
+                    PrimaryGovernmentId.is_deleted.is_(False),
                 )
             )
         )
@@ -242,7 +242,7 @@ class RecordCompletionService(BaseService[RecordCompletion]):
             .where(
                 and_(
                     RecordCompletion.basic_information_id == basic_information_id,
-                    RecordCompletion.is_deleted == False,
+                    RecordCompletion.is_deleted.is_(False),
                 )
             )
         )

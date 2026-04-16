@@ -26,8 +26,8 @@ async def _get_basic_information_id_by_employee_no(
         .where(
             and_(
                 Employee.employee_no == employee_no,
-                Employee.is_deleted == False,
-                BasicInformation.is_deleted == False,
+                Employee.is_deleted.is_(False),
+                BasicInformation.is_deleted.is_(False),
             )
         )
     )
@@ -60,7 +60,7 @@ class WorkExperienceService(BaseService[WorkExperienceRecord]):
             .where(
                 and_(
                     WorkExperienceRecord.basic_information_id == basic_information_id,
-                    WorkExperienceRecord.is_deleted == False,
+                    WorkExperienceRecord.is_deleted.is_(False),
                 )
             )
             .order_by(WorkExperienceRecord.date_from.desc())
@@ -75,8 +75,8 @@ class WorkExperienceService(BaseService[WorkExperienceRecord]):
             .where(
                 and_(
                     WorkExperienceRecord.basic_information_id == basic_information_id,
-                    WorkExperienceRecord.government_service == True,
-                    WorkExperienceRecord.is_deleted == False,
+                    WorkExperienceRecord.government_service.is_(True),
+                    WorkExperienceRecord.is_deleted.is_(False),
                 )
             )
             .order_by(WorkExperienceRecord.date_from.desc())
@@ -110,7 +110,7 @@ class VoluntaryWorkService(BaseService[VoluntaryRecord]):
             .where(
                 and_(
                     VoluntaryRecord.basic_information_id == basic_information_id,
-                    VoluntaryRecord.is_deleted == False,
+                    VoluntaryRecord.is_deleted.is_(False),
                 )
             )
             .order_by(VoluntaryRecord.date_from.desc())
@@ -144,7 +144,7 @@ class TrainingService(BaseService[TrainingRecord]):
             .where(
                 and_(
                     TrainingRecord.basic_information_id == basic_information_id,
-                    TrainingRecord.is_deleted == False,
+                    TrainingRecord.is_deleted.is_(False),
                 )
             )
             .order_by(TrainingRecord.date_from.desc())
@@ -160,7 +160,7 @@ class TrainingService(BaseService[TrainingRecord]):
                 and_(
                     TrainingRecord.basic_information_id == basic_information_id,
                     TrainingRecord.training_type == training_type,
-                    TrainingRecord.is_deleted == False,
+                    TrainingRecord.is_deleted.is_(False),
                 )
             )
             .order_by(TrainingRecord.date_from.desc())
@@ -194,7 +194,7 @@ class CivilServiceEligibilityService(BaseService[CivilServiceEligibility]):
             .where(
                 and_(
                     CivilServiceEligibility.basic_information_id == basic_information_id,
-                    CivilServiceEligibility.is_deleted == False,
+                    CivilServiceEligibility.is_deleted.is_(False),
                 )
             )
             .order_by(CivilServiceEligibility.date_of_examination.desc())
@@ -210,7 +210,7 @@ class CivilServiceEligibilityService(BaseService[CivilServiceEligibility]):
                 and_(
                     CivilServiceEligibility.basic_information_id == basic_information_id,
                     CivilServiceEligibility.career_service == career_service,
-                    CivilServiceEligibility.is_deleted == False,
+                    CivilServiceEligibility.is_deleted.is_(False),
                 )
             )
             .order_by(CivilServiceEligibility.date_of_examination.desc())
