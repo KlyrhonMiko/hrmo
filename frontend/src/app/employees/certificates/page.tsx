@@ -394,7 +394,26 @@ export default function CertificatesPage() {
             return;
         }
 
-        window.open(certificate.fileUrl, "_blank", "noopener,noreferrer");
+        void (async () => {
+            try {
+                const response = await fetch(certificate.fileUrl, { method: "GET", cache: "no-store" });
+                if (!response.ok) {
+                    throw new Error("Failed to download certificate file.");
+                }
+
+                const blob = await response.blob();
+                const objectUrl = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.href = objectUrl;
+                link.download = certificate.fileName || "certificate-file";
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                URL.revokeObjectURL(objectUrl);
+            } catch (error) {
+                alert(error instanceof Error ? error.message : "Failed to download certificate file.");
+            }
+        })();
     };
 
     const handleVerify = async (certificate: CertificateRecord) => {
@@ -1046,8 +1065,8 @@ export default function CertificatesPage() {
                                         <p className="font-medium text-stone-800 truncate">
                                             {selectedCertificate.fileName || "No file attached"}
                                         </p>
-                                        <p className="text-xs text-stone-500 truncate">
-                                            {selectedCertificate.fileUrl || "No file URL available"}
+                                        <p className="text-xs text-stone-500">
+                                            {selectedCertificate.fileUrl ? "File ready for download" : "No file available"}
                                         </p>
                                     </div>
                                 </div>

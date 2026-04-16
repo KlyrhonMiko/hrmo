@@ -42,6 +42,12 @@ class Settings(BaseSettings):
     database_max_overflow: int = 0
     database_pool_pre_ping: bool = True
 
+    # Supabase
+    supabase_url: str | None = None
+    supabase_key: str | None = None
+    supabase_service_role_key: str | None = None
+    supabase_storage_bucket: str = "certificates"
+
     # Security
     secret_key: str = "your-super-secret-key-change-this-in-production-12345678"
     algorithm: str = "HS256"
