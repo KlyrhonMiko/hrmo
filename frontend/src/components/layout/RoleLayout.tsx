@@ -45,12 +45,12 @@ export function RoleLayout({ children, userRole }: RoleLayoutProps) {
 
     if (['HR Head', 'HR Record Asst'].includes(userRole)) {
         navLinks.push({ href: '/employees/onboard', label: 'PDS Data Entry', icon: UserPlus });
-        navLinks.push({ href: '/employees/directory', label: 'Employee 201', icon: FolderOpen });
-        navLinks.push({ href: '/employees/certificates', label: 'Certificates / MOV', icon: ScanLine });
-        navLinks.push({ href: '/training/tracking', label: 'Training Tracking', icon: GraduationCap });
     }
 
     if (['HR Head', 'President', 'HR Record Asst'].includes(userRole)) {
+        navLinks.push({ href: '/employees/directory', label: 'Employee 201', icon: FolderOpen });
+        navLinks.push({ href: '/employees/certificates', label: 'Certificates / MOV', icon: ScanLine });
+        navLinks.push({ href: '/training/tracking', label: 'Training Tracking', icon: GraduationCap });
         navLinks.push({ href: '/reports', label: 'Reports', icon: FileBarChart });
     }
 
@@ -87,15 +87,13 @@ export function RoleLayout({ children, userRole }: RoleLayoutProps) {
                             <Link
                                 key={link.href}
                                 href={link.href}
-                                className={`group flex items-center gap-3 px-3 py-2.5 text-[13px] font-medium rounded-lg transition-all duration-200 ${
-                                    isActive
-                                        ? 'bg-green-50 text-green-700'
-                                        : 'text-stone-600 hover:bg-green-50 hover:text-green-700'
-                                }`}
+                                className={`group flex items-center gap-3 px-3 py-2.5 text-[13px] font-medium rounded-lg transition-all duration-200 ${isActive
+                                    ? 'bg-green-50 text-green-700'
+                                    : 'text-stone-600 hover:bg-green-50 hover:text-green-700'
+                                    }`}
                             >
-                                <Icon className={`w-[18px] h-[18px] transition-colors duration-200 ${
-                                    isActive ? 'text-green-700' : 'text-stone-400 group-hover:text-green-700'
-                                }`} />
+                                <Icon className={`w-[18px] h-[18px] transition-colors duration-200 ${isActive ? 'text-green-700' : 'text-stone-400 group-hover:text-green-700'
+                                    }`} />
                                 {link.label}
                             </Link>
                         );

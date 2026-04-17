@@ -211,6 +211,15 @@ const STATUS_ICONS: Record<CertificateRecord["status"], React.ReactNode> = {
 };
 
 export default function CertificatesPage() {
+    const [userRole, setUserRole] = useState<"HR Head" | "President" | "HR Record Asst">("HR Head");
+
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const role = localStorage.getItem("userRole");
+            if (role) setUserRole(role as any);
+        }
+    }, []);
+
     const PAGE_SIZE = 10;
     const [certificates, setCertificates] = useState<CertificateRecord[]>([]);
     const [employeeOptions, setEmployeeOptions] = useState<Array<{ employeeNo: string; name: string }>>([]);
@@ -490,7 +499,7 @@ export default function CertificatesPage() {
     const labelClass = "block text-xs font-medium text-stone-600 mb-1";
 
     return (
-        <RoleLayout userRole="HR Head">
+        <RoleLayout userRole={userRole}>
             <div className="space-y-6 pb-8">
                 {/* Page Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -507,13 +516,15 @@ export default function CertificatesPage() {
                             </p>
                         </div>
                     </div>
-                    <button
-                        onClick={() => setShowUploadForm(!showUploadForm)}
-                        className="inline-flex items-center gap-2 px-5 py-2.5 bg-green-700 text-white text-[13px] font-medium rounded-lg hover:bg-green-800 active:scale-[0.98] shadow-sm transition-all"
-                    >
-                        <Upload className="w-4 h-4" />
-                        {showUploadForm ? "Hide Upload Form" : "Upload Certificate"}
-                    </button>
+                    {userRole !== "President" && (
+                        <button
+                            onClick={() => setShowUploadForm(!showUploadForm)}
+                            className="inline-flex items-center gap-2 px-5 py-2.5 bg-green-700 text-white text-[13px] font-medium rounded-lg hover:bg-green-800 active:scale-[0.98] shadow-sm transition-all"
+                        >
+                            <Upload className="w-4 h-4" />
+                            {showUploadForm ? "Hide Upload Form" : "Upload Certificate"}
+                        </button>
+                    )}
                 </div>
 
                 {/* Stats Cards */}
@@ -650,11 +661,10 @@ export default function CertificatesPage() {
 
                         {/* Drag & Drop Zone */}
                         <div
-                            className={`relative border-dashed border-2 rounded-xl p-8 transition-all text-center ${
-                                isDragging
+                            className={`relative border-dashed border-2 rounded-xl p-8 transition-all text-center ${isDragging
                                     ? "border-green-500 bg-green-50"
                                     : "border-stone-300 bg-stone-50 hover:border-stone-400"
-                            }`}
+                                }`}
                             onDragEnter={handleDrag}
                             onDragLeave={handleDrag}
                             onDragOver={handleDrag}

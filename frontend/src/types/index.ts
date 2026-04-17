@@ -202,6 +202,17 @@ export interface CertificateRecord {
    EMPLOYEE 201 FILE
    ═══════════════════════════════════════════════════════════ */
 
+/* ═══════════════════════════════════════════════════════════
+   EMPLOYEE 201 FILE
+   ═══════════════════════════════════════════════════════════ */
+
+export interface TimelineRecord {
+    schoolYear: string;
+    semester: '1st Semester' | '2nd Semester' | 'Midyear / Summer Term';
+    status: 'Active' | 'Inactive';
+    remarks?: string;
+}
+
 export interface Employee201 {
     id: string;
     employeeNo: string;
@@ -211,6 +222,8 @@ export interface Employee201 {
     middleName: string;
     office: string;
     position: string;
+    salaryGrade?: string;
+    stepIncrement?: string;
     employmentStatus: 'Teaching' | 'Non-Teaching' | 'COS';
     dateHired: string;
     email: string;
@@ -219,6 +232,7 @@ export interface Employee201 {
     documents: DocumentMOV[];
     certificates: CertificateRecord[];
     trainingsAttended: TrainingRecord[];
+    timeline?: TimelineRecord[];
     profilePhoto?: string;
     isActive: boolean;
 }

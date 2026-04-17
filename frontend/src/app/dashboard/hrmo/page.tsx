@@ -10,6 +10,10 @@ import { QuickActions } from "@/components/dashboard/QuickActions";
 import { PendingApprovals } from "@/components/dashboard/PendingApprovals";
 
 export default function HRMODashboard() {
+    React.useEffect(() => {
+        if (typeof window !== 'undefined') localStorage.setItem('userRole', 'HR Head');
+    }, []);
+
     return (
         <RoleLayout userRole="HR Head">
             <div className="space-y-6 pb-8">

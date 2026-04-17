@@ -115,9 +115,8 @@ function DownloadDropdown({
 
             {open && (
                 <div
-                    className={`absolute z-50 top-full mt-1 bg-white rounded-lg shadow-lg border border-stone-200 p-1.5 min-w-[160px] ${
-                        align === "right" ? "right-0" : "left-0"
-                    }`}
+                    className={`absolute z-50 top-full mt-1 bg-white rounded-lg shadow-lg border border-stone-200 p-1.5 min-w-[160px] ${align === "right" ? "right-0" : "left-0"
+                        }`}
                 >
                     <button
                         onClick={(e) => {
@@ -236,6 +235,14 @@ export default function ReportsPage() {
         null
     );
     const [activeCategory, setActiveCategory] = useState<ReportCategory>("All");
+    const [userRole, setUserRole] = useState<"HR Head" | "President" | "HR Record Asst">("HR Head");
+
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const role = localStorage.getItem("userRole");
+            if (role) setUserRole(role as any);
+        }
+    }, []);
 
     const fetchReports = useCallback(async () => {
         setLoading(true);
@@ -275,7 +282,7 @@ export default function ReportsPage() {
             : reports.filter((r) => resolveCategory(r) === activeCategory);
 
     return (
-        <RoleLayout userRole="HR Head">
+        <RoleLayout userRole={userRole}>
             <div className="space-y-6 pb-8">
                 {/* Page header */}
                 {!selectedReport && (
@@ -295,13 +302,15 @@ export default function ReportsPage() {
                         </div>
                         <div className="flex items-center gap-2">
                             <DownloadAllDropdown reports={filteredReports} />
-                            <button
-                                onClick={() => setModalOpen(true)}
-                                className="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-white text-[13px] font-medium rounded-lg hover:bg-indigo-700 active:scale-[0.98] shadow-sm transition-all"
-                            >
-                                <Plus className="w-4 h-4" />
-                                Create Report
-                            </button>
+                            {userRole !== "President" && (
+                                <button
+                                    onClick={() => setModalOpen(true)}
+                                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-white text-[13px] font-medium rounded-lg hover:bg-indigo-700 active:scale-[0.98] shadow-sm transition-all"
+                                >
+                                    <Plus className="w-4 h-4" />
+                                    Create Report
+                                </button>
+                            )}
                         </div>
                     </div>
                 )}
@@ -314,11 +323,10 @@ export default function ReportsPage() {
                             <button
                                 key={cat}
                                 onClick={() => setActiveCategory(cat)}
-                                className={`px-3.5 py-1.5 text-[12px] font-medium rounded-full border transition-all ${
-                                    activeCategory === cat
-                                        ? "bg-indigo-50 text-indigo-700 border-indigo-200"
-                                        : "bg-white text-slate-500 border-stone-200 hover:bg-stone-50 hover:text-slate-700"
-                                }`}
+                                className={`px-3.5 py-1.5 text-[12px] font-medium rounded-full border transition-all ${activeCategory === cat
+                                    ? "bg-indigo-50 text-indigo-700 border-indigo-200"
+                                    : "bg-white text-slate-500 border-stone-200 hover:bg-stone-50 hover:text-slate-700"
+                                    }`}
                             >
                                 {cat}
                             </button>
@@ -347,8 +355,8 @@ export default function ReportsPage() {
                         <SavedReportsList
                             reports={filteredReports}
                             onSelect={setSelectedReport}
-                            onDelete={handleDelete}
-                            onCreateNew={() => setModalOpen(true)}
+                            onDelete={userRole !== "President" ? handleDelete : undefined}
+                            onCreateNew={userRole !== "President" ? () => setModalOpen(true) : undefined}
                             loading={loading}
                             renderActions={(report: SavedReport) => (
                                 <DownloadDropdown

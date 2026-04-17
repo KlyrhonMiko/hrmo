@@ -14,8 +14,8 @@ import {
 interface SavedReportsListProps {
     reports: SavedReport[];
     onSelect: (report: SavedReport) => void;
-    onDelete: (id: string) => void;
-    onCreateNew: () => void;
+    onDelete?: (id: string) => void;
+    onCreateNew?: () => void;
     loading: boolean;
     renderActions?: (report: SavedReport) => React.ReactNode;
 }
@@ -36,7 +36,7 @@ export function SavedReportsList({
 }: SavedReportsListProps) {
     const handleDelete = (e: React.MouseEvent, id: string) => {
         e.stopPropagation();
-        if (confirm("Are you sure you want to delete this report?")) {
+        if (onDelete && confirm("Are you sure you want to delete this report?")) {
             onDelete(id);
         }
     };
@@ -71,13 +71,15 @@ export function SavedReportsList({
                     Create your first report to start analyzing personnel data
                     across departments, statuses, and degrees.
                 </p>
-                <button
-                    onClick={onCreateNew}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-white text-[13px] font-medium rounded-lg hover:bg-indigo-700 active:scale-[0.98] shadow-sm transition-all"
-                >
-                    <Plus className="w-4 h-4" />
-                    Create First Report
-                </button>
+                {onCreateNew && (
+                    <button
+                        onClick={onCreateNew}
+                        className="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-white text-[13px] font-medium rounded-lg hover:bg-indigo-700 active:scale-[0.98] shadow-sm transition-all"
+                    >
+                        <Plus className="w-4 h-4" />
+                        Create First Report
+                    </button>
+                )}
             </div>
         );
     }
@@ -111,13 +113,15 @@ export function SavedReportsList({
                             </div>
                             <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all">
                                 {renderActions?.(report)}
-                                <button
-                                    onClick={(e) => handleDelete(e, report.id)}
-                                    className="w-7 h-7 rounded-md flex items-center justify-center text-slate-300 hover:text-red-500 hover:bg-red-50 transition-all"
-                                    title="Delete report"
-                                >
-                                    <Trash2 className="w-3.5 h-3.5" />
-                                </button>
+                                {onDelete && (
+                                    <button
+                                        onClick={(e) => handleDelete(e, report.id)}
+                                        className="w-7 h-7 rounded-md flex items-center justify-center text-slate-300 hover:text-red-500 hover:bg-red-50 transition-all"
+                                        title="Delete report"
+                                    >
+                                        <Trash2 className="w-3.5 h-3.5" />
+                                    </button>
+                                )}
                             </div>
                         </div>
 
