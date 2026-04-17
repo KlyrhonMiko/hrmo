@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useMemo } from "react";
 import { RoleLayout } from "@/components/layout/RoleLayout";
-import type { Employee201, PaginationMeta, DocumentMOV, CertificateRecord, TrainingRecord } from "@/types";
+import type { Employee201, PaginationMeta, DocumentMOV, CertificateRecord, TrainingRecord, TimelineRecord } from "@/types";
 import {
     Search,
     Filter,
@@ -28,16 +28,17 @@ import {
 const OFFICES = ["CCS", "COE", "CBA", "CHAS", "CAS", "Admin"] as const;
 const EMPLOYMENT_STATUSES = ["Teaching", "Non-Teaching", "COS"] as const;
 const ACTIVE_STATUSES = ["Active", "Inactive"] as const;
+const SCHOOL_YEARS = ["2023-2024", "2024-2025", "2025-2026"] as const;
+const SEMESTERS = ["1st Semester", "2nd Semester", "Midyear / Summer Term"] as const;
 
-type DetailTab = "personal" | "documents" | "certificates" | "training";
+type DetailTab = "personal" | "documents" | "certificates" | "training" | "timeline";
 
 function StatusBadge({ isActive }: { isActive: boolean }) {
     return (
-        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-medium ${
-            isActive
-                ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600/20"
-                : "bg-stone-100 text-stone-500 ring-1 ring-stone-300/40"
-        }`}>
+        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-medium ${isActive
+            ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600/20"
+            : "bg-stone-100 text-stone-500 ring-1 ring-stone-300/40"
+            }`}>
             {isActive ? "Active" : "Inactive"}
         </span>
     );
@@ -80,28 +81,68 @@ function StatCard({ label, value, icon: Icon, color }: { label: string; value: n
     );
 }
 
-function PersonalInfoTab({ employee }: { employee: Employee201 }) {
+function PersonalInfoTab({ employee, canEdit }: { employee: Employee201; canEdit: boolean }) {
+    const [isEditing, setIsEditing] = useState(false);
+    const [editedData, setEditedData] = useState({
+        position: employee.position,
+        salaryGrade: employee.salaryGrade || "",
+        stepIncrement: employee.stepIncrement || ""
+    });
+
+    const handleSave = () => {
+        // Logic to save data would go here (API call)
+        // For frontend only, we just update the UI state locally if possible, 
+        // but here we just exit editing mode to show it works.
+        Object.assign(employee, editedData); // Mock update
+        setIsEditing(false);
+    };
+
     const fields = [
         { icon: User, label: "Full Name", value: `${employee.firstName} ${employee.middleName ? employee.middleName.charAt(0) + ". " : ""}${employee.surname}` },
         { icon: Briefcase, label: "Employee No.", value: employee.employeeNo },
         { icon: MapPin, label: "Office", value: employee.office },
-        { icon: Briefcase, label: "Position", value: employee.position },
+        { icon: Briefcase, label: "Position", value: employee.position, editable: true, key: "position" },
+        { icon: Award, label: "Salary Grade", value: employee.salaryGrade || "N/A", editable: true, key: "salaryGrade" },
+        { icon: Award, label: "Step Increment", value: employee.stepIncrement || "N/A", editable: true, key: "stepIncrement" },
         { icon: Calendar, label: "Date Hired", value: new Date(employee.dateHired).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }) },
         { icon: Mail, label: "Email", value: employee.email },
         { icon: Phone, label: "Mobile", value: employee.mobileNo },
     ];
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {fields.map((f) => (
-                <div key={f.label} className="flex items-start gap-3 p-3 rounded-lg bg-stone-50/60">
-                    <f.icon className="w-4 h-4 text-stone-400 mt-0.5 shrink-0" />
-                    <div>
-                        <p className="text-[11px] text-stone-400 font-medium uppercase tracking-wide">{f.label}</p>
-                        <p className="text-[13px] text-stone-800 font-medium mt-0.5">{f.value}</p>
-                    </div>
+        <div className="space-y-4">
+            {canEdit && (
+                <div className="flex justify-end">
+                    {isEditing ? (
+                        <div className="flex gap-2">
+                            <button onClick={handleSave} className="px-3 py-1.5 bg-green-700 text-white text-[12px] font-medium rounded-lg hover:bg-green-800">Save Changes</button>
+                            <button onClick={() => setIsEditing(false)} className="px-3 py-1.5 bg-stone-100 text-stone-600 text-[12px] font-medium rounded-lg hover:bg-stone-200">Cancel</button>
+                        </div>
+                    ) : (
+                        <button onClick={() => setIsEditing(true)} className="px-3 py-1.5 bg-stone-100 text-stone-600 text-[12px] font-medium rounded-lg hover:bg-stone-200">Edit Details</button>
+                    )}
                 </div>
-            ))}
+            )}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {fields.map((f) => (
+                    <div key={f.label} className="flex items-start gap-3 p-3 rounded-lg bg-stone-50/60">
+                        <f.icon className="w-4 h-4 text-stone-400 mt-0.5 shrink-0" />
+                        <div className="flex-1">
+                            <p className="text-[11px] text-stone-400 font-medium uppercase tracking-wide">{f.label}</p>
+                            {isEditing && "editable" in f && f.editable ? (
+                                <input
+                                    type="text"
+                                    value={editedData[f.key as keyof typeof editedData]}
+                                    onChange={(e) => setEditedData({ ...editedData, [f.key as string]: e.target.value })}
+                                    className="w-full mt-1 px-2 py-1 text-[13px] bg-white border border-stone-200 rounded focus:outline-none focus:ring-1 focus:ring-green-600"
+                                />
+                            ) : (
+                                <p className="text-[13px] text-stone-800 font-medium mt-0.5">{f.value}</p>
+                            )}
+                        </div>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 }
@@ -120,9 +161,8 @@ function DocumentsTab({ documents }: { documents: DocumentMOV[] }) {
                         </div>
                     </div>
                     <div className="flex items-center gap-3">
-                        <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium ${
-                            doc.status === "Verified" ? "bg-emerald-50 text-emerald-700" : doc.status === "Rejected" ? "bg-red-50 text-red-600" : "bg-amber-50 text-amber-600"
-                        }`}>
+                        <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium ${doc.status === "Verified" ? "bg-emerald-50 text-emerald-700" : doc.status === "Rejected" ? "bg-red-50 text-red-600" : "bg-amber-50 text-amber-600"
+                            }`}>
                             {doc.status}
                         </span>
                         <button className="p-1.5 rounded-md hover:bg-stone-200/60 transition text-stone-400 hover:text-stone-600">
@@ -149,14 +189,41 @@ function CertificatesTab({ certificates }: { certificates: CertificateRecord[] }
                         </div>
                     </div>
                     <div className="flex items-center gap-3">
-                        <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium ${
-                            cert.status === "Active" ? "bg-emerald-50 text-emerald-700" : cert.status === "Expired" ? "bg-red-50 text-red-600" : "bg-amber-50 text-amber-600"
-                        }`}>
+                        <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium ${cert.status === "Active" ? "bg-emerald-50 text-emerald-700" : cert.status === "Expired" ? "bg-red-50 text-red-600" : "bg-amber-50 text-amber-600"
+                            }`}>
                             {cert.status}
                         </span>
                         <button className="p-1.5 rounded-md hover:bg-stone-200/60 transition text-stone-400 hover:text-stone-600">
                             <Download className="w-3.5 h-3.5" />
                         </button>
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
+}
+
+function TimelineTab({ timeline }: { timeline?: TimelineRecord[] }) {
+    if (!timeline || timeline.length === 0) return <p className="text-[13px] text-stone-400 py-6 text-center">No timeline data available.</p>;
+    return (
+        <div className="space-y-3">
+            {timeline.map((t, i) => (
+                <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-stone-50/60 transition">
+                    <div className="flex items-center gap-3">
+                        <Calendar className="w-4 h-4 text-stone-400" />
+                        <div>
+                            <p className="text-[13px] text-stone-800 font-medium">{t.schoolYear}</p>
+                            <p className="text-[11px] text-stone-400">{t.semester}</p>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-medium ${t.status === "Active"
+                            ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600/20"
+                            : "bg-stone-100 text-stone-500 ring-1 ring-stone-300/40"
+                            }`}>
+                            {t.status}
+                        </span>
+                        {t.remarks && <p className="text-[11px] text-stone-400 max-w-[200px] truncate">{t.remarks}</p>}
                     </div>
                 </div>
             ))}
@@ -181,9 +248,8 @@ function TrainingTab({ trainings }: { trainings: TrainingRecord[] }) {
                             </p>
                         </div>
                     </div>
-                    <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium ${
-                        t.status === "Completed" ? "bg-emerald-50 text-emerald-700" : t.status === "Ongoing" ? "bg-blue-50 text-blue-700" : t.status === "Upcoming" ? "bg-amber-50 text-amber-600" : "bg-red-50 text-red-600"
-                    }`}>
+                    <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium ${t.status === "Completed" ? "bg-emerald-50 text-emerald-700" : t.status === "Ongoing" ? "bg-blue-50 text-blue-700" : t.status === "Upcoming" ? "bg-amber-50 text-amber-600" : "bg-red-50 text-red-600"
+                        }`}>
                         {t.status}
                     </span>
                 </div>
@@ -198,6 +264,17 @@ export default function EmployeeDirectoryPage() {
     const [officeFilter, setOfficeFilter] = useState("");
     const [empStatusFilter, setEmpStatusFilter] = useState("");
     const [activeFilter, setActiveFilter] = useState("");
+    const [syFilter, setSyFilter] = useState("");
+    const [semesterFilter, setSemesterFilter] = useState("");
+    const [dateRange, setDateRange] = useState({ start: "", end: "" });
+    const [userRole, setUserRole] = useState<"HR Head" | "President" | "HR Record Asst">("HR Head");
+
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const role = localStorage.getItem("userRole");
+            if (role) setUserRole(role as any);
+        }
+    }, []);
     const [employees, setEmployees] = useState<Employee201[]>([]);
     const [loading, setLoading] = useState(true);
     const [loadError, setLoadError] = useState<string | null>(null);
@@ -255,10 +332,31 @@ export default function EmployeeDirectoryPage() {
             const matchesSearch = !q || e.fullName.toLowerCase().includes(q) || e.employeeNo.toLowerCase().includes(q);
             const matchesOffice = !officeFilter || e.office === officeFilter;
             const matchesEmpStatus = !empStatusFilter || e.employmentStatus === empStatusFilter;
-            const matchesActive = !activeFilter || (activeFilter === "Active" ? e.isActive : !e.isActive);
-            return matchesSearch && matchesOffice && matchesEmpStatus && matchesActive;
+
+            // Basic Active Filter if no SY/Semester selected
+            let matchesActive = !activeFilter || (activeFilter === "Active" ? e.isActive : !e.isActive);
+
+            // Advanced Timeline Filter
+            if (syFilter || semesterFilter) {
+                const timelineMatch = e.timeline?.find(t =>
+                    (!syFilter || t.schoolYear === syFilter) &&
+                    (!semesterFilter || t.semester === semesterFilter)
+                );
+                if (activeFilter) {
+                    matchesActive = timelineMatch?.status === activeFilter;
+                } else {
+                    matchesActive = !!timelineMatch;
+                }
+            }
+
+            // Date Range Filter (based on dateHired)
+            const hiredDate = new Date(e.dateHired);
+            const matchesDateRange = (!dateRange.start || hiredDate >= new Date(dateRange.start)) &&
+                (!dateRange.end || hiredDate <= new Date(dateRange.end));
+
+            return matchesSearch && matchesOffice && matchesEmpStatus && matchesActive && matchesDateRange;
         });
-    }, [employees, search, officeFilter, empStatusFilter, activeFilter]);
+    }, [employees, search, officeFilter, empStatusFilter, activeFilter, syFilter, semesterFilter, dateRange]);
 
     const stats = useMemo(() => ({
         total: employees.length,
@@ -276,24 +374,54 @@ export default function EmployeeDirectoryPage() {
         }
     };
 
-    const hasActiveFilters = officeFilter || empStatusFilter || activeFilter;
+    const hasActiveFilters = officeFilter || empStatusFilter || activeFilter || syFilter || semesterFilter || dateRange.start || dateRange.end;
 
     const clearFilters = () => {
         setOfficeFilter("");
         setEmpStatusFilter("");
         setActiveFilter("");
+        setSyFilter("");
+        setSemesterFilter("");
+        setDateRange({ start: "", end: "" });
         setPage(1);
     };
 
-    const tabs: { key: DetailTab; label: string; icon: React.ElementType }[] = [
+    const exportToCSV = () => {
+        const headers = ["Employee No", "Full Name", "Office", "Position", "Status", "Salary Grade", "Step", "Date Hired", "Email"];
+        const rows = filtered.map(e => [
+            e.employeeNo,
+            e.fullName,
+            e.office,
+            e.position,
+            e.isActive ? "Active" : "Inactive",
+            e.salaryGrade || "N/A",
+            e.stepIncrement || "N/A",
+            new Date(e.dateHired).toLocaleDateString(),
+            e.email
+        ]);
+
+        const csvContent = [headers, ...rows].map(row => row.join(",")).join("\n");
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", `employee_directory_${new Date().toISOString().split('T')[0]}.csv`);
+        link.style.visibility = "hidden";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    const tabs: { key: DetailTab | "timeline"; label: string; icon: React.ElementType }[] = [
         { key: "personal", label: "Personal Info", icon: User },
+        { key: "timeline", label: "Timeline", icon: Calendar },
         { key: "documents", label: "Documents / MOV", icon: FileText },
         { key: "certificates", label: "Certificates", icon: Award },
         { key: "training", label: "Training History", icon: GraduationCap },
     ];
 
     return (
-        <RoleLayout userRole="HR Head">
+        <RoleLayout userRole={userRole}>
             <div className="space-y-6 pb-8">
                 {/* Page Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -332,22 +460,30 @@ export default function EmployeeDirectoryPage() {
                                 className="w-full pl-9 pr-4 py-2.5 text-[13px] text-stone-800 placeholder:text-stone-400 bg-stone-50 border border-stone-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600/20 focus:border-green-600 transition"
                             />
                         </div>
-                        <button
-                            onClick={() => setShowFilters(!showFilters)}
-                            className={`inline-flex items-center gap-2 px-4 py-2.5 text-[13px] font-medium rounded-lg border transition ${
-                                showFilters || hasActiveFilters
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={exportToCSV}
+                                className="inline-flex items-center gap-2 px-4 py-2.5 text-[13px] font-medium rounded-lg bg-stone-100 text-stone-600 border border-stone-200 hover:bg-stone-200/60 transition"
+                            >
+                                <Download className="w-4 h-4" />
+                                Export
+                            </button>
+                            <button
+                                onClick={() => setShowFilters(!showFilters)}
+                                className={`inline-flex items-center gap-2 px-4 py-2.5 text-[13px] font-medium rounded-lg border transition ${showFilters || hasActiveFilters
                                     ? "bg-green-50 text-green-700 border-green-200"
                                     : "bg-white text-stone-600 border-stone-200 hover:bg-stone-50"
-                            }`}
-                        >
-                            <Filter className="w-4 h-4" />
-                            Filters
-                            {hasActiveFilters && (
-                                <span className="w-5 h-5 rounded-full bg-green-700 text-white text-[10px] flex items-center justify-center font-bold">
-                                    {[officeFilter, empStatusFilter, activeFilter].filter(Boolean).length}
-                                </span>
-                            )}
-                        </button>
+                                    }`}
+                            >
+                                <Filter className="w-4 h-4" />
+                                Filters
+                                {hasActiveFilters && (
+                                    <span className="w-5 h-5 rounded-full bg-green-700 text-white text-[10px] flex items-center justify-center font-bold">
+                                        {[officeFilter, empStatusFilter, activeFilter, syFilter, semesterFilter, dateRange.start, dateRange.end].filter(Boolean).length}
+                                    </span>
+                                )}
+                            </button>
+                        </div>
                     </div>
 
                     {showFilters && (
@@ -385,6 +521,49 @@ export default function EmployeeDirectoryPage() {
                                 <option value="">All Status</option>
                                 {ACTIVE_STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
                             </select>
+
+                            <div className="h-6 w-px bg-stone-200 mx-1 hidden sm:block" />
+
+                            <select
+                                value={syFilter}
+                                onChange={(e) => {
+                                    setSyFilter(e.target.value);
+                                    setPage(1);
+                                }}
+                                className="px-3 py-2 text-[12px] text-stone-700 bg-stone-50 border border-stone-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600/20 focus:border-green-600 transition"
+                            >
+                                <option value="">Select SY</option>
+                                {SCHOOL_YEARS.map((sy) => <option key={sy} value={sy}>{sy}</option>)}
+                            </select>
+
+                            <select
+                                value={semesterFilter}
+                                onChange={(e) => {
+                                    setSemesterFilter(e.target.value);
+                                    setPage(1);
+                                }}
+                                className="px-3 py-2 text-[12px] text-stone-700 bg-stone-50 border border-stone-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600/20 focus:border-green-600 transition"
+                            >
+                                <option value="">Select Semester</option>
+                                {SEMESTERS.map((sem) => <option key={sem} value={sem}>{sem}</option>)}
+                            </select>
+
+                            <div className="flex items-center gap-2 ml-auto">
+                                <span className="text-[11px] text-stone-400 font-medium uppercase tracking-wide">Hired Range:</span>
+                                <input
+                                    type="date"
+                                    value={dateRange.start}
+                                    onChange={(e) => setDateRange(prev => ({ ...prev, start: e.target.value }))}
+                                    className="px-2 py-1.5 text-[11px] text-stone-700 bg-stone-50 border border-stone-200 rounded focus:outline-none"
+                                />
+                                <span className="text-stone-300">-</span>
+                                <input
+                                    type="date"
+                                    value={dateRange.end}
+                                    onChange={(e) => setDateRange(prev => ({ ...prev, end: e.target.value }))}
+                                    className="px-2 py-1.5 text-[11px] text-stone-700 bg-stone-50 border border-stone-200 rounded focus:outline-none"
+                                />
+                            </div>
                             {hasActiveFilters && (
                                 <button onClick={clearFilters} className="inline-flex items-center gap-1.5 px-3 py-2 text-[12px] font-medium text-red-600 hover:bg-red-50 rounded-lg transition">
                                     <X className="w-3.5 h-3.5" />
@@ -510,11 +689,10 @@ export default function EmployeeDirectoryPage() {
                                                                             <button
                                                                                 key={tab.key}
                                                                                 onClick={() => setActiveTab(tab.key)}
-                                                                                className={`flex items-center gap-1.5 px-3 py-2.5 text-[12px] font-medium rounded-t-lg transition -mb-px ${
-                                                                                    isActive
-                                                                                        ? "bg-white text-green-700 border border-stone-200/80 border-b-white"
-                                                                                        : "text-stone-500 hover:text-stone-700 hover:bg-stone-100/60"
-                                                                                }`}
+                                                                                className={`flex items-center gap-1.5 px-3 py-2.5 text-[12px] font-medium rounded-t-lg transition -mb-px ${isActive
+                                                                                    ? "bg-white text-green-700 border border-stone-200/80 border-b-white"
+                                                                                    : "text-stone-500 hover:text-stone-700 hover:bg-stone-100/60"
+                                                                                    }`}
                                                                             >
                                                                                 <Icon className="w-3.5 h-3.5" />
                                                                                 <span className="hidden sm:inline">{tab.label}</span>
@@ -525,7 +703,8 @@ export default function EmployeeDirectoryPage() {
 
                                                                 {/* Tab content */}
                                                                 <div className="bg-white rounded-lg border border-stone-200/80 p-4">
-                                                                    {activeTab === "personal" && <PersonalInfoTab employee={emp} />}
+                                                                    {activeTab === "personal" && <PersonalInfoTab employee={emp} canEdit={userRole === "HR Head"} />}
+                                                                    {activeTab === "timeline" && <TimelineTab timeline={emp.timeline || []} />}
                                                                     {activeTab === "documents" && <DocumentsTab documents={emp.documents} />}
                                                                     {activeTab === "certificates" && <CertificatesTab certificates={emp.certificates} />}
                                                                     {activeTab === "training" && <TrainingTab trainings={emp.trainingsAttended} />}

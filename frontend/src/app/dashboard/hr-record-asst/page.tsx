@@ -46,6 +46,10 @@ const shortcutColorMap: Record<string, { bg: string; text: string }> = {
 };
 
 export default function HRRecordAsstDashboard() {
+    React.useEffect(() => {
+        if (typeof window !== 'undefined') localStorage.setItem('userRole', 'HR Record Asst');
+    }, []);
+
     return (
         <RoleLayout userRole="HR Record Asst">
             <div className="space-y-6 pb-8">

@@ -135,6 +135,15 @@ const EMPTY_CERTIFICATE_FORM: CertificateFormState = {
 };
 
 export default function TrainingTrackingPage() {
+    const [userRole, setUserRole] = useState<"HR Head" | "President" | "HR Record Asst">("HR Head");
+
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const role = localStorage.getItem("userRole");
+            if (role) setUserRole(role as any);
+        }
+    }, []);
+
     const [trainings, setTrainings] = useState<TrainingWithParticipants[]>([]);
     const [employees, setEmployees] = useState<TrainingEmployeeOption[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -322,9 +331,9 @@ export default function TrainingTrackingPage() {
             if (!response.ok || !payload.success || !payload.data) {
                 throw new Error(
                     payload.message ||
-                        (formMode === "create"
-                            ? "Failed to create training event."
-                            : "Failed to update training event.")
+                    (formMode === "create"
+                        ? "Failed to create training event."
+                        : "Failed to update training event.")
                 );
             }
 
@@ -431,7 +440,7 @@ export default function TrainingTrackingPage() {
     const labelClass = "block text-xs font-medium text-stone-600 mb-1";
 
     return (
-        <RoleLayout userRole="HR Head">
+        <RoleLayout userRole={userRole}>
             <div className="space-y-6 pb-8">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div className="flex items-center gap-3">
@@ -447,13 +456,15 @@ export default function TrainingTrackingPage() {
                             </p>
                         </div>
                     </div>
-                    <button
-                        onClick={openAddModal}
-                        className="inline-flex items-center gap-2 px-5 py-2.5 bg-green-700 text-white text-[13px] font-medium rounded-lg hover:bg-green-800 active:scale-[0.98] shadow-sm transition-all"
-                    >
-                        <Plus className="w-4 h-4" />
-                        Add Training Record
-                    </button>
+                    {userRole !== "President" && (
+                        <button
+                            onClick={openAddModal}
+                            className="inline-flex items-center gap-2 px-5 py-2.5 bg-green-700 text-white text-[13px] font-medium rounded-lg hover:bg-green-800 active:scale-[0.98] shadow-sm transition-all"
+                        >
+                            <Plus className="w-4 h-4" />
+                            Add Training Record
+                        </button>
+                    )}
                 </div>
 
                 {errorMessage && (
@@ -639,26 +650,30 @@ export default function TrainingTrackingPage() {
                                             <Eye className="w-3.5 h-3.5" />
                                             View
                                         </button>
-                                        <button
-                                            onClick={() => openEditModal(tr)}
-                                            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium text-stone-600 bg-stone-50 border border-stone-200 rounded-lg hover:bg-stone-100 transition-colors"
-                                        >
-                                            <Pencil className="w-3.5 h-3.5" />
-                                            Edit
-                                        </button>
-                                        <button
-                                            onClick={() => openCertificateModal(tr)}
-                                            disabled={tr.status !== "Completed"}
-                                            title={
-                                                tr.status !== "Completed"
-                                                    ? "Certificates can be uploaded only for completed trainings"
-                                                    : "Upload participant certificate"
-                                            }
-                                            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium text-green-700 bg-green-50 border border-green-200 rounded-lg hover:bg-green-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                                        >
-                                            <Award className="w-3.5 h-3.5" />
-                                            Certificate
-                                        </button>
+                                        {userRole !== "President" && (
+                                            <>
+                                                <button
+                                                    onClick={() => openEditModal(tr)}
+                                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium text-stone-600 bg-stone-50 border border-stone-200 rounded-lg hover:bg-stone-100 transition-colors"
+                                                >
+                                                    <Pencil className="w-3.5 h-3.5" />
+                                                    Edit
+                                                </button>
+                                                <button
+                                                    onClick={() => openCertificateModal(tr)}
+                                                    disabled={tr.status !== "Completed"}
+                                                    title={
+                                                        tr.status !== "Completed"
+                                                            ? "Certificates can be uploaded only for completed trainings"
+                                                            : "Upload participant certificate"
+                                                    }
+                                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium text-green-700 bg-green-50 border border-green-200 rounded-lg hover:bg-green-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                                >
+                                                    <Award className="w-3.5 h-3.5" />
+                                                    Certificate
+                                                </button>
+                                            </>
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -1114,11 +1129,10 @@ export default function TrainingTrackingPage() {
                                             return (
                                                 <label
                                                     key={emp.id}
-                                                    className={`flex items-center gap-3 px-3 py-2 cursor-pointer transition-colors ${
-                                                        selected
+                                                    className={`flex items-center gap-3 px-3 py-2 cursor-pointer transition-colors ${selected
                                                             ? "bg-green-50"
                                                             : "hover:bg-stone-50"
-                                                    }`}
+                                                        }`}
                                                 >
                                                     <input
                                                         type="checkbox"

@@ -7,6 +7,10 @@ import { PersonnelCharts } from "@/components/dashboard/PersonnelCharts";
 import { ComplianceSummary } from "@/components/dashboard/ComplianceSummary";
 
 export default function PresidentDashboard() {
+    React.useEffect(() => {
+        if (typeof window !== 'undefined') localStorage.setItem('userRole', 'President');
+    }, []);
+
     return (
         <RoleLayout userRole="President">
             <div className="space-y-6 pb-8">
