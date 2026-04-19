@@ -91,7 +91,7 @@ export function MOVUploadZone({ onUploadSuccess }: MOVUploadZoneProps) {
                     <select
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         value={docType}
-                        onChange={(e) => setDocType(e.target.value as any)}
+                        onChange={(e) => setDocType(e.target.value as DocumentMOV["documentType"])}
                     >
                         <option value="Certificate">Certificate</option>
                         <option value="Diploma">Diploma</option>

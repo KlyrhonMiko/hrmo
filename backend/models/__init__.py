@@ -26,10 +26,12 @@ from models.professional_background import (
     TrainingRecord,
     CivilServiceEligibility,
 )
+from models.training_requests import TrainingRequest
 from models.training_tracking import (
     TrainingEvent,
     TrainingEventParticipant,
 )
+from models.users import User
 
 __all__ = [
     "BaseModel",
@@ -48,7 +50,9 @@ __all__ = [
     "WorkExperienceRecord",
     "VoluntaryRecord",
     "TrainingRecord",
+    "TrainingRequest",
     "CivilServiceEligibility",
     "TrainingEvent",
     "TrainingEventParticipant",
+    "User",
 ]

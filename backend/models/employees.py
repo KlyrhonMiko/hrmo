@@ -9,6 +9,8 @@ from models.base import BaseModel
 
 if TYPE_CHECKING:
     from models.personal_information import BasicInformation
+    from models.training_requests import TrainingRequest
+    from models.users import User
 
 
 class Employee(BaseModel, table=True):
@@ -25,6 +27,9 @@ class Employee(BaseModel, table=True):
     # Relationships
     basic_information: Optional["BasicInformation"] = Relationship(back_populates="employee")
     certificate_records: list["CertificateRecord"] = Relationship(back_populates="employee")
+    training_requests: list["TrainingRequest"] = Relationship(back_populates="employee")
+    user: Optional["User"] = Relationship(back_populates="employee", sa_relationship_kwargs={"uselist": False})
+
 
 
 class CertificateRecord(BaseModel, table=True):

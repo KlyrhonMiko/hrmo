@@ -6,6 +6,7 @@ from datetime import datetime
 from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 
 from core.config import get_settings
 from core.database import close_db, init_db
@@ -26,6 +27,8 @@ from routers import (
     primary_government_ids,
     record_completions,
     employees,
+    users,
+    auth,
     certificates,
     dashboard,
 )
@@ -59,6 +62,20 @@ def create_app() -> FastAPI:
         lifespan=lifespan,
     )
 
+    # CORS - allow frontend dev server origins for browser requests
+    origins = [
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    ]
+
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
     # Include routers
     app.include_router(basic_information.router)
     app.include_router(government_ids.router)
@@ -76,6 +93,8 @@ def create_app() -> FastAPI:
     app.include_router(primary_government_ids.router)
     app.include_router(record_completions.router)
     app.include_router(employees.router)
+    app.include_router(users.router)
+    app.include_router(auth.router)
     app.include_router(certificates.router)
     app.include_router(dashboard.router)
 

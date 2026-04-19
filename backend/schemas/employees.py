@@ -52,6 +52,8 @@ class EmployeeAtomicOnboardRequest(BaseModel):
 
     formData: dict[str, Any]
     employeeMeta: dict[str, Any] = Field(default_factory=dict)
+    user_id: Optional[str] = Field(None, description="Optional user ID to link to this employee")
+
 
 
 # ==================== Certificate Record Schemas ====================

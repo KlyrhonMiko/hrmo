@@ -50,7 +50,7 @@ type BackendTraining = {
     number_of_hours: string;
 };
 
-const TRAINING_TYPES: TrainingRecord["type"][] = [
+const TRAINING_TYPES: string[] = [
     "Seminar",
     "Workshop",
     "Conference",
@@ -59,7 +59,7 @@ const TRAINING_TYPES: TrainingRecord["type"][] = [
     "Other",
 ];
 
-function toTrainingType(value: string): TrainingRecord["type"] {
+function toTrainingType(value: string): string {
     const normalized = value.trim().toLowerCase();
     const match = TRAINING_TYPES.find((type) => type.toLowerCase() === normalized);
     return match || "Other";
@@ -210,17 +210,13 @@ export async function GET(request: Request) {
 
             const mappedTraining: TrainingRecord[] = employeeTrainingRecords.map((training) => ({
                 id: training.id,
-                title: training.training_title,
-                type: toTrainingType(training.training_type),
-                conductedBy: training.conducted_by,
-                venue: "",
-                dateFrom: training.date_from,
-                dateTo: training.date_to,
-                numberOfHours: Number(training.number_of_hours) || 0,
-                status: "Completed",
-                employeeId: employeeNo,
-                employeeName: fullName,
-                office: employee.office_department,
+                training_title: training.training_title,
+                training_type: toTrainingType(training.training_type),
+                conducted_by: training.conducted_by,
+                date_from: training.date_from,
+                date_to: training.date_to,
+                number_of_hours: training.number_of_hours,
+                basic_information_id: training.basic_information_id,
             }));
 
             return {
