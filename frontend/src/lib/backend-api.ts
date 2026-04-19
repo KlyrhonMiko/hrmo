@@ -36,6 +36,43 @@ export function toBackendUrl(path: string): string {
     return `${getBackendApiBaseUrl()}${normalizedPath}`;
 }
 
+function getAuthTokenFromCookie(): string | null {
+    if (typeof document === "undefined") return null;
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; hrmo_token=`);
+    if (parts.length === 2) {
+        return parts.pop()?.split(";").shift() || null;
+    }
+    return null;
+}
+
+function getRequestInitWithAuth(init?: RequestInit): RequestInit {
+    const token = getAuthTokenFromCookie();
+    const headers = new Headers(init?.headers);
+
+    if (!headers.has("Accept")) {
+        headers.set("Accept", "application/json");
+    }
+
+    if (token && !headers.has("Authorization")) {
+        headers.set("Authorization", `Bearer ${token}`);
+    }
+
+    if (init?.body && !headers.has("Content-Type")) {
+        // Only set if not already set (e.g., for FormData)
+        if (typeof init.body === "string") {
+            headers.set("Content-Type", "application/json");
+        }
+    }
+
+    return {
+        ...init,
+        headers,
+    };
+}
+
+
+
 async function parseBackendResponseBody<T>(response: Response): Promise<T | null> {
     if (response.status === 204) {
         return null;
@@ -56,14 +93,13 @@ async function parseBackendResponseBody<T>(response: Response): Promise<T | null
 }
 
 export async function backendRequest<T>(path: string, init?: RequestInit): Promise<T> {
+    const mergedInit = getRequestInitWithAuth(init);
     const response = await fetch(toBackendUrl(path), {
-        ...init,
-        headers: {
-            Accept: "application/json",
-            ...(init?.headers || {}),
-        },
+        ...mergedInit,
         cache: "no-store",
     });
+
+
 
     if (!response.ok) {
         const contentType = response.headers.get("content-type") || "";
@@ -92,14 +128,13 @@ export async function backendRequest<T>(path: string, init?: RequestInit): Promi
 }
 
 export async function backendEnvelopeRequest<T>(path: string, init?: RequestInit): Promise<BackendResponseEnvelope<T>> {
+    const mergedInit = getRequestInitWithAuth(init);
     const response = await fetch(toBackendUrl(path), {
-        ...init,
-        headers: {
-            Accept: "application/json",
-            ...(init?.headers || {}),
-        },
+        ...mergedInit,
         cache: "no-store",
     });
+
+
 
     if (!response.ok) {
         const contentType = response.headers.get("content-type") || "";
@@ -140,16 +175,15 @@ export async function backendEnvelopeRequest<T>(path: string, init?: RequestInit
 }
 
 export async function backendFormRequest<T>(path: string, formData: FormData, init?: Omit<RequestInit, "body">): Promise<T> {
+    const mergedInit = getRequestInitWithAuth(init as RequestInit);
     const response = await fetch(toBackendUrl(path), {
-        ...init,
-        method: init?.method || "POST",
+        ...mergedInit,
+        method: mergedInit.method || "POST",
         body: formData,
-        headers: {
-            Accept: "application/json",
-            ...(init?.headers || {}),
-        },
         cache: "no-store",
     });
+
+
 
     if (!response.ok) {
         const contentType = response.headers.get("content-type") || "";

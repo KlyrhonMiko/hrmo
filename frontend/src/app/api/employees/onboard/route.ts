@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
 import type { FullPDS } from "@/types";
 import { backendRequest, BackendApiError } from "@/lib/backend-api";
@@ -29,12 +30,19 @@ export async function POST(request: Request) {
             );
         }
 
+        // Forward the auth token so the backend can self-link the employee record
+        const cookieStore = await cookies();
+        const token = cookieStore.get("hrmo_token")?.value;
+        const authHeader: Record<string, string> = token
+            ? { Authorization: `Bearer ${token}` }
+            : {};
+
         const result = await backendRequest<{
             employeeNo: string;
             stages: Array<{ stage: string; created: number; skipped: number }>;
         }>("/api/employees/onboard-atomic", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json", ...authHeader },
             body: JSON.stringify(body),
         });
 

@@ -38,7 +38,7 @@ export async function POST(request: Request) {
             },
             { status: 200 }
         );
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Error in /api/upload-mov:', error);
         return NextResponse.json(
             { error: 'Internal Server Error' },

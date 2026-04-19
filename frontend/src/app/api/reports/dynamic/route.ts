@@ -50,7 +50,7 @@ export async function GET(request: Request) {
       { data },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error in /api/reports/dynamic:', error);
     return NextResponse.json(
       { error: 'Internal Server Error' },

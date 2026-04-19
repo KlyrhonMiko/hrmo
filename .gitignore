@@ -110,6 +110,23 @@ next-env.d.ts
 # Uploaded files (certificates, documents, etc.)
 backend/uploads/
 
+# Backend runtime and environment files
+# Ignore virtual environments, env files, caches, and local DBs
+backend/.venv/
+backend/venv/
+backend/env/
+backend/.env
+backend/.env.local
+backend/.env.*.local
+backend/*.sqlite
+backend/*.db
+backend/*.db3
+backend/.pytest_cache/
+backend/.mypy_cache/
+backend/.coverage
+backend/.Python
+backend/__pycache__/
+
 # Vercel
 .vercel/
 

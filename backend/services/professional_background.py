@@ -12,6 +12,7 @@ from models.professional_background import (
     TrainingRecord,
     CivilServiceEligibility,
 )
+from models.training_requests import TrainingRequest
 from services.base import BaseService
 
 
@@ -217,3 +218,54 @@ class CivilServiceEligibilityService(BaseService[CivilServiceEligibility]):
         )
         result = await self.session.execute(stmt)
         return result.scalars().all()
+
+
+class TrainingRequestService(BaseService[TrainingRequest]):
+    """Service for managing training requests."""
+
+    def __init__(self, session: AsyncSession):
+        super().__init__(TrainingRequest, session)
+
+    async def get_all_with_employees(self, status: Optional[str] = None) -> list[dict]:
+        """Get all training requests with basic employee information."""
+        from models.employees import Employee
+        from models.personal_information import BasicInformation
+
+        stmt = (
+            select(TrainingRequest, Employee, BasicInformation)
+            .join(Employee, TrainingRequest.employee_id == Employee.id)
+            .join(BasicInformation, Employee.id == BasicInformation.employee_id)
+            .where(TrainingRequest.is_deleted.is_(False))
+        )
+
+        if status:
+            stmt = stmt.where(TrainingRequest.status == status)
+
+        stmt = stmt.order_by(TrainingRequest.submitted_at.desc())
+        
+        result = await self.session.execute(stmt)
+        records = []
+        for req, emp, basic in result.all():
+            middle = f" {basic.middle_name}" if basic.middle_name else ""
+            full_name = f"{basic.surname}, {basic.first_name}{middle}".strip()
+            
+            records.append({
+                **req.model_dump(),
+                "employee_name": full_name,
+                "employee_no": emp.employee_no,
+                "office": emp.office_department
+            })
+        
+        return records
+
+    async def get_basic_info_id_by_employee_id(self, employee_id: str) -> Optional[str]:
+        """Get basic information ID for an employee ID."""
+        from models.personal_information import BasicInformation
+        stmt = select(BasicInformation.id).where(
+            and_(
+                BasicInformation.employee_id == employee_id,
+                BasicInformation.is_deleted.is_(False)
+            )
+        )
+        result = await self.session.execute(stmt)
+        return result.scalar_one_or_none()

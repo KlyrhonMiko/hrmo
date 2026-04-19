@@ -14,6 +14,9 @@ from models.employees import CertificateRecord, Employee
 from models.personal_background import RecordCompletion
 from models.personal_information import BasicInformation
 from models.training_tracking import TrainingEvent, TrainingEventParticipant
+from models.professional_background import TrainingRecord
+from deps.auth import get_current_user
+from models.users import User
 from utils.response import APIResponse, create_response
 
 router = APIRouter(prefix="/api/dashboard", tags=["Dashboard"])
@@ -853,5 +856,185 @@ async def get_pending_approvals(
             "items": items,
             "total_pending": total_pending,
         },
+        success=True,
+    )
+
+
+@router.get("/employee", response_model=APIResponse)
+async def get_employee_dashboard(
+    request: Request,
+    current_user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_db),
+):
+    """Return aggregated dashboard data for the currently authenticated employee."""
+    if not current_user.employee_id:
+        return create_response(
+            path=request.url.path,
+            data=None,
+            success=True,
+        )
+
+    # 1. Base Employee Data
+    employee_stmt = select(Employee).where(
+        Employee.id == current_user.employee_id, Employee.is_deleted.is_(False)
+    )
+    employee = (await session.execute(employee_stmt)).scalar_one_or_none()
+    if not employee:
+        return create_response(path=request.url.path, data=None, success=True)
+
+    # 2. Get Basic Information ID
+    basic_info_stmt = select(BasicInformation.id).where(
+        and_(
+            BasicInformation.employee_id == employee.id,
+            BasicInformation.is_deleted.is_(False),
+        )
+    )
+    basic_info_id = (await session.execute(basic_info_stmt)).scalar_one_or_none()
+
+    now = datetime.utcnow()
+    current_year = now.year
+    date_hired = employee.date_hired or now.date()
+    years_service = (now.date() - date_hired).days // 365
+
+    # 3. Training Stats & Aggregations
+    training_records = []
+    if basic_info_id:
+        tr_stmt = select(TrainingRecord).where(
+            and_(
+                TrainingRecord.basic_information_id == basic_info_id,
+                TrainingRecord.is_deleted.is_(False),
+            )
+        )
+        training_records = (await session.execute(tr_stmt)).scalars().all()
+
+    total_trainings = len(training_records)
+    annual_hours = 0
+    categories = {
+        "Technical": 0,
+        "Leadership": 0,
+        "Compliance": 0,
+        "Soft Skills": 0,
+    }
+
+    def map_category(t_type: str) -> str:
+        t = t_type.lower()
+        if any(x in t for x in ["tech", "skill", "software", "program"]):
+            return "Technical"
+        if any(x in t for x in ["lead", "manage", "supervis", "executive"]):
+            return "Leadership"
+        if any(x in t for x in ["complian", "law", "ethics", "conduct", "privacy"]):
+            return "Compliance"
+        return "Soft Skills"
+
+    for tr in training_records:
+        hours = 0
+        try:
+            hours = int(tr.number_of_hours or 0)
+        except (ValueError, TypeError):
+            pass
+
+        if tr.date_from and tr.date_from.year == current_year:
+            annual_hours += hours
+        
+        cat = map_category(tr.training_type)
+        categories[cat] += hours
+
+    # 4. Certificate Records
+    cert_stmt = select(CertificateRecord).where(
+        and_(
+            CertificateRecord.employee_id == employee.id,
+            CertificateRecord.is_deleted.is_(False),
+        )
+    ).order_by(CertificateRecord.created_at.desc())
+    certificates = (await session.execute(cert_stmt)).scalars().all()
+
+    view_certs = [
+        {
+            "name": c.certificate_type,
+            "date": c.date_issued.strftime("%b %d, %Y") if c.date_issued else "",
+            "status": "verified" if c.verified_at else "pending"
+        }
+        for c in certificates[:5]
+    ]
+
+    verified_count = sum(1 for c in certificates if c.verified_at)
+    pending_certs_count = len(certificates) - verified_count
+
+    # 5. Upcoming Trainings (Assigned Events)
+    upcoming_stmt = (
+        select(TrainingEvent)
+        .join(TrainingEventParticipant)
+        .where(
+            and_(
+                TrainingEventParticipant.employee_id == employee.id,
+                TrainingEventParticipant.completion_status != "Completed",
+                TrainingEventParticipant.is_deleted.is_(False),
+                TrainingEvent.is_deleted.is_(False),
+            )
+        )
+        .order_by(TrainingEvent.date_from.asc())
+    )
+    upcoming_events = (await session.execute(upcoming_stmt)).scalars().all()
+    
+    view_upcoming = [
+        {
+            "title": e.training_title,
+            "date": f"{e.date_from.strftime('%B %d')} - {e.date_to.strftime('%d, %Y')}" if e.date_from and e.date_to else "",
+            "venue": e.venue,
+            "type": e.training_type
+        }
+        for e in upcoming_events[:3]
+    ]
+
+    # 6. PDS Completion
+    has_pds = False
+    if basic_info_id:
+        pds_stmt = select(RecordCompletion).where(
+            and_(
+                RecordCompletion.basic_information_id == basic_info_id,
+                RecordCompletion.is_deleted.is_(False)
+            )
+        )
+        has_pds = (await session.execute(pds_stmt)).scalar_one_or_none() is not None
+
+    action_items = []
+    if not has_pds:
+        action_items.append({"text": "Update PDS contact information", "priority": "high", "icon": "AlertCircle"})
+    
+    # Check for missing certifications if profile exists
+    if not certificates and has_pds:
+        action_items.append({"text": "Upload training certificates", "priority": "medium", "icon": "Upload"})
+
+    data = {
+        "profile": {
+            "full_name": current_user.full_name,
+            "position": employee.position_title,
+            "department": employee.office_department,
+            "employee_no": employee.employee_no,
+        },
+        "stats": {
+            "years_service": years_service,
+            "total_trainings": total_trainings,
+            "total_documents": len(certificates),
+            "annual_training_hours": annual_hours,
+            "training_target": 60,
+            "pending_requests_count": pending_certs_count + len(view_upcoming),
+            "verified_docs_count": verified_count,
+            "pending_docs_count": pending_certs_count,
+            "pds_status": "Up to Date" if has_pds else "Action Required",
+            "last_pds_update": "Feb 2026" if has_pds else "Never", # Mock for now or get from updated_at
+        },
+        "upcoming_trainings": view_upcoming,
+        "recent_documents": view_certs,
+        "training_progress": [
+            {"category": k, "completed": v, "target": 20 if k == "Technical" else 15}
+            for k, v in categories.items()
+        ],
+        "action_items": action_items
+    }
+
+    return create_response(
+        path=request.url.path,
+        data=data,
         success=True,
     )

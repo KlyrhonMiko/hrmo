@@ -1,8 +1,52 @@
-/* ═══════════════════════════════════════════════════════════
-   ROLES
-   ═══════════════════════════════════════════════════════════ */
-
+export type BackendUserRole = "admin" | "president" | "hr" | "hr-assistant" | "employee";
 export type Role = 'HR Head' | 'HR Record Asst' | 'President' | 'Employee';
+
+export interface BackendUser {
+    id: string;
+    user_no: string;
+    surname: string;
+    first_name: string;
+    middle_name?: string | null;
+    email: string;
+    phone_number?: string | null;
+    username: string;
+    role: BackendUserRole;
+    employee_id?: string | null;
+    created_at?: string;
+    updated_at?: string;
+
+    is_deleted?: boolean;
+}
+
+export interface EmployeeBasicInfo {
+    id: string;
+    surname: string;
+    first_name: string;
+    middle_name?: string | null;
+    name_extension?: string | null;
+    full_name: string;
+}
+
+export interface EmployeeContactInfo {
+    telephone_no?: string | null;
+    mobile_no: string;
+    email_address: string;
+}
+
+export interface EmployeeProfile {
+    id: string;
+    employee_no: string;
+    office_department: string;
+    position_title: string;
+    employment_status: string;
+    date_hired: string;
+    created_at: string;
+    updated_at: string;
+    basic_information: EmployeeBasicInfo | null;
+    contact_information: EmployeeContactInfo | null;
+}
+
+
 
 /* ═══════════════════════════════════════════════════════════
    PDS — CSC Form 212 (Personal Data Sheet)
@@ -142,6 +186,50 @@ export interface PDSGovernmentIssuedID {
     placeOfIssuance: string;
 }
 
+/* ───────────────────────── Dashboard Types ───────────────────────── */
+
+export interface EmployeeDashboardData {
+    profile: {
+        full_name: string;
+        position: string;
+        department: string;
+        employee_no: string;
+    };
+    stats: {
+        years_service: number;
+        total_trainings: number;
+        total_documents: number;
+        annual_training_hours: number;
+        training_target: number;
+        pending_requests_count: number;
+        verified_docs_count: number;
+        pending_docs_count: number;
+        pds_status: string;
+        last_pds_update: string;
+    };
+    upcoming_trainings: {
+        title: string;
+        date: string;
+        venue: string;
+        type: string;
+    }[];
+    recent_documents: {
+        name: string;
+        date: string;
+        status: "verified" | "pending";
+    }[];
+    training_progress: {
+        category: string;
+        completed: number;
+        target: number;
+    }[];
+    action_items: {
+        text: string;
+        priority: "high" | "medium" | "low";
+        icon: string; // Icon name string for mapping
+    }[];
+}
+
 export interface FullPDS {
     id?: string;
     personalInfo: PDSPersonalInfo;
@@ -243,37 +331,69 @@ export interface Employee201 {
 
 export interface TrainingRecord {
     id: string;
-    title: string;
-    type: 'Seminar' | 'Workshop' | 'Conference' | 'Webinar' | 'Certification' | 'Other';
-    conductedBy: string;
-    venue: string;
-    dateFrom: string;
-    dateTo: string;
-    numberOfHours: number;
-    status: 'Completed' | 'Ongoing' | 'Upcoming' | 'Cancelled';
-    certificateUrl?: string;
-    employeeId?: string;
-    employeeName?: string;
-    office?: string;
+    training_title?: string;
+    training_type?: string;
+    date_from?: string;
+    date_to?: string;
+    number_of_hours?: string;
+    conducted_by?: string;
+    basic_information_id?: string;
+
+    // Common aliases/extensions used in routes and components
+    title?: string;
+    type?: string;
+    status?: string;
+    venue?: string;
+    numberOfHours?: number;
+    conductedBy?: string;
+    dateFrom?: string;
+    dateTo?: string;
 }
+
+export type TrainingRequestStatus = "pending" | "approved" | "rejected" | "completed";
 
 export interface TrainingRequest {
     id: string;
-    employeeId: string;
-    employeeName: string;
-    trainingTitle: string;
-    trainingType: 'Seminar' | 'Workshop' | 'Conference' | 'Webinar' | 'Certification' | 'Other';
+    employee_id: string;
+    title: string;
+    training_type: string;
     provider: string;
     venue: string;
-    dateFrom: string;
-    dateTo: string;
-    estimatedCost: number;
+    date_from: string;
+    date_to: string;
+    estimated_cost: number;
     justification: string;
-    status: 'Pending' | 'Approved' | 'Rejected' | 'Completed';
-    submittedAt: string;
-    reviewedBy?: string;
-    reviewedAt?: string;
-    remarks?: string;
+    status: TrainingRequestStatus;
+    submitted_at: string;
+    remarks?: string | null;
+    reviewed_at?: string | null;
+    reviewed_by?: string | null;
+    training_event_id?: string | null;
+    // Extensions for HRMO management view
+    employee_name?: string;
+    employee_no?: string;
+    office?: string;
+    number_of_hours?: number;
+}
+
+export interface EmpTrainingStats {
+    attended: number;
+    hours: number;
+    pending: number;
+    approved: number;
+}
+
+export interface TrainingEvent {
+    id: string;
+    training_title: string;
+    training_type: string;
+    status: string;
+    conducted_by: string;
+    venue: string;
+    date_from: string;
+    date_to: string;
+    hours: number;
+    participant_count: number;
 }
 
 /* ═══════════════════════════════════════════════════════════

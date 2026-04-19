@@ -125,7 +125,141 @@ class EmployeeService(BaseService[Employee]):
         result = await self.session.execute(stmt)
         return result.scalars().all()
 
+    async def get_full_pds(self, employee_id: str) -> Optional[dict]:
+        """Fetch all PDS components for a single employee."""
+        stmt = (
+            select(Employee)
+            .options(
+                selectinload(Employee.basic_information).selectinload(BasicInformation.contact_information),
+                selectinload(Employee.basic_information).selectinload(BasicInformation.addresses),
+                selectinload(Employee.basic_information).selectinload(BasicInformation.government_ids),
+                selectinload(Employee.basic_information).selectinload(BasicInformation.primary_government_id),
+                selectinload(Employee.basic_information).selectinload(BasicInformation.family_details),
+                selectinload(Employee.basic_information).selectinload(BasicInformation.educational_backgrounds),
+                selectinload(Employee.basic_information).selectinload(BasicInformation.civil_service_eligibilities),
+                selectinload(Employee.basic_information).selectinload(BasicInformation.work_experience_records),
+                selectinload(Employee.basic_information).selectinload(BasicInformation.voluntary_records),
+                selectinload(Employee.basic_information).selectinload(BasicInformation.training_records),
+                selectinload(Employee.basic_information).selectinload(BasicInformation.other_information),
+                selectinload(Employee.basic_information).selectinload(BasicInformation.reference_records),
+            )
+            .where(
+                and_(
+                    Employee.id == employee_id,
+                    Employee.is_deleted.is_(False),
+                )
+            )
+        )
+        result = await self.session.execute(stmt)
+        employee = result.scalar_one_or_none()
+
+        if not employee or not employee.basic_information:
+            return None
+
+        basic = employee.basic_information
+
+        # Helper to convert to dict list
+        def _to_dicts(items: list) -> list[dict]:
+            return [i.model_dump() for i in items if not getattr(i, "is_deleted", False)]
+
+        return {
+            "employee": employee.model_dump(),
+            "personalInfo": {
+                **basic.model_dump(),
+                "residentialAddress": next((a.model_dump() for a in basic.addresses if a.address_type == "RESIDENTIAL"), None),
+                "permanentAddress": next((a.model_dump() for a in basic.addresses if a.address_type == "PERMANENT"), None),
+                "governmentIds": _to_dicts(basic.government_ids),
+                "contactInfo": basic.contact_information.model_dump() if basic.contact_information else None,
+            },
+            "familyBackground": {
+                "spouse": next((f.model_dump() for f in basic.family_details if getattr(f, "relationship", "") == "Spouse"), None),
+                "father": next((f.model_dump() for f in basic.family_details if getattr(f, "relationship", "") == "Father"), None),
+                "mother": next((f.model_dump() for f in basic.family_details if getattr(f, "relationship", "") == "Mother"), None),
+                "children": _to_dicts([f for f in basic.family_details if getattr(f, "relationship", "") == "Child"]),
+            },
+
+            "education": _to_dicts(basic.educational_backgrounds),
+            "eligibility": _to_dicts(basic.civil_service_eligibilities),
+            "workExperience": _to_dicts(basic.work_experience_records),
+            "voluntaryWork": _to_dicts(basic.voluntary_records),
+            "training": _to_dicts(basic.training_records),
+            "otherInfo": _to_dicts(basic.other_information),
+            "references": _to_dicts(basic.reference_records),
+            "governmentIssuedId": basic.primary_government_id.model_dump() if basic.primary_government_id else None,
+        }
+
+    async def get_with_details(self, employee_id: str) -> Optional[dict]:
+
+        """Get a single employee with basic and contact details by ID."""
+        stmt = (
+            select(Employee, BasicInformation, ContactInformation)
+            .outerjoin(
+                BasicInformation,
+                and_(
+                    BasicInformation.employee_id == Employee.id,
+                    BasicInformation.is_deleted.is_(False),
+                ),
+            )
+            .outerjoin(
+                ContactInformation,
+                and_(
+                    ContactInformation.basic_information_id == BasicInformation.id,
+                    ContactInformation.is_deleted.is_(False),
+                ),
+            )
+            .where(
+                and_(
+                    Employee.id == employee_id,
+                    Employee.is_deleted.is_(False),
+                )
+            )
+        )
+        result = await self.session.execute(stmt)
+        record = result.first()
+
+        if not record:
+            return None
+
+        employee, basic_info, contact_info = record
+        full_name = None
+        if basic_info:
+            middle = f" {basic_info.middle_name}" if basic_info.middle_name else ""
+            full_name = f"{basic_info.surname}, {basic_info.first_name}{middle}".strip()
+
+        return {
+            "id": employee.id,
+            "employee_no": employee.employee_no,
+            "office_department": employee.office_department,
+            "position_title": employee.position_title,
+            "employment_status": employee.employment_status,
+            "date_hired": employee.date_hired,
+            "created_at": employee.created_at,
+            "updated_at": employee.updated_at,
+            "basic_information": (
+                {
+                    "id": basic_info.id,
+                    "surname": basic_info.surname,
+                    "first_name": basic_info.first_name,
+                    "middle_name": basic_info.middle_name,
+                    "name_extension": basic_info.name_extension,
+                    "full_name": full_name,
+                }
+                if basic_info
+                else None
+            ),
+            "contact_information": (
+                {
+                    "telephone_no": contact_info.telephone_no,
+                    "mobile_no": contact_info.mobile_no,
+                    "email_address": contact_info.email_address,
+                }
+                if contact_info
+                else None
+            ),
+        }
+
     async def get_all_with_details(self, skip: int = 0, limit: int = 100) -> list[dict]:
+
         """Get employees with basic and contact details in a single query."""
         stmt = (
             select(Employee, BasicInformation, ContactInformation)

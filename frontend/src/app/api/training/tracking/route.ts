@@ -85,13 +85,13 @@ function hasValue(value?: string | null): boolean {
 
 function normalizeTrainingType(value: string): TrainingRecord["type"] {
     const normalized = value.trim().toLowerCase();
-    const match = TRAINING_TYPES.find((item) => item.toLowerCase() === normalized);
+    const match = TRAINING_TYPES.find((item) => item?.toLowerCase() === normalized);
     return match || "Other";
 }
 
 function normalizeStatus(value: string): TrainingRecord["status"] {
     const normalized = value.trim().toLowerCase();
-    const match = STATUSES.find((item) => item.toLowerCase() === normalized);
+    const match = STATUSES.find((item) => item?.toLowerCase() === normalized);
     return match || "Upcoming";
 }
 

@@ -17,6 +17,7 @@ class FamilyDetail(BaseModel, table=True):
     __tablename__ = "family_details"
 
     basic_information_id: str = Field(foreign_key="basic_information.id", description="Reference to basic information")
+    relationship: str = Field(default="Other", max_length=50, description="Relationship to employee (Spouse, Father, Mother, Child)")
     surname: str = Field(max_length=100, description="Family member surname")
     first_name: str = Field(max_length=100, description="Family member first name")
     middle_name: Optional[str] = Field(default=None, max_length=100, description="Family member middle name")

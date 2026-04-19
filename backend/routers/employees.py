@@ -4,7 +4,8 @@ from typing import Any, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, status, Request
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlmodel import select
+from sqlalchemy.orm import selectinload
+from sqlmodel import select, delete
 
 from core.database import get_db
 from models.employees import Employee
@@ -23,11 +24,18 @@ from models.professional_background import (
     TrainingRecord,
     CivilServiceEligibility,
 )
+from models.users import User, UserRole
 from schemas.employees import (
     EmployeeAtomicOnboardRequest,
     EmployeeCreate,
     EmployeeUpdate,
 )
+
+from deps.auth import get_current_user
+from utils.token import decode_token
+import jwt
+
+
 from services.employees import EmployeeService
 from utils.response import APIResponse, build_pagination_meta, create_response
 
@@ -155,6 +163,70 @@ def _split_name(full_name: str) -> Optional[dict[str, Optional[str]]]:
     }
 
 
+@router.get("/me", response_model=APIResponse)
+async def get_my_employee_profile(
+    request: Request,
+    current_user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_db),
+):
+    """Get the employee profile for the currently authenticated user."""
+    if not current_user.employee_id:
+        return create_response(
+            path=request.url.path,
+            data=None,
+            success=True,
+        )
+
+    service = EmployeeService(session)
+    record = await service.get_with_details(current_user.employee_id)
+    
+    if not record:
+        return create_response(
+            path=request.url.path,
+            data=None,
+            success=True,
+        )
+    
+    return create_response(
+        path=request.url.path,
+        data=record,
+        success=True,
+    )
+
+
+@router.get("/me/pds", response_model=APIResponse)
+async def get_my_full_pds(
+    request: Request,
+    current_user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_db),
+):
+    """Get the full PDS record for the currently authenticated user."""
+    if not current_user.employee_id:
+        return create_response(
+            path=request.url.path,
+            data=None,
+            success=True,
+        )
+
+    service = EmployeeService(session)
+    record = await service.get_full_pds(current_user.employee_id)
+    
+    if not record:
+        return create_response(
+            path=request.url.path,
+            data=None,
+            success=True,
+        )
+    
+    return create_response(
+        path=request.url.path,
+        data=record,
+        success=True,
+    )
+
+
+
+
 @router.post("", response_model=APIResponse, status_code=status.HTTP_201_CREATED)
 async def create_employee(
     request: Request,
@@ -190,9 +262,14 @@ async def onboard_employee_atomic(
     data: EmployeeAtomicOnboardRequest,
     session: AsyncSession = Depends(get_db),
 ):
-    """Atomically create employee onboarding records in a single transaction."""
+    """Atomically create employee onboarding records in a single transaction.
+    
+    If the caller is an authenticated employee (Bearer token in Authorization header),
+    their user record is automatically linked to the newly created employee record.
+    """
     form_data = data.formData or {}
     employee_meta = data.employeeMeta or {}
+
 
     personal = form_data.get("personalInfo") or {}
     work_experience = _list_of_dicts(form_data.get("workExperience"))
@@ -247,52 +324,133 @@ async def onboard_employee_atomic(
 
     try:
         async with session.begin():
-            existing_stmt = select(Employee).where(
+            # Resolve the calling user from the Authorization header (inside transaction)
+            calling_user: User | None = None
+            auth_header = request.headers.get("Authorization", "")
+            if auth_header.startswith("Bearer "):
+                try:
+                    token = auth_header.removeprefix("Bearer ").strip()
+                    payload = decode_token(token)
+                    caller_id = payload.get("sub")
+                    if caller_id:
+                        from services.users import UserService
+                        calling_user = await UserService(session).get(caller_id)
+                except (jwt.PyJWTError, Exception):
+                    calling_user = None
+
+
+            existing_stmt = select(Employee).options(selectinload(Employee.basic_information)).where(
                 Employee.employee_no == employee_no,
                 Employee.is_deleted.is_(False),
             )
-            existing = (await session.execute(existing_stmt)).scalar_one_or_none()
-            if existing:
-                raise HTTPException(
-                    status_code=status.HTTP_409_CONFLICT,
-                    detail="Employee number already exists",
-                )
+            employee = (await session.execute(existing_stmt)).scalar_one_or_none()
+            
+            is_update = employee is not None
 
-            if date_hired is None:
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="Missing required fields: date hired",
+            if is_update:
+                # Update existing employee record
+                employee.office_department = _clean(form_data.get("office"))
+                employee.position_title = position_title
+                employee.employment_status = _clean(form_data.get("employmentStatus"))
+                employee.date_hired = date_hired
+                session.add(employee)
+            else:
+                # Create new employee record
+                if date_hired is None:
+                    raise HTTPException(
+                        status_code=status.HTTP_400_BAD_REQUEST,
+                        detail="Missing required fields: date hired",
+                    )
+                employee = Employee(
+                    employee_no=employee_no,
+                    office_department=_clean(form_data.get("office")),
+                    position_title=position_title,
+                    employment_status=_clean(form_data.get("employmentStatus")),
+                    date_hired=date_hired,
                 )
-
-            employee = Employee(
-                employee_no=employee_no,
-                office_department=_clean(form_data.get("office")),
-                position_title=position_title,
-                employment_status=_clean(form_data.get("employmentStatus")),
-                date_hired=date_hired,
-            )
-            session.add(employee)
+                session.add(employee)
+            
             await session.flush()
+
+            # ── Link to user record ──────────────────────────────────────────
+            # Priority 1: self-service — authenticated caller is an employee with no record yet
+            if calling_user and calling_user.role == UserRole.employee and not calling_user.employee_id:
+                calling_user.employee_id = employee.id
+                session.add(calling_user)
+                stage_results.append({"stage": "user_link", "created": 1, "skipped": 0})
+            # Priority 2: HR-provided explicit user_id in the request body
+            elif data.user_id:
+                user_stmt = select(User).where(User.id == data.user_id)
+                user = (await session.execute(user_stmt)).scalar_one_or_none()
+                if user and user.role == UserRole.employee:
+                    user.employee_id = employee.id
+                    session.add(user)
+                    stage_results.append({"stage": "user_link", "created": 1, "skipped": 0})
+
             stage_results.append({"stage": "employee", "created": 1, "skipped": 0})
 
-            basic_information = BasicInformation(
-                employee_id=employee.id,
-                surname=_clean(personal.get("surname")),
-                first_name=_clean(personal.get("firstName")),
-                middle_name=_clean(personal.get("middleName")) or None,
-                name_extension=_clean(personal.get("nameExtension")) or None,
-                date_of_birth=_to_required_date(personal.get("dateOfBirth"), "personalInfo.dateOfBirth"),
-                place_of_birth=_clean(personal.get("placeOfBirth")),
-                sex=_clean(personal.get("sex")),
-                civil_status=_clean(personal.get("civilStatus")),
-                height=_to_optional_float(personal.get("height")),
-                weight=_to_optional_float(personal.get("weight")),
-                blood_type=_clean(personal.get("bloodType")) or None,
-                citizenship=_clean(personal.get("citizenship")) or "Filipino",
-            )
-            session.add(basic_information)
+
+            # Resolve or Create Basic Information
+            basic_information = None
+            if is_update:
+                bi_stmt = select(BasicInformation).where(
+                    BasicInformation.employee_id == employee.id,
+                    BasicInformation.is_deleted.is_(False)
+                )
+                basic_information = (await session.execute(bi_stmt)).scalar_one_or_none()
+
+            if basic_information:
+                # Update existing basic information
+                basic_information.surname = _clean(personal.get("surname"))
+                basic_information.first_name = _clean(personal.get("firstName"))
+                basic_information.middle_name = _clean(personal.get("middleName")) or None
+                basic_information.name_extension = _clean(personal.get("nameExtension")) or None
+                basic_information.date_of_birth = _to_required_date(personal.get("dateOfBirth"), "personalInfo.dateOfBirth")
+                basic_information.place_of_birth = _clean(personal.get("placeOfBirth"))
+                basic_information.sex = _clean(personal.get("sex"))
+                basic_information.civil_status = _clean(personal.get("civilStatus"))
+                basic_information.height = _to_optional_float(personal.get("height"))
+                basic_information.weight = _to_optional_float(personal.get("weight"))
+                basic_information.blood_type = _clean(personal.get("bloodType")) or None
+                basic_information.citizenship = _clean(personal.get("citizenship")) or "Filipino"
+                session.add(basic_information)
+            else:
+                basic_information = BasicInformation(
+                    employee_id=employee.id,
+                    surname=_clean(personal.get("surname")),
+                    first_name=_clean(personal.get("firstName")),
+                    middle_name=_clean(personal.get("middleName")) or None,
+                    name_extension=_clean(personal.get("nameExtension")) or None,
+                    date_of_birth=_to_required_date(personal.get("dateOfBirth"), "personalInfo.dateOfBirth"),
+                    place_of_birth=_clean(personal.get("placeOfBirth")),
+                    sex=_clean(personal.get("sex")),
+                    civil_status=_clean(personal.get("civilStatus")),
+                    height=_to_optional_float(personal.get("height")),
+                    weight=_to_optional_float(personal.get("weight")),
+                    blood_type=_clean(personal.get("bloodType")) or None,
+                    citizenship=_clean(personal.get("citizenship")) or "Filipino",
+                )
+                session.add(basic_information)
+            
             await session.flush()
             basic_information_id = basic_information.id
+
+            if is_update:
+                # Clear related collections for fresh recreation
+                await session.execute(delete(GovernmentId).where(GovernmentId.basic_information_id == basic_information_id))
+                await session.execute(delete(Address).where(Address.basic_information_id == basic_information_id))
+                await session.execute(delete(ContactInformation).where(ContactInformation.basic_information_id == basic_information_id))
+                await session.execute(delete(FamilyDetail).where(FamilyDetail.basic_information_id == basic_information_id))
+                await session.execute(delete(EducationalBackground).where(EducationalBackground.basic_information_id == basic_information_id))
+                await session.execute(delete(CivilServiceEligibility).where(CivilServiceEligibility.basic_information_id == basic_information_id))
+                await session.execute(delete(WorkExperienceRecord).where(WorkExperienceRecord.basic_information_id == basic_information_id))
+                await session.execute(delete(VoluntaryRecord).where(VoluntaryRecord.basic_information_id == basic_information_id))
+                await session.execute(delete(TrainingRecord).where(TrainingRecord.basic_information_id == basic_information_id))
+                await session.execute(delete(OtherInformation).where(OtherInformation.basic_information_id == basic_information_id))
+                await session.execute(delete(ReferenceRecord).where(ReferenceRecord.basic_information_id == basic_information_id))
+                await session.execute(delete(PrimaryGovernmentId).where(PrimaryGovernmentId.basic_information_id == basic_information_id))
+                await session.flush()
+
             stage_results.append({"stage": "basic_information", "created": 1, "skipped": 0})
 
             id_entries = [
@@ -377,6 +535,7 @@ async def onboard_employee_atomic(
                     session.add(
                         FamilyDetail(
                             basic_information_id=basic_information_id,
+                            relationship="Spouse",
                             surname=_clean(family.get("spouseSurname")),
                             first_name=_clean(family.get("spouseFirstName")),
                             middle_name=_clean(family.get("spouseMiddleName")) or None,
@@ -403,6 +562,7 @@ async def onboard_employee_atomic(
                     session.add(
                         FamilyDetail(
                             basic_information_id=basic_information_id,
+                            relationship="Father",
                             surname=_clean(family.get("fatherSurname")),
                             first_name=_clean(family.get("fatherFirstName")),
                             middle_name=_clean(family.get("fatherMiddleName")) or None,
@@ -428,6 +588,7 @@ async def onboard_employee_atomic(
                     session.add(
                         FamilyDetail(
                             basic_information_id=basic_information_id,
+                            relationship="Mother",
                             surname=_clean(family.get("motherMaidenSurname")),
                             first_name=_clean(family.get("motherFirstName")),
                             middle_name=_clean(family.get("motherMiddleName")) or None,
@@ -464,6 +625,7 @@ async def onboard_employee_atomic(
                 session.add(
                     FamilyDetail(
                         basic_information_id=basic_information_id,
+                        relationship="Child",
                         surname=surname,
                         first_name=first_name,
                         middle_name=middle_name or None,

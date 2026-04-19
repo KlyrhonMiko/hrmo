@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { SavedReport, ReportResult } from '@/types';
 
 // In-memory store for demo — replace with DB in production
-let savedReports: SavedReport[] = [
+const savedReports: SavedReport[] = [
     {
         id: '1',
         title: 'Q1 2026 Department Headcount',
