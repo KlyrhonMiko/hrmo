@@ -5,6 +5,7 @@ import type { Role } from "@/types";
 import { SavedReportsList } from "@/components/reports/SavedReportsList";
 import { CreateReportModal } from "@/components/reports/CreateReportModal";
 import { ReportDetailView } from "@/components/reports/ReportDetailView";
+import { EmployeeDataExport } from "@/components/reports/EmployeeDataExport";
 import type { SavedReport } from "@/types";
 import {
     Plus,
@@ -345,21 +346,27 @@ export default function ReportsPage({ userRole = "HR Head" }: ReportsPageProps) 
                         />
                     </div>
                 ) : (
-                    <div className="space-y-0">
-                        {/* Per-report download buttons rendered as an overlay row */}
-                        <SavedReportsList
-                            reports={filteredReports}
-                            onSelect={setSelectedReport}
-                            onDelete={userRole !== "President" ? handleDelete : undefined}
-                            onCreateNew={userRole !== "President" ? () => setModalOpen(true) : undefined}
-                            loading={loading}
-                            renderActions={(report: SavedReport) => (
-                                <DownloadDropdown
-                                    report={report}
-                                    align="right"
-                                />
-                            )}
-                        />
+                    <div className="space-y-6">
+                        {/* Employee Data Export Section */}
+                        <EmployeeDataExport userRole={userRole} />
+
+                        {/* Aggregate Reports Section */}
+                        <div className="space-y-0">
+                            {/* Per-report download buttons rendered as an overlay row */}
+                            <SavedReportsList
+                                reports={filteredReports}
+                                onSelect={setSelectedReport}
+                                onDelete={userRole !== "President" ? handleDelete : undefined}
+                                onCreateNew={userRole !== "President" ? () => setModalOpen(true) : undefined}
+                                loading={loading}
+                                renderActions={(report: SavedReport) => (
+                                    <DownloadDropdown
+                                        report={report}
+                                        align="right"
+                                    />
+                                )}
+                            />
+                        </div>
                     </div>
                 )}
 

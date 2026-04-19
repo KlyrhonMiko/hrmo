@@ -115,11 +115,13 @@ async def get_certificates(
     employee_no: str,
     skip: int = 0,
     limit: int = 100,
+    date_from: Optional[date] = None,
+    date_to: Optional[date] = None,
     session: AsyncSession = Depends(get_db),
 ):
-    """Get all certificates for an employee."""
+    """Get all certificates for an employee with optional date range filtering."""
     service = CertificateRecordService(session)
-    records = await service.get_by_employee_no(employee_no, skip=skip, limit=limit)
+    records = await service.get_by_employee_no(employee_no, skip=skip, limit=limit, date_from=date_from, date_to=date_to)
     
     return create_response(
         path=request.url.path,

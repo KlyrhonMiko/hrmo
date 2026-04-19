@@ -23,6 +23,8 @@ class Employee(BaseModel, table=True):
     position_title: str = Field(max_length=100, description="Current position/job title")
     employment_status: str = Field(max_length=50, description="Employment status (Permanent, Contractual, etc.)")
     date_hired: date = Field(description="Date when hired at this organization")
+    salary_grade: Optional[int] = Field(default=None, description="Salary grade level")
+    step_increment: Optional[int] = Field(default=None, description="Step increment in salary scale")
 
     # Relationships
     basic_information: Optional["BasicInformation"] = Relationship(back_populates="employee")

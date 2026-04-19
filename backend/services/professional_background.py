@@ -1,4 +1,5 @@
 """Professional Background Services."""
+from datetime import date
 from typing import Optional
 
 from sqlalchemy import and_, select
@@ -130,24 +131,47 @@ class TrainingService(BaseService[TrainingRecord]):
         """Helper to get basic_information_id from employee_no."""
         return await _get_basic_information_id_by_employee_no(self.session, employee_no)
 
-    async def get_by_employee_no(self, employee_no: str) -> list[TrainingRecord]:
-        """Get all training records by employee number."""
+    async def get_by_employee_no(self, employee_no: str, date_from: Optional[date] = None, date_to: Optional[date] = None) -> list[TrainingRecord]:
+        """Get all training records by employee number with optional date range filtering.
+        
+        Args:
+            employee_no: The employee number.
+            date_from: Optional start date for filtering (based on training date_from field).
+            date_to: Optional end date for filtering (based on training date_to field).
+            
+        Returns:
+            List of training records for the employee.
+        """
         basic_info_id = await self._get_basic_information_id(employee_no)
         if not basic_info_id:
             return []
 
-        return await self.get_by_basic_information(basic_info_id)
+        return await self.get_by_basic_information(basic_info_id, date_from=date_from, date_to=date_to)
 
-    async def get_by_basic_information(self, basic_information_id: str) -> list[TrainingRecord]:
-        """Get all training records for a basic information record."""
+    async def get_by_basic_information(self, basic_information_id: str, date_from: Optional[date] = None, date_to: Optional[date] = None) -> list[TrainingRecord]:
+        """Get all training records for a basic information record with optional date range filtering.
+        
+        Args:
+            basic_information_id: The ID of the basic information record.
+            date_from: Optional start date for filtering (based on training date_from field).
+            date_to: Optional end date for filtering (based on training date_to field).
+            
+        Returns:
+            List of training records for the basic information.
+        """
+        conditions = [
+            TrainingRecord.basic_information_id == basic_information_id,
+            TrainingRecord.is_deleted.is_(False),
+        ]
+        
+        if date_from is not None:
+            conditions.append(TrainingRecord.date_from >= date_from)
+        if date_to is not None:
+            conditions.append(TrainingRecord.date_to <= date_to)
+        
         stmt = (
             select(TrainingRecord)
-            .where(
-                and_(
-                    TrainingRecord.basic_information_id == basic_information_id,
-                    TrainingRecord.is_deleted.is_(False),
-                )
-            )
+            .where(and_(*conditions))
             .order_by(TrainingRecord.date_from.desc())
         )
         result = await self.session.execute(stmt)

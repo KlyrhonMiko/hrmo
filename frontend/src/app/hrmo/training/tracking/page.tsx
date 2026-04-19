@@ -156,6 +156,8 @@ export default function TrainingTrackingPage({ userRole = "HR Head" }: TrainingT
     const [filterType, setFilterType] = useState("");
     const [filterStatus, setFilterStatus] = useState("");
     const [filterOffice, setFilterOffice] = useState("");
+    const [filterDateFrom, setFilterDateFrom] = useState("");
+    const [filterDateTo, setFilterDateTo] = useState("");
     const [showModal, setShowModal] = useState(false);
     const [formMode, setFormMode] = useState<TrainingFormMode>("create");
     const [editingTrainingId, setEditingTrainingId] = useState<string | null>(null);
@@ -231,9 +233,34 @@ export default function TrainingTrackingPage({ userRole = "HR Head" }: TrainingT
             const matchStatus = !filterStatus || (t.status === filterStatus);
             const matchOffice =
                 !filterOffice || t.participants.some((p) => p.office === filterOffice);
-            return matchSearch && matchType && matchStatus && matchOffice;
+            
+            // Date range filtering - handle both date_from/date_to and dateFrom/dateTo
+            let matchDateFrom = true;
+            let matchDateTo = true;
+            
+            if (filterDateFrom) {
+                const dateFromStr = t.date_from || t.dateFrom;
+                if (dateFromStr) {
+                    const trainingDateFrom = new Date(dateFromStr);
+                    matchDateFrom = trainingDateFrom >= new Date(filterDateFrom);
+                } else {
+                    matchDateFrom = false; // No date on training, exclude if filtering by date
+                }
+            }
+            
+            if (filterDateTo) {
+                const dateToStr = t.date_to || t.dateTo;
+                if (dateToStr) {
+                    const trainingDateTo = new Date(dateToStr);
+                    matchDateTo = trainingDateTo <= new Date(filterDateTo);
+                } else {
+                    matchDateTo = false; // No date on training, exclude if filtering by date
+                }
+            }
+            
+            return matchSearch && matchType && matchStatus && matchOffice && matchDateFrom && matchDateTo;
         });
-    }, [trainings, search, filterType, filterStatus, filterOffice]);
+    }, [trainings, search, filterType, filterStatus, filterOffice, filterDateFrom, filterDateTo]);
 
     function openAddModal() {
         setFormMode("create");
@@ -564,6 +591,24 @@ export default function TrainingTrackingPage({ userRole = "HR Head" }: TrainingT
                                     ))}
                                 </select>
                                 <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-stone-400 pointer-events-none" />
+                            </div>
+
+                            {/* Date Range Filters */}
+                            <div className="flex items-center gap-2">
+                                <span className="text-xs text-stone-600 font-medium">Date:</span>
+                                <input
+                                    type="date"
+                                    value={filterDateFrom}
+                                    onChange={(e) => setFilterDateFrom(e.target.value)}
+                                    className="px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-sm outline-none focus:bg-white focus:ring-2 focus:ring-green-500 transition-all"
+                                />
+                                <span className="text-stone-400 text-xs">to</span>
+                                <input
+                                    type="date"
+                                    value={filterDateTo}
+                                    onChange={(e) => setFilterDateTo(e.target.value)}
+                                    className="px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-sm outline-none focus:bg-white focus:ring-2 focus:ring-green-500 transition-all"
+                                />
                             </div>
                         </div>
                     </div>

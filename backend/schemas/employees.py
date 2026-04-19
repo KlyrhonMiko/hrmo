@@ -16,6 +16,8 @@ class EmployeeBase(BaseModel):
     position_title: str = Field(..., max_length=100)
     employment_status: str = Field(..., max_length=50)
     date_hired: date
+    salary_grade: Optional[int] = None
+    step_increment: Optional[int] = None
 
 
 class EmployeeCreate(EmployeeBase):
@@ -32,6 +34,8 @@ class EmployeeUpdate(BaseModel):
     position_title: Optional[str] = Field(None, max_length=100)
     employment_status: Optional[str] = Field(None, max_length=50)
     date_hired: Optional[date] = None
+    salary_grade: Optional[int] = None
+    step_increment: Optional[int] = None
 
 
 class EmployeeResponse(EmployeeBase):

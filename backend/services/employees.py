@@ -1,4 +1,5 @@
 """Services for Employee and Certificate entities."""
+from datetime import date
 from typing import Optional
 
 from sqlalchemy import and_, select
@@ -333,13 +334,15 @@ class CertificateRecordService(BaseService[CertificateRecord]):
     def __init__(self, session: AsyncSession):
         super().__init__(CertificateRecord, session)
 
-    async def get_by_employee_no(self, employee_no: str, skip: int = 0, limit: int = 100) -> list[CertificateRecord]:
-        """Get all certificates by employee number.
+    async def get_by_employee_no(self, employee_no: str, skip: int = 0, limit: int = 100, date_from: Optional[date] = None, date_to: Optional[date] = None) -> list[CertificateRecord]:
+        """Get all certificates by employee number with optional date filtering.
         
         Args:
             employee_no: The employee number.
             skip: Number of records to skip.
             limit: Maximum number of records to return.
+            date_from: Optional start date for filtering (based on date_issued).
+            date_to: Optional end date for filtering (based on date_issued).
             
         Returns:
             List of certificates for the employee.
@@ -358,27 +361,34 @@ class CertificateRecordService(BaseService[CertificateRecord]):
             return []
         
         # Get certificates
-        return await self.get_by_employee(employee.id, skip=skip, limit=limit)
+        return await self.get_by_employee(employee.id, skip=skip, limit=limit, date_from=date_from, date_to=date_to)
 
-    async def get_by_employee(self, employee_id: str, skip: int = 0, limit: int = 100) -> list[CertificateRecord]:
-        """Get all certificates for a specific employee.
+    async def get_by_employee(self, employee_id: str, skip: int = 0, limit: int = 100, date_from: Optional[date] = None, date_to: Optional[date] = None) -> list[CertificateRecord]:
+        """Get all certificates for a specific employee with optional date filtering.
         
         Args:
             employee_id: The ID of the employee.
             skip: Number of records to skip.
             limit: Maximum number of records to return.
+            date_from: Optional start date for filtering (based on date_issued).
+            date_to: Optional end date for filtering (based on date_issued).
             
         Returns:
             List of certificates for the employee.
         """
+        conditions = [
+            CertificateRecord.employee_id == employee_id,
+            CertificateRecord.is_deleted.is_(False),
+        ]
+        
+        if date_from is not None:
+            conditions.append(CertificateRecord.date_issued >= date_from)
+        if date_to is not None:
+            conditions.append(CertificateRecord.date_issued <= date_to)
+        
         stmt = (
             select(CertificateRecord)
-            .where(
-                and_(
-                    CertificateRecord.employee_id == employee_id,
-                    CertificateRecord.is_deleted.is_(False),
-                )
-            )
+            .where(and_(*conditions))
             .offset(skip)
             .limit(limit)
         )

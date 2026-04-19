@@ -226,6 +226,8 @@ export default function CertificatesPage({ userRole = "HR Head" }: CertificatesP
     const [filterCategory, setFilterCategory] = useState<string>("All");
     const [filterStatus, setFilterStatus] = useState<string>("All");
     const [filterEmployee, setFilterEmployee] = useState<string>("All");
+    const [filterDateFrom, setFilterDateFrom] = useState<string>("");
+    const [filterDateTo, setFilterDateTo] = useState<string>("");
 
     // Upload form state
     const [selectedEmployee, setSelectedEmployee] = useState("");
@@ -292,12 +294,17 @@ export default function CertificatesPage({ userRole = "HR Head" }: CertificatesP
         const matchesCategory = filterCategory === "All" || cert.category === filterCategory;
         const matchesStatus = filterStatus === "All" || cert.status === filterStatus;
         const matchesEmployee = filterEmployee === "All" || cert.employeeId === filterEmployee;
-        return matchesSearch && matchesCategory && matchesStatus && matchesEmployee;
+        
+        const matchesDateRange = 
+            (!filterDateFrom || new Date(cert.dateIssued) >= new Date(filterDateFrom)) &&
+            (!filterDateTo || new Date(cert.dateIssued) <= new Date(filterDateTo));
+        
+        return matchesSearch && matchesCategory && matchesStatus && matchesEmployee && matchesDateRange;
     });
 
     useEffect(() => {
         setPage(1);
-    }, [searchQuery, filterCategory, filterStatus, filterEmployee]);
+    }, [searchQuery, filterCategory, filterStatus, filterEmployee, filterDateFrom, filterDateTo]);
 
     const handleDrag = useCallback((e: React.DragEvent) => {
         e.preventDefault();
@@ -462,6 +469,45 @@ export default function CertificatesPage({ userRole = "HR Head" }: CertificatesP
         } finally {
             setVerifyingCertificateId(null);
         }
+    };
+
+    const downloadFilteredAsCSV = () => {
+        if (filteredCertificates.length === 0) {
+            alert("No certificates to download.");
+            return;
+        }
+
+        // Prepare CSV content
+        const headers = ["Employee Name", "Employee ID", "Certificate Title", "Category", "Issuing Body", "Date Issued", "Expiry Date", "Status"];
+        const rows = filteredCertificates.map((cert) => [
+            cert.employeeName,
+            cert.employeeId,
+            cert.title,
+            cert.category,
+            cert.issuingBody,
+            formatDate(cert.dateIssued),
+            cert.expiryDate ? formatDate(cert.expiryDate) : "—",
+            cert.status,
+        ]);
+
+        // Create CSV string with proper escaping
+        const csvContent = [
+            headers.map((h) => `"${h}"`).join(","),
+            ...rows.map((row) =>
+                row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(",")
+            ),
+        ].join("\n");
+
+        // Create and trigger download
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+        link.href = url;
+        link.download = `certificates_${new Date().toISOString().split("T")[0]}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
     };
 
     const resetForm = () => {
@@ -811,6 +857,36 @@ export default function CertificatesPage({ userRole = "HR Head" }: CertificatesP
                                     </select>
                                     <ChevronDown className="w-3.5 h-3.5 text-stone-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                                 </div>
+
+                                {/* Date Range Filter */}
+                                <div className="flex items-center gap-2">
+                                    <span className="text-sm text-stone-600">Date Issued:</span>
+                                    <input
+                                        type="date"
+                                        className="px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-sm outline-none focus:bg-white focus:ring-2 focus:ring-green-500 transition-all"
+                                        value={filterDateFrom}
+                                        onChange={(e) => setFilterDateFrom(e.target.value)}
+                                    />
+                                    <span className="text-stone-400">to</span>
+                                    <input
+                                        type="date"
+                                        className="px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-sm outline-none focus:bg-white focus:ring-2 focus:ring-green-500 transition-all"
+                                        value={filterDateTo}
+                                        onChange={(e) => setFilterDateTo(e.target.value)}
+                                    />
+                                </div>
+
+                                {/* Download Button */}
+                                {filteredCertificates.length > 0 && (
+                                    <button
+                                        onClick={downloadFilteredAsCSV}
+                                        className="inline-flex items-center gap-2 px-4 py-2 bg-green-50 text-green-700 text-sm font-medium rounded-lg border border-green-200 hover:bg-green-100 transition-colors"
+                                        title="Download filtered certificates as CSV"
+                                    >
+                                        <Download className="w-4 h-4" />
+                                        Download ({filteredCertificates.length})
+                                    </button>
+                                )}
                             </div>
                         </div>
                     </div>

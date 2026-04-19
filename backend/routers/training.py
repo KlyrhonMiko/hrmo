@@ -1,5 +1,5 @@
 """Router for Training endpoints."""
-from datetime import datetime
+from datetime import datetime, date
 from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, status, Request
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -289,11 +289,13 @@ async def list_all_training_records(
 async def get_training_records(
     request: Request,
     employee_no: str,
+    date_from: Optional[date] = None,
+    date_to: Optional[date] = None,
     session: AsyncSession = Depends(get_db),
 ):
-    """Get all training records for an employee."""
+    """Get all training records for an employee with optional date range filtering."""
     service = TrainingService(session)
-    records = await service.get_by_employee_no(employee_no)
+    records = await service.get_by_employee_no(employee_no, date_from=date_from, date_to=date_to)
 
     return create_response(
         path=request.url.path,

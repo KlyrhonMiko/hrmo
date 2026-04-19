@@ -232,28 +232,114 @@ function TimelineTab({ timeline }: { timeline?: TimelineRecord[] }) {
 }
 
 function TrainingTab({ trainings }: { trainings: TrainingRecord[] }) {
+    const [filterDateFrom, setFilterDateFrom] = useState("");
+    const [filterDateTo, setFilterDateTo] = useState("");
+
+    const filteredTrainings = trainings.filter((t) => {
+        const trainingDateFrom = new Date(t.date_from || t.dateFrom || 0);
+        const trainingDateTo = new Date(t.date_to || t.dateTo || 0);
+        
+        if (filterDateFrom && trainingDateFrom < new Date(filterDateFrom)) return false;
+        if (filterDateTo && trainingDateTo > new Date(filterDateTo)) return false;
+        return true;
+    });
+
+    const downloadTrainingAsCSV = () => {
+        if (filteredTrainings.length === 0) {
+            alert("No training records to download.");
+            return;
+        }
+
+        const headers = ["Training Title", "Type", "Conducted By", "Venue", "Date From", "Date To", "Hours", "Status"];
+        const rows = filteredTrainings.map((t) => [
+            t.title,
+            t.training_type || t.type || "N/A",
+            t.conductedBy || "N/A",
+            t.venue || "N/A",
+            new Date(t.date_from || t.dateFrom || 0).toLocaleDateString("en-US"),
+            new Date(t.date_to || t.dateTo || 0).toLocaleDateString("en-US"),
+            t.numberOfHours || "N/A",
+            t.status || "N/A",
+        ]);
+
+        const csvContent = [
+            headers.map((h) => `"${h}"`).join(","),
+            ...rows.map((row) =>
+                row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(",")
+            ),
+        ].join("\n");
+
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+        link.href = url;
+        link.download = `training_records_${new Date().toISOString().split("T")[0]}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    };
+
     if (trainings.length === 0) return <p className="text-[13px] text-stone-400 py-6 text-center">No training records found.</p>;
+    
     return (
-        <div className="space-y-2">
-            {trainings.map((t) => (
-                <div key={t.id} className="flex items-center justify-between p-3 rounded-lg bg-stone-50/60 hover:bg-stone-100/60 transition">
-                    <div className="flex items-center gap-3">
-                        <GraduationCap className="w-4 h-4 text-stone-400" />
-                        <div>
-                            <p className="text-[13px] text-stone-800 font-medium">{t.title}</p>
-                            <p className="text-[11px] text-stone-400">
-                                {t.conductedBy} &middot; {t.numberOfHours}hrs &middot;{" "}
-                                {new Date(t.date_from || t.dateFrom || 0).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
-                                {(t.date_from || t.dateFrom) !== (t.date_to || t.dateTo) && ` – ${new Date(t.date_to || t.dateTo || 0).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`}
-                            </p>
+        <div className="space-y-4">
+            {/* Date Filter */}
+            <div className="flex items-center gap-2 pb-3 border-b border-stone-100">
+                <span className="text-xs text-stone-600 font-medium">Filter by date:</span>
+                <input
+                    type="date"
+                    value={filterDateFrom}
+                    onChange={(e) => setFilterDateFrom(e.target.value)}
+                    className="px-2.5 py-1.5 text-xs bg-stone-50 border border-stone-200 rounded focus:outline-none focus:ring-1 focus:ring-green-500"
+                    title="From date"
+                />
+                <span className="text-stone-400 text-xs">to</span>
+                <input
+                    type="date"
+                    value={filterDateTo}
+                    onChange={(e) => setFilterDateTo(e.target.value)}
+                    className="px-2.5 py-1.5 text-xs bg-stone-50 border border-stone-200 rounded focus:outline-none focus:ring-1 focus:ring-green-500"
+                    title="To date"
+                />
+                {filteredTrainings.length > 0 && (
+                    <button
+                        onClick={downloadTrainingAsCSV}
+                        className="ml-auto inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium bg-green-50 text-green-700 border border-green-200 rounded hover:bg-green-100 transition"
+                        title="Download training records as CSV"
+                    >
+                        <Download className="w-3.5 h-3.5" />
+                        Download
+                    </button>
+                )}
+            </div>
+
+            {/* Training Records */}
+            <div className="space-y-2">
+                {filteredTrainings.length === 0 ? (
+                    <p className="text-[13px] text-stone-400 py-4 text-center">No training records match the selected date range.</p>
+                ) : (
+                    filteredTrainings.map((t) => (
+                        <div key={t.id} className="flex items-center justify-between p-3 rounded-lg bg-stone-50/60 hover:bg-stone-100/60 transition">
+                            <div className="flex items-center gap-3">
+                                <GraduationCap className="w-4 h-4 text-stone-400" />
+                                <div>
+                                    <p className="text-[13px] text-stone-800 font-medium">{t.title}</p>
+                                    <p className="text-[11px] text-stone-400">
+                                        {t.conductedBy} &middot; {t.numberOfHours}hrs &middot;{" "}
+                                        {new Date(t.date_from || t.dateFrom || 0).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                                        {(t.date_from || t.dateFrom) !== (t.date_to || t.dateTo) && ` – ${new Date(t.date_to || t.dateTo || 0).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`}
+                                    </p>
+                                </div>
+                            </div>
+                            <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium ${t.status === "Completed" ? "bg-emerald-50 text-emerald-700" : t.status === "Ongoing" ? "bg-blue-50 text-blue-700" : t.status === "Upcoming" ? "bg-amber-50 text-amber-600" : "bg-red-50 text-red-600"
+                            }`}>
+                                {t.status}
+                            </span>
                         </div>
-                    </div>
-                    <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium ${t.status === "Completed" ? "bg-emerald-50 text-emerald-700" : t.status === "Ongoing" ? "bg-blue-50 text-blue-700" : t.status === "Upcoming" ? "bg-amber-50 text-amber-600" : "bg-red-50 text-red-600"
-                        }`}>
-                        {t.status}
-                    </span>
-                </div>
-            ))}
+                    ))
+                )}
+            </div>
         </div>
     );
 }
