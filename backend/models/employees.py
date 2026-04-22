@@ -25,6 +25,9 @@ class Employee(BaseModel, table=True):
     date_hired: date = Field(description="Date when hired at this organization")
     salary_grade: Optional[int] = Field(default=None, description="Salary grade level")
     step_increment: Optional[int] = Field(default=None, description="Step increment in salary scale")
+    status: str = Field(default="pending", max_length=50, description="Verification status of the employee record")
+    verified_by: Optional[str] = Field(default=None, max_length=100, description="User or role that verified the employee record")
+    verified_at: Optional[datetime] = Field(default=None, description="Timestamp when the employee record was verified")
 
     # Relationships
     basic_information: Optional["BasicInformation"] = Relationship(back_populates="employee")

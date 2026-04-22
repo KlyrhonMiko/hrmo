@@ -72,6 +72,32 @@ class BasicInformationService(BaseService[BasicInformation]):
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
 
+    async def update_with_sync(self, id: str, update_data: dict) -> Optional[BasicInformation]:
+        """Update basic information and sync with linked user if names change."""
+        record = await self.get(id)
+        if not record:
+            return None
+        
+        for field, value in update_data.items():
+            setattr(record, field, value)
+        
+        self.session.add(record)
+        
+        # Check if name fields were updated
+        name_fields = {"surname", "first_name", "middle_name"}
+        if any(f in update_data for f in name_fields):
+            from services.users import UserService
+            user_service = UserService(self.session)
+            # Find user linked to this employee
+            user = await user_service.get_by_employee_id(record.employee_id)
+            if user:
+                await user_service.sync_profile_from_pds(user, record)
+        
+        await self.session.commit()
+        await self.session.refresh(record)
+        return record
+
+
 
 class GovernmentIdService(BaseService[GovernmentId]):
     """Service for managing government IDs."""

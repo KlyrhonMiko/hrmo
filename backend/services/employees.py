@@ -299,6 +299,8 @@ class EmployeeService(BaseService[Employee]):
                     "position_title": employee.position_title,
                     "employment_status": employee.employment_status,
                     "date_hired": employee.date_hired,
+                    "status": employee.status,
+                    "is_deleted": employee.is_deleted,
                     "created_at": employee.created_at,
                     "updated_at": employee.updated_at,
                     "basic_information": (
@@ -326,6 +328,108 @@ class EmployeeService(BaseService[Employee]):
             )
 
         return records
+
+    async def get_directory_data(self, skip: int = 0, limit: int = 100) -> list[dict]:
+        """Get full employee data for the directory directory, including all 201 details."""
+        stmt = (
+            select(Employee)
+            .options(
+                selectinload(Employee.basic_information).selectinload(BasicInformation.contact_information),
+                selectinload(Employee.basic_information).selectinload(BasicInformation.addresses),
+                selectinload(Employee.basic_information).selectinload(BasicInformation.government_ids),
+                selectinload(Employee.basic_information).selectinload(BasicInformation.primary_government_id),
+                selectinload(Employee.basic_information).selectinload(BasicInformation.family_details),
+                selectinload(Employee.basic_information).selectinload(BasicInformation.educational_backgrounds),
+                selectinload(Employee.basic_information).selectinload(BasicInformation.civil_service_eligibilities),
+                selectinload(Employee.basic_information).selectinload(BasicInformation.work_experience_records),
+                selectinload(Employee.basic_information).selectinload(BasicInformation.voluntary_records),
+                selectinload(Employee.basic_information).selectinload(BasicInformation.training_records),
+                selectinload(Employee.basic_information).selectinload(BasicInformation.other_information),
+                selectinload(Employee.basic_information).selectinload(BasicInformation.reference_records),
+                selectinload(Employee.certificate_records),
+            )
+            .where(Employee.is_deleted.is_(False))
+            .offset(skip)
+            .limit(limit)
+        )
+        result = await self.session.execute(stmt)
+        employees = result.scalars().all()
+
+        records: list[dict] = []
+        for emp in employees:
+            basic = emp.basic_information
+            full_name = None
+            if basic:
+                middle = f" {basic.middle_name}" if basic.middle_name else ""
+                full_name = f"{basic.surname}, {basic.first_name}{middle}".strip()
+
+            # Map to Employee201 frontend structure
+            records.append({
+                "id": emp.id,
+                "employeeNo": emp.employee_no,
+                "fullName": full_name,
+                "surname": basic.surname if basic else "",
+                "firstName": basic.first_name if basic else "",
+                "middleName": basic.middle_name if basic else "",
+                "office": emp.office_department,
+                "position": emp.position_title,
+                "salaryGrade": str(emp.salary_grade) if emp.salary_grade else None,
+                "stepIncrement": str(emp.step_increment) if emp.step_increment else None,
+                "employmentStatus": emp.employment_status,
+                "dateHired": emp.date_hired.isoformat() if emp.date_hired else None,
+                "email": basic.contact_information.email_address if basic and basic.contact_information else "",
+                "mobileNo": basic.contact_information.mobile_no if basic and basic.contact_information else "",
+                "status": emp.status,
+                "isActive": not emp.is_deleted,
+                "documents": [
+                    {
+                        "id": cert.id,
+                        "documentType": cert.certificate_type,
+                        "serialNumber": cert.certificate_no,
+                        "fileUrl": cert.file,
+                        "category": "Certificate",
+                        "status": "Verified" if cert.verified_at else "Pending"
+                    } for cert in emp.certificate_records
+                ],
+                "certificates": [
+                    {
+                        "id": cert.id,
+                        "title": cert.certificate_no,
+                        "issuingBody": cert.issuing_body,
+                        "dateIssued": cert.date_issued.isoformat() if cert.date_issued else None,
+                        "status": "Active"
+                    } for cert in emp.certificate_records
+                ],
+                "trainingsAttended": [
+                    {
+                        "id": t.id,
+                        "title": t.training_title,
+                        "dateFrom": t.date_from.isoformat() if t.date_from else None,
+                        "dateTo": t.date_to.isoformat() if t.date_to else None,
+                        "numberOfHours": t.number_of_hours,
+                        "conductedBy": t.conducted_by
+                    } for t in (basic.training_records if basic else [])
+                ],
+            })
+
+        return records
+
+    async def verify_employee(self, employee_no: str, verifier_name: str) -> Optional[Employee]:
+        """Update the verification status of an employee."""
+        from datetime import datetime
+        
+        employee = await self.get_by_employee_no(employee_no)
+        if not employee:
+            return None
+        
+        employee.status = "verified"
+        employee.verified_by = verifier_name
+        employee.verified_at = datetime.utcnow()
+        
+        self.session.add(employee)
+        await self.session.commit()
+        await self.session.refresh(employee)
+        return employee
 
 
 class CertificateRecordService(BaseService[CertificateRecord]):

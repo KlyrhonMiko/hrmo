@@ -10,6 +10,9 @@ type BackendEmployee = {
     position_title: string;
     employment_status: Employee201["employmentStatus"];
     date_hired: string;
+    salary_grade?: number | null;
+    step_increment?: number | null;
+    status: string;
     is_deleted: boolean;
     basic_information?: BackendBasicInformation | null;
     contact_information?: BackendContactInformation | null;
@@ -228,6 +231,8 @@ export async function GET(request: Request) {
                 middleName: basicInfo?.middle_name || "",
                 office: employee.office_department,
                 position: employee.position_title,
+                salaryGrade: employee.salary_grade?.toString() || "",
+                stepIncrement: employee.step_increment?.toString() || "",
                 employmentStatus: employee.employment_status,
                 dateHired: employee.date_hired,
                 email: contactInfo?.email_address || "",
@@ -236,6 +241,7 @@ export async function GET(request: Request) {
                 certificates: mappedCertificates,
                 trainingsAttended: mappedTraining,
                 isActive: !employee.is_deleted,
+                status: employee.status,
             };
         });
 

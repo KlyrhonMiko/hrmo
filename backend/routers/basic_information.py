@@ -109,18 +109,14 @@ async def update_basic_information(
         )
     
     update_data = data.model_dump(exclude_unset=True)
-    for field, value in update_data.items():
-        setattr(record, field, value)
-    
-    session.add(record)
-    await session.commit()
-    await session.refresh(record)
+    record = await service.update_with_sync(record.id, update_data)
     
     return create_response(
         path=request.url.path,
         data=record.model_dump(),
         success=True,
     )
+
 
 
 @router.delete("/{employee_no}", status_code=status.HTTP_204_NO_CONTENT)

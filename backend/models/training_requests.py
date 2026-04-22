@@ -3,6 +3,7 @@ from datetime import date, datetime
 from enum import Enum
 from typing import Optional, TYPE_CHECKING
 from sqlmodel import Field, Relationship
+from sqlalchemy import Column, String
 from models.base import BaseModel
 
 if TYPE_CHECKING:
@@ -33,7 +34,7 @@ class TrainingRequest(BaseModel, table=True):
     number_of_hours: int = Field(default=0, description="Number of hours")
     justification: str = Field(description="Employee's justification for the request")
     
-    status: TrainingRequestStatus = Field(default=TrainingRequestStatus.pending, description="Current approval status")
+    status: TrainingRequestStatus = Field(default=TrainingRequestStatus.pending, sa_column=Column(String), description="Current approval status")
     remarks: Optional[str] = Field(default=None, description="Reviewer remarks")
     
     submitted_at: datetime = Field(default_factory=datetime.utcnow, description="Timestamp of submission")

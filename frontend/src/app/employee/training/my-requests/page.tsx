@@ -94,6 +94,7 @@ export default function MyTrainingPage() {
     const [activeTab, setActiveTab] = useState<"history" | "requests">("history");
     const [showModal, setShowModal] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [history, setHistory] = useState<TrainingRecord[]>([]);
     const [requests, setRequests] = useState<TrainingRequest[]>([]);
     const [counters, setCounters] = useState<EmpTrainingStats>({
@@ -103,7 +104,7 @@ export default function MyTrainingPage() {
         approved: 0,
     });
     const [upcomingEvents, setUpcomingEvents] = useState<TrainingEvent[]>([]);
-    const [selectedEventId, setSelectedEventId] = useState<string>("manual");
+    const [selectedEventId, setSelectedEventId] = useState<string>("");
 
     const [form, setForm] = useState({
         title: "",
@@ -115,7 +116,7 @@ export default function MyTrainingPage() {
         estimated_cost: "",
         number_of_hours: 0,
         justification: "",
-        training_event_id: null as string | null,
+        training_event_id: "",
     });
 
     useEffect(() => {
@@ -132,8 +133,10 @@ export default function MyTrainingPage() {
                 if (historyRes.data) setHistory(historyRes.data);
                 if (reqRes.data) setRequests(reqRes.data);
                 if (upcomingEventsRes.data) setUpcomingEvents(upcomingEventsRes.data);
-            } catch (err) {
+            } catch (err: any) {
                 console.error("Failed to fetch training data", err);
+                const msg = err?.message || "Failed to fetch training data.";
+                setError(String(msg));
             } finally {
                 setLoading(false);
             }
@@ -193,7 +196,7 @@ export default function MyTrainingPage() {
                     estimated_cost: "",
                     number_of_hours: 0,
                     justification: "",
-                    training_event_id: null,
+                    training_event_id: "",
                 });
                 // Optimistic refresh would be better, but let's just refresh counters and list
                 const [statsRes, reqRes] = await Promise.all([
@@ -209,6 +212,16 @@ export default function MyTrainingPage() {
             const msg = error.details?.detail?.[0]?.msg || error.message || "Failed to submit request. Please try again.";
             alert(`Submission failed: ${msg}`);
         }
+    }
+
+    if (error) {
+        return (
+            <div className="flex flex-col items-center justify-center p-12 bg-white rounded-xl border border-red-200 shadow-sm mt-8 mx-auto max-w-lg text-center">
+                <AlertCircle className="w-12 h-12 text-red-500 mb-4" />
+                <h3 className="text-[16px] font-bold text-stone-900 mb-2">Notice</h3>
+                <p className="text-[14px] text-stone-500">{error}</p>
+            </div>
+        );
     }
 
     return (
@@ -491,40 +504,39 @@ export default function MyTrainingPage() {
                                 </label>
                                 <select
                                     value={selectedEventId}
+                                    required
                                     onChange={(e) => {
                                         const eventId = e.target.value;
                                         setSelectedEventId(eventId);
-                                        if (eventId === "manual") {
+                                        const event = upcomingEvents.find((ev) => ev.id === eventId);
+                                        if (event) {
                                             setForm({
                                                 ...form,
+                                                training_event_id: event.id,
+                                                title: event.training_title,
+                                                training_type: event.training_type as (typeof TRAINING_TYPES)[number],
+                                                provider: event.conducted_by,
+                                                venue: event.venue,
+                                                date_from: event.date_from,
+                                                date_to: event.date_to,
+                                                number_of_hours: event.hours,
+                                            });
+                                        } else {
+                                            setForm({
+                                                ...form,
+                                                training_event_id: "",
                                                 title: "",
-                                                training_type: "Seminar",
                                                 provider: "",
                                                 venue: "",
                                                 date_from: "",
                                                 date_to: "",
                                                 number_of_hours: 0,
                                             });
-                                        } else {
-                                            const event = upcomingEvents.find((ev) => ev.id === eventId);
-                                            if (event) {
-                                                setForm({
-                                                    ...form,
-                                                    training_event_id: event.id,
-                                                    title: event.training_title,
-                                                    training_type: event.training_type as (typeof TRAINING_TYPES)[number],
-                                                    provider: event.conducted_by,
-                                                    venue: event.venue,
-                                                    date_from: event.date_from,
-                                                    date_to: event.date_to,
-                                                    number_of_hours: event.hours,
-                                                });
-                                            }
                                         }
                                     }}
                                     className="w-full px-3 py-2 text-[13px] border border-stone-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600/20 focus:border-green-600 transition-colors bg-white font-medium text-stone-900"
                                 >
-                                    <option value="manual">None (Manual Entry)</option>
+                                    <option value="" disabled>Select an upcoming training...</option>
                                     <optgroup label="Upcoming Sessions">
                                         {upcomingEvents.map((event) => (
                                             <option key={event.id} value={event.id}>
@@ -533,9 +545,11 @@ export default function MyTrainingPage() {
                                         ))}
                                     </optgroup>
                                 </select>
-                                <p className="mt-2 text-[11px] text-stone-500 italic">
-                                    Selecting an upcoming training will auto-fill the details.
-                                </p>
+                                {upcomingEvents.length === 0 && (
+                                    <p className="mt-2 text-[11px] text-amber-600 font-medium">
+                                        No upcoming HR-managed trainings are available at this time.
+                                    </p>
+                                )}
                             </div>
 
                             <div className="h-px bg-stone-100 my-2" />
@@ -550,10 +564,8 @@ export default function MyTrainingPage() {
                                     onChange={(e) =>
                                         setForm({ ...form, title: e.target.value })
                                     }
-                                    readOnly={selectedEventId !== "manual"}
-                                    className={`w-full px-3 py-2 text-[13px] border border-stone-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600/20 focus:border-green-600 transition-colors ${
-                                        selectedEventId !== "manual" ? "bg-stone-50 text-stone-500" : ""
-                                    }`}
+                                    readOnly={true}
+                                    className="w-full px-3 py-2 text-[13px] border border-stone-200 rounded-lg focus:outline-none bg-stone-50 text-stone-500 cursor-not-allowed"
                                     placeholder="e.g. Leadership Development Program"
                                 />
                             </div>
@@ -572,10 +584,8 @@ export default function MyTrainingPage() {
                                                     .value as (typeof TRAINING_TYPES)[number],
                                             })
                                         }
-                                        disabled={selectedEventId !== "manual"}
-                                        className={`w-full px-3 py-2 text-[13px] border border-stone-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600/20 focus:border-green-600 transition-colors bg-white ${
-                                            selectedEventId !== "manual" ? "bg-stone-50 text-stone-500" : ""
-                                        }`}
+                                        disabled={true}
+                                        className="w-full px-3 py-2 text-[13px] border border-stone-200 rounded-lg focus:outline-none bg-stone-50 text-stone-500 cursor-not-allowed"
                                     >
                                         {TRAINING_TYPES.map((t) => (
                                             <option key={t} value={t}>
@@ -613,10 +623,8 @@ export default function MyTrainingPage() {
                                     onChange={(e) =>
                                         setForm({ ...form, venue: e.target.value })
                                     }
-                                    readOnly={selectedEventId !== "manual"}
-                                    className={`w-full px-3 py-2 text-[13px] border border-stone-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600/20 focus:border-green-600 transition-colors ${
-                                        selectedEventId !== "manual" ? "bg-stone-50 text-stone-500" : ""
-                                    }`}
+                                    readOnly={true}
+                                    className="w-full px-3 py-2 text-[13px] border border-stone-200 rounded-lg focus:outline-none bg-stone-50 text-stone-500 cursor-not-allowed"
                                     placeholder="Training venue or Online"
                                 />
                             </div>
@@ -721,8 +729,12 @@ export default function MyTrainingPage() {
                                     Cancel
                                 </button>
                                 <button
-                                    type="submit"
-                                    className="inline-flex items-center gap-2 px-5 py-2 bg-green-700 text-white text-[13px] font-medium rounded-lg hover:bg-green-800 active:scale-[0.98] shadow-sm transition-all"
+                                    disabled={!selectedEventId}
+                                    className={`inline-flex items-center gap-2 px-5 py-2 text-white text-[13px] font-medium rounded-lg shadow-sm transition-all ${
+                                        !selectedEventId 
+                                            ? "bg-stone-300 cursor-not-allowed" 
+                                            : "bg-green-700 hover:bg-green-800 active:scale-[0.98]"
+                                    }`}
                                 >
                                     <Send className="w-3.5 h-3.5" />
                                     Submit Request

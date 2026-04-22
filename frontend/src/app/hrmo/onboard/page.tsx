@@ -348,6 +348,7 @@ const initialFormData: FullPDS = {
     dateAccomplished: "",
     office: "",
     employmentStatus: "Teaching",
+    verificationStatus: "pending",
 };
 // reusable sub-components
 function Label({ children, required }: { children: React.ReactNode; required?: boolean }) {
@@ -632,6 +633,7 @@ export default function PDSOnboardPage() {
             office: employee.office_department || "",
             employmentStatus: employee.employment_status as FullPDS["employmentStatus"],
             dateAccomplished: "",
+            verificationStatus: "pending",
         };
 
         const meta = {
@@ -646,6 +648,7 @@ export default function PDSOnboardPage() {
     useEffect(() => {
         async function loadExisting() {
             setIsLoadingExisting(true);
+            let loadedExisting = false;
             try {
                 const env = await backendEnvelopeRequest<RawPDSEntity>("/api/employees/me/pds");
                 if (env.success && env.data && env.data.personalInfo && env.data.employee) {
@@ -653,12 +656,26 @@ export default function PDSOnboardPage() {
                     setFormData(mapped);
                     setEmployeeMeta(mappedMeta);
                     setHasExistingRecord(true);
+                    loadedExisting = true;
                 }
             } catch (err) {
                 console.error("Failed to load existing PDS:", err);
-            } finally {
-                setIsLoadingExisting(false);
             }
+
+            if (!loadedExisting) {
+                try {
+                    const draftStr = localStorage.getItem("onboard-pds-draft");
+                    if (draftStr) {
+                        const parsed = JSON.parse(draftStr);
+                        if (parsed.formData) setFormData(parsed.formData);
+                        if (parsed.employeeMeta) setEmployeeMeta(parsed.employeeMeta);
+                    }
+                } catch (err) {
+                    console.error("Failed to parse draft from localStorage:", err);
+                }
+            }
+
+            setIsLoadingExisting(false);
         }
         loadExisting();
     }, [mapBackendPdsToFrontend]);

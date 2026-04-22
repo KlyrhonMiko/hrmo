@@ -63,10 +63,7 @@ def create_app() -> FastAPI:
     )
 
     # CORS - allow frontend dev server origins for browser requests
-    origins = [
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-    ]
+    origins = [settings.frontend_url, settings.docker_frontend_url]
 
     app.add_middleware(
         CORSMiddleware,
@@ -145,9 +142,9 @@ app = create_app()
 if __name__ == "__main__":
     import uvicorn
 
-    host = os.getenv("HOST", settings.host)
-    port = int(os.getenv("PORT", settings.port))
-    reload = settings.env == "development"
+    host = settings.host
+    port = settings.port
+    reload = settings.reload
 
     uvicorn.run(
         "main:app",

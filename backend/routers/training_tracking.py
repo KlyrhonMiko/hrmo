@@ -151,12 +151,21 @@ async def update_training_event(
             detail="date_to must be on or after date_from",
         )
 
+    is_becoming_completed = (
+        update_data.get("status") == "Completed" and 
+        event.status != "Completed"
+    )
+
     for field, value in update_data.items():
         setattr(event, field, value)
 
     session.add(event)
     await session.commit()
     await session.refresh(event)
+
+    # If the training is marked as completed, sync it to the participants' PDS history
+    if is_becoming_completed:
+        await event_service.sync_completed_event_to_pds(event.id)
 
     participants_by_event = await participant_service.get_grouped_by_event_ids([event.id])
 

@@ -11,6 +11,7 @@ from models.training_requests import (
     TrainingRequest,
     TrainingRequestStatus,
 )
+from models.training_tracking import TrainingEvent
 from schemas.professional_background import (
     TrainingCreate,
     TrainingUpdate,
@@ -113,13 +114,17 @@ async def get_my_training_stats(
 ):
     """Get summarized training stats for the current employee."""
     if not current_user.employee_id:
-        return create_response(path=request.url.path, data={"attended": 0, "hours": 0, "pending": 0, "approved": 0}, success=True)
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User is not linked to an employee record")
     
     employee_id = current_user.employee_id
     
     # Get PDS records (attended & hours)
     employee_service = EmployeeService(session)
     employee = await employee_service.get(employee_id)
+    
+    if not employee:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Employee record not found")
+
     employee_no = employee.employee_no
     service = TrainingService(session)
     records = await service.get_by_employee_no(employee_no)
@@ -168,10 +173,13 @@ async def get_my_training_history(
 ):
     """Get training history (PDS records) for the current employee."""
     if not current_user.employee_id:
-        return create_response(path=request.url.path, data=[], success=True)
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User is not linked to an employee record")
     
     employee_service = EmployeeService(session)
     employee = await employee_service.get(current_user.employee_id)
+    
+    if not employee:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Employee record not found")
     
     service = TrainingService(session)
     records = await service.get_by_employee_no(employee.employee_no)
@@ -191,7 +199,7 @@ async def get_my_training_requests(
 ):
     """Get list of training requests submitted by the current employee."""
     if not current_user.employee_id:
-        return create_response(path=request.url.path, data=[], success=True)
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User is not linked to an employee record")
     
     stmt = select(TrainingRequest).where(TrainingRequest.employee_id == current_user.employee_id).order_by(TrainingRequest.submitted_at.desc())
     res = await session.execute(stmt)
@@ -215,6 +223,18 @@ async def submit_training_request(
     if not current_user.employee_id:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User is not linked to an employee record")
     
+    # Verify training event exists
+    event_stmt = select(TrainingEvent).where(
+        TrainingEvent.id == data.training_event_id,
+        TrainingEvent.is_deleted.is_(False)
+    )
+    event = (await session.execute(event_stmt)).scalar_one_or_none()
+    if not event:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail="The specified training event was not found or is no longer available."
+        )
+
     new_request = TrainingRequest(
         **data.model_dump(),
         employee_id=current_user.employee_id,

@@ -91,8 +91,25 @@ export default function EmployeeDashboard() {
                                 </div>
                                 <div>
                                     <h2 className="text-xl font-bold text-white">{profile.full_name}</h2>
-                                    <p className="text-green-100 text-sm mt-0.5">{profile.position}</p>
+                                    <div className="flex items-center gap-3 mt-0.5">
+                                        <p className="text-green-100 text-sm">{profile.position}</p>
+                                        {(profile.sex || profile.civil_status) && (
+                                            <div className="flex gap-1.5 ml-1">
+                                                {profile.sex && (
+                                                    <span className="px-1.5 py-0.5 bg-white/20 text-[10px] font-bold text-white uppercase tracking-wider rounded border border-white/20">
+                                                        {profile.sex}
+                                                    </span>
+                                                )}
+                                                {profile.civil_status && (
+                                                    <span className="px-1.5 py-0.5 bg-white/20 text-[10px] font-bold text-white uppercase tracking-wider rounded border border-white/20">
+                                                        {profile.civil_status}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
+
                             </div>
                             <div className="flex gap-2">
                                 <Link
@@ -122,7 +139,14 @@ export default function EmployeeDashboard() {
                                 <Hash className="w-4 h-4 text-stone-400" />
                                 {profile.employee_no}
                             </span>
+                            {profile.birth_date && (
+                                <span className="flex items-center gap-1.5">
+                                    <Calendar className="w-4 h-4 text-stone-400" />
+                                    {profile.birth_date}
+                                </span>
+                            )}
                         </div>
+
                         <div className="flex items-center gap-6">
                             <div className="text-center">
                                 <p className="text-lg font-bold text-green-700">{stats.years_service}</p>

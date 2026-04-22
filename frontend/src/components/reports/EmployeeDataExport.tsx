@@ -60,7 +60,7 @@ export function EmployeeDataExport({ userRole = "HR Head" }: EmployeeDataExportP
             });
             const payload = (await response.json()) as {
                 success?: boolean;
-                data?: any[];
+                data?: Record<string, unknown>[];
                 message?: string;
             };
 
@@ -78,12 +78,12 @@ export function EmployeeDataExport({ userRole = "HR Head" }: EmployeeDataExportP
             const csvHeader = fieldLabels.map((h) => `"${h}"`).join(",");
 
             // Create CSV rows
-            const csvRows = employees.map((emp: any) =>
+            const csvRows = employees.map((emp: Record<string, unknown>) =>
                 fieldKeys
                     .map((key) => {
-                        let value = (emp as any)[key] || "";
+                        let value = emp[key] || "";
                         if (key === "dateHired" && value) {
-                            value = new Date(value).toLocaleDateString("en-US");
+                            value = new Date(value as string | number).toLocaleDateString("en-US");
                         }
                         return `"${String(value).replace(/"/g, '""')}"`;
                     })

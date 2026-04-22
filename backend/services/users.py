@@ -10,6 +10,8 @@ from utils.security import hash_password
 from schemas.users import UserCreate
 from utils.idgen import generate_user_no
 from utils.security import verify_password
+from models.personal_information import BasicInformation
+
 
 
 class UserService(BaseService[User]):
@@ -86,3 +88,21 @@ class UserService(BaseService[User]):
         await self.session.commit()
         await self.session.refresh(record)
         return record
+
+    async def get_by_employee_id(self, employee_id: str) -> Optional[User]:
+        """Get a user by their linked employee ID."""
+        stmt = select(User).where(
+            and_(User.employee_id == employee_id, User.is_deleted.is_(False))
+        )
+        result = await self.session.execute(stmt)
+        return result.scalar_one_or_none()
+
+    async def sync_profile_from_pds(self, user: User, basic_info: BasicInformation) -> User:
+        """Synchronize user name fields from PDS (BasicInformation)."""
+        user.surname = basic_info.surname.strip()
+        user.first_name = basic_info.first_name.strip()
+        user.middle_name = basic_info.middle_name.strip() if basic_info.middle_name else None
+        
+        self.session.add(user)
+        # Note: caller is responsible for committing if part of a larger transaction
+        return user

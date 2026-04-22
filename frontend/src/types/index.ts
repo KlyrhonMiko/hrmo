@@ -194,7 +194,11 @@ export interface EmployeeDashboardData {
         position: string;
         department: string;
         employee_no: string;
+        sex?: string | null;
+        civil_status?: string | null;
+        birth_date?: string | null;
     };
+
     stats: {
         years_service: number;
         total_trainings: number;
@@ -246,6 +250,9 @@ export interface FullPDS {
     dateAccomplished?: string;
     office: string;
     employmentStatus: 'Teaching' | 'Non-Teaching' | 'COS';
+    verificationStatus: string;
+    verifiedBy?: string;
+    verifiedAt?: string;
     createdAt?: string;
     updatedAt?: string;
 }
@@ -323,6 +330,7 @@ export interface Employee201 {
     timeline?: TimelineRecord[];
     profilePhoto?: string;
     isActive: boolean;
+    status: string;
 }
 
 /* ═══════════════════════════════════════════════════════════

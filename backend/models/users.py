@@ -38,7 +38,13 @@ class User(BaseModel, table=True):
     username: str = Field(unique=True, max_length=50, description="Username for login")
     password: str = Field(max_length=255, description="Hashed password")
     role: UserRole = Field(
-        sa_column=Column(SQLEnum(UserRole, name="user_role")),
+        sa_column=Column(
+            SQLEnum(
+                UserRole,
+                name="user_role",
+                values_callable=lambda enum_cls: [member.value for member in enum_cls],
+            )
+        ),
         default=UserRole.employee,
         description="User role",
     )

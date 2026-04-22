@@ -20,15 +20,36 @@ type BackendEnvelope<T> = {
 
 export type BackendResponseEnvelope<T> = BackendEnvelope<T>;
 
-const FALLBACK_BACKEND_API_URL = "http://127.0.0.1:8000";
-
 export function getBackendApiBaseUrl(): string {
-    const configured =
-        process.env.BACKEND_API_URL ||
-        process.env.NEXT_PUBLIC_BACKEND_API_URL ||
-        FALLBACK_BACKEND_API_URL;
+    // In browsers `process.env.NEXT_PUBLIC_BACKEND_URL` is statically replaced by Next.js during build/dev.
+    // On the server, we prefer `BACKEND_API_URL` (for internal container networking).
+    const isServer = typeof window === "undefined";
+    const isDocker = process.env.RUNNING_IN_DOCKER === "true";
 
-    return configured.replace(/\/$/, "");
+    const configured = isServer 
+        ? (isDocker ? process.env.BACKEND_API_URL : process.env.NEXT_PUBLIC_BACKEND_URL)
+        : process.env.NEXT_PUBLIC_BACKEND_URL;
+
+
+
+    if (!configured || !configured.trim()) {
+        throw new Error("Backend API URL is missing. Set NEXT_PUBLIC_BACKEND_URL or BACKEND_API_URL in .env.local.");
+    }
+
+    const normalized = configured.trim();
+    let parsed: URL;
+
+    try {
+        parsed = new URL(normalized);
+    } catch {
+        throw new Error(`Backend API URL is invalid: "${normalized}". Provide a full URL (e.g., http://localhost:8000).`);
+    }
+
+    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+        throw new Error("Backend API URL must use http:// or https://.");
+    }
+
+    return normalized.replace(/\/$/, "");
 }
 
 export function toBackendUrl(path: string): string {
@@ -71,6 +92,31 @@ function getRequestInitWithAuth(init?: RequestInit): RequestInit {
     };
 }
 
+/**
+ * Handle unauthorized responses by clearing session and redirecting to login.
+ * Only triggers in the browser and for non-login paths.
+ */
+function handleUnauthorized(status: number, path: string): boolean {
+    if (status === 401 && !path.includes("/auth/login") && typeof window !== "undefined") {
+        console.warn(`Unauthorized access to ${path}. Redirecting to login...`);
+        // Clear auth cookies
+        document.cookie = "hrmo_token=; Path=/; Max-Age=0; SameSite=Lax";
+        document.cookie = "hrmo_role=; Path=/; Max-Age=0; SameSite=Lax";
+        
+        // Clear localStorage
+        try {
+            localStorage.removeItem("hrmo_user");
+        } catch {
+            /* ignore */
+        }
+
+        // Hard redirect to login page
+        window.location.href = "/auth/login";
+        return true;
+    }
+    return false;
+}
+
 
 
 async function parseBackendResponseBody<T>(response: Response): Promise<T | null> {
@@ -83,7 +129,12 @@ async function parseBackendResponseBody<T>(response: Response): Promise<T | null
         return null;
     }
 
-    const json = (await response.json()) as BackendEnvelope<T> | T;
+    let json;
+    try {
+        json = (await response.json()) as BackendEnvelope<T> | T;
+    } catch {
+        return null;
+    }
 
     if (json && typeof json === "object" && "data" in (json as BackendEnvelope<T>)) {
         return ((json as BackendEnvelope<T>).data ?? null) as T | null;
@@ -120,6 +171,7 @@ export async function backendRequest<T>(path: string, init?: RequestInit): Promi
                 message;
         }
 
+        handleUnauthorized(response.status, path);
         throw new BackendApiError(message, response.status, details);
     }
 
@@ -155,15 +207,26 @@ export async function backendEnvelopeRequest<T>(path: string, init?: RequestInit
                 message;
         }
 
+        handleUnauthorized(response.status, path);
         throw new BackendApiError(message, response.status, details);
+    }
+
+    if (response.status === 204) {
+        return { success: true, data: null as unknown as T } as BackendResponseEnvelope<T>;
     }
 
     const contentType = response.headers.get("content-type") || "";
     if (!contentType.toLowerCase().includes("application/json")) {
-        return {} as BackendResponseEnvelope<T>;
+        return { success: true } as BackendResponseEnvelope<T>;
     }
 
-    const json = (await response.json()) as BackendResponseEnvelope<T> | T;
+    let json;
+    try {
+        json = (await response.json()) as BackendResponseEnvelope<T> | T;
+    } catch {
+        return { success: true } as BackendResponseEnvelope<T>;
+    }
+    
     if (json && typeof json === "object" && "data" in (json as BackendResponseEnvelope<T>)) {
         return json as BackendResponseEnvelope<T>;
     }
@@ -204,6 +267,7 @@ export async function backendFormRequest<T>(path: string, formData: FormData, in
                 message;
         }
 
+        handleUnauthorized(response.status, path);
         throw new BackendApiError(message, response.status, details);
     }
 

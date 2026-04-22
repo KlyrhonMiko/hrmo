@@ -47,6 +47,91 @@ class TrainingEventService(BaseService[TrainingEvent]):
         result = await self.session.execute(stmt)
         return result.scalars().all()
 
+    async def sync_completed_event_to_pds(self, event_id: str) -> int:
+        """Synchronize a completed training event to the participants' PDS history.
+        
+        Returns the number of PDS records created.
+        """
+        from models.professional_background import TrainingRecord
+        
+        # 1. Get the event
+        event = await self.get(event_id)
+        if not event or event.status != "Completed":
+            return 0
+            
+        # 2. Get all participants with their basic information ID
+        stmt = (
+            select(Employee.id, BasicInformation.id.label("basic_info_id"))
+            .join(TrainingEventParticipant, TrainingEventParticipant.employee_id == Employee.id)
+            .join(BasicInformation, BasicInformation.employee_id == Employee.id)
+            .where(
+                and_(
+                    TrainingEventParticipant.training_event_id == event_id,
+                    TrainingEventParticipant.is_deleted.is_(False),
+                    Employee.is_deleted.is_(False),
+                    BasicInformation.is_deleted.is_(False)
+                )
+            )
+        )
+        result = await self.session.execute(stmt)
+        participants = result.all()
+        
+        created_count = 0
+        for p in participants:
+            # Check if record already exists to avoid duplicates
+            # We check by title, date_from, and basic_info_id
+            exists_stmt = select(TrainingRecord).where(
+                and_(
+                    TrainingRecord.basic_information_id == p.basic_info_id,
+                    TrainingRecord.training_title == event.training_title,
+                    TrainingRecord.date_from == event.date_from,
+                    TrainingRecord.is_deleted.is_(False)
+                )
+            )
+            exists_result = await self.session.execute(exists_stmt)
+            if exists_result.scalar_one_or_none():
+                continue
+                
+            # Create PDS record
+            pds_record = TrainingRecord(
+                basic_information_id=p.basic_info_id,
+                training_title=event.training_title,
+                training_type=event.training_type,
+                conducted_by=event.conducted_by,
+                venue=event.venue,
+                date_from=event.date_from,
+                date_to=event.date_to,
+                number_of_hours=str(event.hours)
+            )
+            self.session.add(pds_record)
+            
+            # Also update the participant's completion status in the tracking system
+            # Note: We are already iterating over participants fetched via TrainingEventParticipant join
+            # So we can just update the participant completion status if we fetch the whole object instead of just IDs
+            
+            created_count += 1
+            
+        # Bulk update participant completion status
+        update_stmt = (
+            update(TrainingEventParticipant)
+            .where(
+                and_(
+                    TrainingEventParticipant.training_event_id == event_id,
+                    TrainingEventParticipant.is_deleted.is_(False)
+                )
+            )
+            .values(completion_status="Completed", updated_at=datetime.utcnow())
+        )
+        await self.session.execute(update_stmt)
+            
+        if created_count > 0:
+            await self.session.commit()
+        else:
+            # Still commit the completion status change if applicable
+            await self.session.commit()
+            
+        return created_count
+
 
 class TrainingEventParticipantService(BaseService[TrainingEventParticipant]):
     """Service for managing event participants."""

@@ -23,7 +23,12 @@ import {
     MapPin,
     Briefcase,
     ChevronLeft,
+    Plus,
+    Trash2,
+    Save,
 } from "lucide-react";
+
+import EmployeeEditModal from "@/components/employee-edit/EmployeeEditModal";
 
 const OFFICES = ["CCS", "COE", "CBA", "CHAS", "CAS", "Admin"] as const;
 const EMPLOYMENT_STATUSES = ["Teaching", "Non-Teaching", "COS"] as const;
@@ -33,13 +38,17 @@ const SEMESTERS = ["1st Semester", "2nd Semester", "Midyear / Summer Term"] as c
 
 type DetailTab = "personal" | "documents" | "certificates" | "training" | "timeline";
 
-function StatusBadge({ isActive }: { isActive: boolean }) {
+function StatusBadge({ status }: { status: string }) {
+    const s = status?.toLowerCase() || "pending";
+    const styles: Record<string, string> = {
+        verified: "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600/20",
+        pending: "bg-amber-50 text-amber-700 ring-1 ring-amber-600/20",
+        rejected: "bg-red-50 text-red-700 ring-1 ring-red-600/20",
+    };
+    
     return (
-        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-medium ${isActive
-            ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600/20"
-            : "bg-stone-100 text-stone-500 ring-1 ring-stone-300/40"
-            }`}>
-            {isActive ? "Active" : "Inactive"}
+        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-medium capitalize ${styles[s] ?? "bg-stone-100 text-stone-500 ring-1 ring-stone-300/40"}`}>
+            {s}
         </span>
     );
 }
@@ -365,6 +374,52 @@ export default function EmployeeDirectoryPage({ userRole = "HR Head" }: Director
     const [expandedId, setExpandedId] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<DetailTab>("personal");
     const [showFilters, setShowFilters] = useState(false);
+    const [isVerifying, setIsVerifying] = useState(false);
+    const [editingEmployee, setEditingEmployee] = useState<Employee201 | null>(null);
+
+    const handleVerify = async (employeeNo: string) => {
+        if (!confirm("Are you sure you want to verify this employee?")) return;
+        setIsVerifying(true);
+        try {
+            const response = await fetch(`/api/employees/${employeeNo}/verify`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" }
+            });
+            const result = await response.json();
+            if (result.success) {
+                // Refresh listing
+                const refreshResponse = await fetch(`/api/employees/directory?page=${page}&limit=${PAGE_SIZE}`, { cache: "no-store" });
+                const refreshData = await refreshResponse.json();
+                if (refreshData.success) {
+                    setEmployees(refreshData.data);
+                }
+            } else {
+                alert(result.message || "Failed to verify employee");
+            }
+        } catch (error) {
+            console.error("Verification error:", error);
+            alert("An error occurred while verifying the employee");
+        } finally {
+            setIsVerifying(false);
+        }
+    };
+
+    const handleEditClick = (emp: Employee201) => {
+        setEditingEmployee(emp);
+    };
+
+    const handleEditClose = () => {
+        setEditingEmployee(null);
+    };
+
+    const handleEditSuccess = () => {
+        // Refresh listing
+        void fetch(`/api/employees/directory?page=${page}&limit=${PAGE_SIZE}`, { cache: "no-store" })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) setEmployees(data.data);
+            });
+    };
 
     useEffect(() => {
         let mounted = true;
@@ -411,7 +466,7 @@ export default function EmployeeDirectoryPage({ userRole = "HR Head" }: Director
     const filtered = useMemo(() => {
         return employees.filter((e) => {
             const q = search.toLowerCase();
-            const matchesSearch = !q || e.fullName.toLowerCase().includes(q) || e.employeeNo.toLowerCase().includes(q);
+            const matchesSearch = !q || e.fullName?.toLowerCase().includes(q) || e.employeeNo?.toLowerCase().includes(q);
             const matchesOffice = !officeFilter || e.office === officeFilter;
             const matchesEmpStatus = !empStatusFilter || e.employmentStatus === empStatusFilter;
 
@@ -720,19 +775,36 @@ export default function EmployeeDirectoryPage({ userRole = "HR Head" }: Director
                                                     </span>
                                                 </td>
                                                 <td className="px-4 py-3 text-center hidden sm:table-cell">
-                                                    <StatusBadge isActive={emp.isActive} />
+                                                    <StatusBadge status={emp.status} />
                                                 </td>
                                                 <td className="px-4 py-3 text-right">
-                                                    <button
-                                                        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium rounded-lg bg-green-700 text-white hover:bg-green-800 active:scale-[0.97] shadow-sm transition"
-                                                        onClick={(e) => { e.stopPropagation(); handleExpand(emp.id); }}
-                                                    >
-                                                        <Eye className="w-3.5 h-3.5" />
-                                                        <span className="hidden sm:inline">View 201</span>
-                                                        {expandedId === emp.id
-                                                            ? <ChevronDown className="w-3.5 h-3.5" />
-                                                            : <ChevronRight className="w-3.5 h-3.5" />}
-                                                    </button>
+                                                    <div className="flex items-center justify-end gap-2">
+                                                        {(!emp.status || emp.status.toLowerCase() === "pending") && (
+                                                            <button
+                                                                onClick={(e) => { e.stopPropagation(); handleVerify(emp.employeeNo); }}
+                                                                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium rounded-lg bg-amber-600 text-white hover:bg-amber-700 active:scale-[0.97] shadow-sm transition"
+                                                                title="Verify this employee record"
+                                                            >
+                                                                Verify
+                                                            </button>
+                                                        )}
+                                                        <button
+                                                            onClick={(e) => { e.stopPropagation(); handleEditClick(emp); }}
+                                                            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium rounded-lg bg-stone-800 text-white hover:bg-stone-900 active:scale-[0.97] shadow-sm transition"
+                                                        >
+                                                            Edit
+                                                        </button>
+                                                        <button
+                                                            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium rounded-lg bg-green-700 text-white hover:bg-green-800 active:scale-[0.97] shadow-sm transition"
+                                                            onClick={(e) => { e.stopPropagation(); handleExpand(emp.id); }}
+                                                        >
+                                                            <Eye className="w-3.5 h-3.5" />
+                                                            <span className="hidden sm:inline">View 201</span>
+                                                            {expandedId === emp.id
+                                                                ? <ChevronDown className="w-3.5 h-3.5" />
+                                                                : <ChevronRight className="w-3.5 h-3.5" />}
+                                                        </button>
+                                                    </div>
                                                 </td>
                                             </tr>
 
@@ -841,6 +913,15 @@ export default function EmployeeDirectoryPage({ userRole = "HR Head" }: Director
                         )}
                     </div>
                 </div>
+            {/* Edit Modal */}
+            {editingEmployee && (
+                <EmployeeEditModal 
+                    employee={editingEmployee} 
+                    onClose={handleEditClose} 
+                    onSuccess={handleEditSuccess}
+                />
+            )}
         </div>
     );
 }
+

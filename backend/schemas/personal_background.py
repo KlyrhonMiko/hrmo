@@ -11,6 +11,7 @@ from pydantic import BaseModel, Field
 class FamilyDetailBase(BaseModel):
     """Base schema for family details."""
 
+    relationship: str = Field(..., max_length=50)
     surname: str = Field(..., max_length=100)
     first_name: str = Field(..., max_length=100)
     middle_name: Optional[str] = Field(None, max_length=100)
@@ -31,6 +32,7 @@ class FamilyDetailCreate(FamilyDetailBase):
 class FamilyDetailUpdate(BaseModel):
     """Schema for updating family detail."""
 
+    relationship: Optional[str] = Field(None, max_length=50)
     surname: Optional[str] = Field(None, max_length=100)
     first_name: Optional[str] = Field(None, max_length=100)
     middle_name: Optional[str] = Field(None, max_length=100)
