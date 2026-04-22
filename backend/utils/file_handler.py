@@ -5,19 +5,14 @@ import mimetypes
 import uuid
 from pathlib import Path
 from typing import Optional
-from urllib.parse import quote, urlparse
 
-import httpx
 from fastapi import UploadFile
-
-from core.config import get_settings
 
 
 LOGGER = logging.getLogger(__name__)
-settings = get_settings()
 
 
-# Define upload directories for local fallback and backwards compatibility
+# Define upload directories.
 BASE_UPLOAD_DIR = Path(__file__).parent.parent / "uploads"
 CERTIFICATES_DIR = BASE_UPLOAD_DIR / "certificates"
 
@@ -39,148 +34,35 @@ class FileUploadError(Exception):
     pass
 
 
-def _is_supabase_storage_enabled() -> bool:
-    """Return True when Supabase Storage credentials are configured."""
-    return bool(
-        settings.supabase_url
-        and settings.supabase_service_role_key
-        and settings.supabase_storage_bucket
-    )
-
-
-def _strip_bucket_prefix(path_value: str) -> str:
-    """Normalize a DB file path or URL into a Storage object path."""
-    normalized = path_value.strip()
+def _normalize_relative_path(file_path: str) -> str:
+    """Normalize DB file path into the local certificates path format."""
+    normalized = file_path.strip().lstrip("/")
+    if not normalized:
+        raise FileUploadError("No file path available for this certificate")
 
     if normalized.startswith("http://") or normalized.startswith("https://"):
-        parsed = urlparse(normalized)
-        public_marker = f"/storage/v1/object/public/{settings.supabase_storage_bucket}/"
-        signed_marker = f"/storage/v1/object/sign/{settings.supabase_storage_bucket}/"
-        authenticated_marker = f"/storage/v1/object/authenticated/{settings.supabase_storage_bucket}/"
-        object_marker = f"/storage/v1/object/{settings.supabase_storage_bucket}/"
+        raise FileUploadError("URL-based file paths are not supported in local storage mode")
 
-        for marker in (public_marker, signed_marker, authenticated_marker, object_marker):
-            if marker in parsed.path:
-                return parsed.path.split(marker, maxsplit=1)[1].lstrip("/")
-
-        return parsed.path.lstrip("/")
-
-    normalized = normalized.lstrip("/")
-    bucket_prefix = f"{settings.supabase_storage_bucket}/"
-    if normalized.startswith(bucket_prefix):
-        return normalized[len(bucket_prefix):]
     if normalized.startswith("certificates/"):
-        return normalized[len("certificates/"):]
-    return normalized
+        return normalized
 
-
-async def _upload_to_supabase(
-    file_content: bytes,
-    object_path: str,
-    content_type: str,
-) -> None:
-    """Upload file bytes to Supabase Storage."""
-    if not _is_supabase_storage_enabled():
-        raise FileUploadError("Supabase Storage is not configured")
-
-    upload_url = (
-        f"{settings.supabase_url.rstrip('/')}/storage/v1/object/"
-        f"{settings.supabase_storage_bucket}/{quote(object_path, safe='/')}"
-    )
-    headers = {
-        "Authorization": f"Bearer {settings.supabase_service_role_key}",
-        "apikey": settings.supabase_service_role_key,
-        "x-upsert": "true",
-        "Content-Type": content_type,
-    }
-
-    async with httpx.AsyncClient(timeout=60.0) as client:
-        response = await client.post(upload_url, headers=headers, content=file_content)
-
-    if response.status_code not in (200, 201):
-        raise FileUploadError(
-            "Supabase upload failed "
-            f"(status={response.status_code}): {response.text[:300]}"
-        )
-
-
-async def _delete_from_supabase(object_path: str) -> bool:
-    """Delete a file from Supabase Storage."""
-    if not _is_supabase_storage_enabled():
-        return False
-
-    delete_url = (
-        f"{settings.supabase_url.rstrip('/')}/storage/v1/object/"
-        f"{settings.supabase_storage_bucket}/{quote(object_path, safe='/')}"
-    )
-    headers = {
-        "Authorization": f"Bearer {settings.supabase_service_role_key}",
-        "apikey": settings.supabase_service_role_key,
-    }
-
-    async with httpx.AsyncClient(timeout=30.0) as client:
-        response = await client.delete(delete_url, headers=headers)
-
-    if response.status_code in (200, 204):
-        return True
-    if response.status_code == 404:
-        return False
-
-    raise FileUploadError(
-        "Supabase delete failed "
-        f"(status={response.status_code}): {response.text[:300]}"
-    )
+    return f"certificates/{normalized}"
 
 
 def _delete_local_file(file_path: str) -> bool:
-    """Delete file from local fallback storage."""
-    normalized = file_path.strip()
-    if normalized.startswith("http://") or normalized.startswith("https://"):
-        return False
-
-    full_path = BASE_UPLOAD_DIR / normalized.lstrip("/")
+    """Delete file from local storage."""
+    normalized = _normalize_relative_path(file_path)
+    full_path = BASE_UPLOAD_DIR / normalized
     if full_path.exists():
         full_path.unlink()
         return True
     return False
 
 
-async def _download_from_supabase(object_path: str) -> tuple[bytes, str]:
-    """Download a file from Supabase Storage.
-
-    Returns:
-        tuple[bytes, str]: (file content, content type)
-    """
-    if not _is_supabase_storage_enabled():
-        raise FileUploadError("Supabase Storage is not configured")
-
-    download_url = (
-        f"{settings.supabase_url.rstrip('/')}/storage/v1/object/"
-        f"{settings.supabase_storage_bucket}/{quote(object_path, safe='/')}"
-    )
-    headers = {
-        "Authorization": f"Bearer {settings.supabase_service_role_key}",
-        "apikey": settings.supabase_service_role_key,
-    }
-
-    async with httpx.AsyncClient(timeout=60.0) as client:
-        response = await client.get(download_url, headers=headers)
-
-    if response.status_code == 404:
-        raise FileUploadError("File not found in Supabase Storage")
-    if response.status_code != 200:
-        raise FileUploadError(
-            "Supabase download failed "
-            f"(status={response.status_code}): {response.text[:300]}"
-        )
-
-    content_type = response.headers.get("content-type") or mimetypes.guess_type(object_path)[0] or "application/octet-stream"
-    return response.content, content_type
-
-
 def _download_from_local(file_path: str) -> tuple[bytes, str]:
-    """Download a file from local fallback storage."""
-    full_path = BASE_UPLOAD_DIR / file_path.lstrip("/")
+    """Download a file from local storage."""
+    normalized = _normalize_relative_path(file_path)
+    full_path = BASE_UPLOAD_DIR / normalized
     if not full_path.exists() or not full_path.is_file():
         raise FileUploadError("Local file not found")
 
@@ -193,7 +75,7 @@ async def save_certificate_file(
     file: UploadFile,
     employee_no: str,
 ) -> str:
-    """Save uploaded certificate file to disk.
+    """Save uploaded certificate file to local disk.
     
     Args:
         file: The uploaded file from FastAPI
@@ -234,17 +116,6 @@ async def save_certificate_file(
     # Keep DB path format stable for existing consumers.
     relative_path = f"certificates/{employee_no}/{file_name}"
 
-    if _is_supabase_storage_enabled():
-        object_path = _strip_bucket_prefix(relative_path)
-        content_type = file.content_type or mimetypes.guess_type(file.filename)[0] or "application/octet-stream"
-        await _upload_to_supabase(
-            file_content=file_content,
-            object_path=object_path,
-            content_type=content_type,
-        )
-        return relative_path
-
-    # Local disk fallback when Supabase is not configured.
     employee_dir = CERTIFICATES_DIR / employee_no
     employee_dir.mkdir(parents=True, exist_ok=True)
     file_path = employee_dir / file_name
@@ -255,7 +126,7 @@ async def save_certificate_file(
 
 
 async def delete_certificate_file(file_path: Optional[str]) -> bool:
-    """Delete certificate file from disk.
+    """Delete certificate file from local disk.
     
     Args:
         file_path: Relative file path from database
@@ -267,13 +138,8 @@ async def delete_certificate_file(file_path: Optional[str]) -> bool:
         return False
 
     try:
-        deleted_supabase = False
-        if _is_supabase_storage_enabled():
-            object_path = _strip_bucket_prefix(file_path)
-            deleted_supabase = await _delete_from_supabase(object_path)
-
         deleted_local = _delete_local_file(file_path)
-        return deleted_supabase or deleted_local
+        return deleted_local
     except Exception as e:
         raise FileUploadError(f"Error deleting file: {str(e)}")
 
@@ -283,19 +149,7 @@ def get_certificate_file_url(file_path: Optional[str]) -> Optional[str]:
     if not file_path:
         return None
 
-    normalized = file_path.strip()
-    if normalized.startswith("http://") or normalized.startswith("https://"):
-        return normalized
-
-    normalized = normalized.lstrip("/")
-
-    if _is_supabase_storage_enabled():
-        object_path = _strip_bucket_prefix(normalized)
-        return (
-            f"{settings.supabase_url.rstrip('/')}/storage/v1/object/public/"
-            f"{settings.supabase_storage_bucket}/{quote(object_path, safe='/')}"
-        )
-
+    normalized = _normalize_relative_path(file_path)
     return f"/uploads/{normalized}"
 
 
@@ -311,15 +165,12 @@ def get_certificate_file_path(file_path: Optional[str]) -> Optional[str]:
     if not file_path:
         return None
 
-    normalized = file_path.strip()
-    if normalized.startswith("http://") or normalized.startswith("https://"):
-        return None
-
-    return str(BASE_UPLOAD_DIR / normalized.lstrip("/"))
+    normalized = _normalize_relative_path(file_path)
+    return str(BASE_UPLOAD_DIR / normalized)
 
 
 async def download_certificate_file(file_path: Optional[str]) -> tuple[bytes, str, str]:
-    """Download a certificate file from storage.
+    """Download a certificate file from local storage.
 
     Returns:
         tuple[bytes, str, str]: (file content, content type, file name)
@@ -327,19 +178,7 @@ async def download_certificate_file(file_path: Optional[str]) -> tuple[bytes, st
     if not file_path:
         raise FileUploadError("No file path available for this certificate")
 
-    normalized = file_path.strip()
-    if not normalized:
-        raise FileUploadError("No file path available for this certificate")
-
-    object_path = _strip_bucket_prefix(normalized)
-    filename = Path(object_path).name or "certificate-file"
-
-    if _is_supabase_storage_enabled():
-        content, content_type = await _download_from_supabase(object_path)
-        return content, content_type, filename
-
-    if normalized.startswith("http://") or normalized.startswith("https://"):
-        raise FileUploadError("Cannot download URL-based file when Supabase Storage is not configured")
-
+    normalized = _normalize_relative_path(file_path)
+    filename = Path(normalized).name or "certificate-file"
     content, content_type = _download_from_local(normalized)
     return content, content_type, filename

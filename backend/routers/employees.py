@@ -434,6 +434,17 @@ async def onboard_employee_atomic(
             
             await session.flush()
             basic_information_id = basic_information.id
+            
+            # Sync user name from PDS if linked
+            from services.users import UserService
+            user_svc = UserService(session)
+            if calling_user and calling_user.employee_id == employee.id:
+                await user_svc.sync_profile_from_pds(calling_user, basic_information)
+            elif data.user_id:
+                user_stmt = select(User).where(User.id == data.user_id)
+                linked_user = (await session.execute(user_stmt)).scalar_one_or_none()
+                if linked_user and linked_user.employee_id == employee.id:
+                    await user_svc.sync_profile_from_pds(linked_user, basic_information)
 
             if is_update:
                 # Clear related collections for fresh recreation
@@ -1043,5 +1054,66 @@ async def restore_employee(
     return create_response(
         path=request.url.path,
         data=record.model_dump(),
+        success=True,
+    )
+
+
+@router.get("/directory", response_model=APIResponse)
+async def list_employees_directory(
+    request: Request,
+    skip: int = 0,
+    limit: int = 10,
+    session: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """List all employees with full 201 details for the directory."""
+    # Ensure only HR/Admin can access the full directory data
+    if current_user.role not in [UserRole.ADMIN, UserRole.PRESIDENT, UserRole.HR, UserRole.HR_ASSISTANT]:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to view employee directory",
+        )
+
+    service = EmployeeService(session)
+    records = await service.get_directory_data(skip=skip, limit=limit)
+    total_records = await service.count_all()
+    
+    return create_response(
+        path=request.url.path,
+        data=records,
+        meta=build_pagination_meta(skip=skip, limit=limit, total_records=total_records),
+        success=True,
+    )
+
+
+@router.post("/{employee_no}/verify", response_model=APIResponse)
+async def verify_employee(
+    request: Request,
+    employee_no: str,
+    session: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Verify an employee record."""
+    # Ensure only HR/Admin can verify
+    if current_user.role not in [UserRole.admin, UserRole.hr, UserRole.hr_assistant]:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to verify employee records",
+        )
+
+    service = EmployeeService(session)
+    # Use the current user's full name as verifier
+    verifier_name = f"{current_user.first_name} {current_user.surname}"
+    
+    employee = await service.verify_employee(employee_no, verifier_name)
+    if not employee:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Employee not found",
+        )
+    
+    return create_response(
+        path=request.url.path,
+        data=employee.model_dump(),
         success=True,
     )

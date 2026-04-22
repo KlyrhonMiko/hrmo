@@ -83,18 +83,19 @@ function formatDate(dateStr: string) {
 }
 
 function statusColor(status: string) {
-    switch (status) {
-        case "Verified":
-        case "Completed":
-        case "Active":
+    const s = status.toLowerCase();
+    switch (s) {
+        case "verified":
+        case "completed":
+        case "active":
             return "bg-emerald-50 text-emerald-700";
-        case "Pending":
-        case "Pending Verification":
-        case "Ongoing":
+        case "pending":
+        case "pending verification":
+        case "ongoing":
             return "bg-amber-50 text-amber-700";
-        case "Rejected":
-        case "Expired":
-        case "Cancelled":
+        case "rejected":
+        case "expired":
+        case "cancelled":
             return "bg-red-50 text-red-700";
         default:
             return "bg-stone-100 text-stone-600";
@@ -102,12 +103,13 @@ function statusColor(status: string) {
 }
 
 function StatusBadge({ status }: { status: string }) {
+    const s = status.toLowerCase();
     return (
         <span className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full ${statusColor(status)}`}>
-            {(status === "Verified" || status === "Completed") && <CheckCircle2 className="w-3 h-3" />}
-            {(status === "Pending" || status === "Pending Verification") && <Clock className="w-3 h-3" />}
-            {(status === "Rejected" || status === "Expired") && <AlertCircle className="w-3 h-3" />}
-            {status}
+            {(s === "verified" || s === "completed") && <CheckCircle2 className="w-3 h-3" />}
+            {(s === "pending" || s === "pending verification") && <Clock className="w-3 h-3" />}
+            {(s === "rejected" || s === "expired") && <AlertCircle className="w-3 h-3" />}
+            {status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()}
         </span>
     );
 }
@@ -154,6 +156,9 @@ interface RawPDSEntity {
         employee_no: string;
         office_department: string;
         employment_status: string;
+        status: string;
+        verified_by?: string | null;
+        verified_at?: string | null;
     };
 }
 
@@ -301,6 +306,9 @@ export default function MyPDSPage() {
                         },
                         office: raw.employee.office_department,
                         employmentStatus: raw.employee.employment_status as any,
+                        verificationStatus: raw.employee.status,
+                        verifiedBy: raw.employee.verified_by || undefined,
+                        verifiedAt: raw.employee.verified_at || undefined,
                     };
                     setPds(mapped);
                 }
@@ -369,7 +377,7 @@ export default function MyPDSPage() {
                     <div className="flex items-center gap-4">
                         <div className="text-center bg-white/5 border border-white/10 px-6 py-3 rounded-2xl backdrop-blur-sm">
                             <p className="text-[10px] text-stone-500 uppercase tracking-widest font-black mb-1">Status</p>
-                            <StatusBadge status="Verified" />
+                            <StatusBadge status={pds.verificationStatus} />
                         </div>
                     </div>
                 </div>

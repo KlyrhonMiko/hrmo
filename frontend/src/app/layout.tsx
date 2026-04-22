@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
+import { GlobalApiInterceptor } from "@/components/auth/GlobalApiInterceptor";
+
 const inter = Inter({
   variable: "--font-sans",
   subsets: ["latin"],
@@ -21,6 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} font-sans antialiased`}>
+        <GlobalApiInterceptor />
         {children}
       </body>
     </html>

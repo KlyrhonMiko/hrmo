@@ -1,9 +1,7 @@
 """Alembic environment configuration."""
 from logging.config import fileConfig
 from sqlalchemy import engine_from_config, pool
-from sqlalchemy.engine import make_url
 from alembic import context
-import os
 import sys
 from pathlib import Path
 
@@ -32,23 +30,10 @@ if config.config_file_name is not None:
         # Fallback when logger keys are malformed; migrations can still proceed.
         pass
 
-# Set the sqlalchemy.url from environment variable or settings.
-# ALEMBIC_DATABASE_URL takes precedence for migration-only overrides.
-raw_sqlalchemy_url = (
-    os.getenv("ALEMBIC_DATABASE_URL")
-    or os.getenv("DATABASE_URL")
-    or settings.database_url
-)
-parsed_url = make_url(raw_sqlalchemy_url)
+sqlalchemy_url = settings.database_url
+if not sqlalchemy_url or not sqlalchemy_url.strip():
+    raise RuntimeError("DATABASE_URL is missing or empty in .env.local")
 
-# Ensure remote PostgreSQL connections fail fast and use SSL by default.
-if parsed_url.drivername.startswith("postgresql") and parsed_url.host not in {None, "localhost", "127.0.0.1"}:
-    query = dict(parsed_url.query)
-    query.setdefault("sslmode", "require")
-    query.setdefault("connect_timeout", "10")
-    parsed_url = parsed_url.set(query=query)
-
-sqlalchemy_url = parsed_url.render_as_string(hide_password=False)
 config.set_main_option("sqlalchemy.url", sqlalchemy_url)
 
 # Use BaseModel metadata for autogenerate support

@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "dev": "if [ -f ../.env.local ]; then set -a; . ../.env.local; set +a; fi; unset PORT HOST; next dev",
+    "build": "if [ -f ../.env.local ]; then set -a; . ../.env.local; set +a; fi; unset PORT HOST; NODE_ENV=production next build",
+    "start": "if [ -f ../.env.local ]; then set -a; . ../.env.local; set +a; fi; unset PORT HOST; next start",
     "lint": "eslint"
   },
   "dependencies": {

@@ -1,296 +1,180 @@
-# HRMO Backend - FastAPI with Supabase & Alembic
+# HRMO Backend - FastAPI + Local PostgreSQL
 
-A modern Python backend built with FastAPI, SQLAlchemy, and Alembic for database migrations, connected to Supabase PostgreSQL.
+Backend API for HRMO built with FastAPI, SQLAlchemy/SQLModel, and Alembic.
+
+This backend is configured for local development using:
+- Local PostgreSQL (Docker or host machine)
+- Local certificate file storage under `backend/uploads/certificates`
 
 ## Prerequisites
 
-- Python 3.8+
-- Supabase account with a PostgreSQL database
-- pip or your preferred Python package manager
+- Python 3.11+
+- PostgreSQL (local install or Docker)
+- pip
+
+## Environment Configuration
+
+The project uses a single environment file at repository root:
+
+```bash
+.env.local
+```
+
+Core backend variables:
+
+```bash
+DATABASE_URL=postgresql://postgres:password@localhost:5432/hrmo
+DOCKER_DATABASE_URL=postgresql://postgres:password@postgres:5432/hrmo
+DATABASE_ECHO=false
+DATABASE_POOL_SIZE=4
+DATABASE_MAX_OVERFLOW=0
+DATABASE_POOL_PRE_PING=true
+
+ENV=development
+HOST=0.0.0.0
+PORT=8000
+RELOAD=true
+
+SECRET_KEY=your-secret-key-change-this-in-production
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+
+FRONTEND_URL=http://localhost:3000
+BACKEND_URL=http://localhost:8000
+DOCKER_FRONTEND_URL=http://frontend:3000
+DOCKER_BACKEND_URL=http://backend:8000
+
+BACKEND_API_URL=http://backend:8000
+NEXT_PUBLIC_BACKEND_URL=http://localhost:8000
+```
+
+If running backend inside Docker Compose, backend service uses `DOCKER_DATABASE_URL` from `.env.local`.
+
+## Initial Users
+
+One initial account per role is configured in `.env.local` and can be seeded idempotently:
+
+```bash
+python scripts/seed_initial_users.py
+```
+
+Roles seeded:
+- `admin`
+- `president`
+- `hr`
+- `hr-assistant`
+- `employee`
 
 ## Quick Start
 
-### 1. Set Up Supabase
-
-1. Go to [Supabase Dashboard](https://app.supabase.com)
-2. Create a new project or use an existing one
-3. Navigate to **Project Settings** → **Database**
-4. Copy your connection details:
-   - **Connection string**: `postgresql://postgres:[password]@[project-id].supabase.co:5432/postgres`
-   - **Project URL**: `https://[project-id].supabase.co`
-   - **Anon Key**: Found in **Settings** → **API**
-   - **Service Role Key**: Found in **Settings** → **API**
-
-### 2. Configure Environment Variables
-
-Update `.env.local` in the root directory with your Supabase credentials:
-
-```bash
-DATABASE_URL=postgresql://postgres:YOUR_PASSWORD@YOUR_PROJECT_ID.supabase.co:5432/postgres
-SUPABASE_URL=https://YOUR_PROJECT_ID.supabase.co
-SUPABASE_KEY=YOUR_ANON_KEY
-SUPABASE_SERVICE_ROLE_KEY=YOUR_SERVICE_ROLE_KEY
-SUPABASE_STORAGE_BUCKET=certificates
-```
-
-### 3. Install Dependencies
+1. Install dependencies
 
 ```bash
 cd backend
 pip install -r requirements.txt
 ```
 
-### 4. Run Database Migrations
+2. Run migrations
 
 ```bash
-# Create a new migration
-alembic revision --autogenerate -m "Initial migration"
-
-# Apply migrations to your database
 alembic upgrade head
 ```
 
-### 5. Run the Development Server
+3. Start API
 
 ```bash
 python main.py
 ```
 
-Or use uvicorn directly:
+Or with uvicorn:
 
 ```bash
-uvicorn main:app --reload
+uvicorn main:create_app --factory --host 0.0.0.0 --port 8000 --reload
 ```
 
-The API will be available at `http://localhost:5000`
+API docs: `http://localhost:8000/docs`
 
-Check the health status:
-```bash
-curl http://localhost:5000/health
-```
+## Docker Compose Workflow
 
-## Project Structure
-
-```
-backend/
-├── main.py                 # Application entry point
-├── alembic/               # Database migrations
-│   ├── env.py            # Alembic environment config
-│   ├── script.py.mako    # Migration template
-│   └── versions/         # Migration files
-├── app/
-│   ├── core.py           # FastAPI app factory
-│   ├── db/
-│   │   └── database.py   # Database configuration & session
-│   ├── models/           # SQLAlchemy ORM models
-│   ├── schemas/          # Pydantic request/response schemas
-│   ├── api/
-│   │   └── endpoints/    # API route handlers
-│   └── services/         # Business logic layer
-├── tests/                # Unit and integration tests
-├── requirements.txt      # Python dependencies
-└── .env.example         # Environment variable template
-```
-
-## Creating Models
-
-Example: `app/models/user.py`
-
-```python
-from sqlalchemy import Column, Integer, String
-from app.db.database import Base
-
-class User(Base):
-    __tablename__ = "users"
-
-    id = Column(Integer, primary_key=True, index=True)
-    email = Column(String, unique=True, index=True)
-    name = Column(String)
-```
-
-## Creating API Routes
-
-Example: `app/api/endpoints/users.py`
-
-```python
-from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
-from app.db.database import get_db
-from app.models.user import User
-from app.schemas.user import UserCreate, UserResponse
-
-router = APIRouter(prefix="/users", tags=["users"])
-
-@router.post("/", response_model=UserResponse)
-async def create_user(user: UserCreate, db: Session = Depends(get_db)):
-    db_user = User(**user.model_dump())
-    db.add(db_user)
-    db.commit()
-    db.refresh(db_user)
-    return db_user
-```
-
-Register routes in `app/core.py`:
-
-```python
-from app.api.endpoints import users
-
-def create_app() -> FastAPI:
-    app = FastAPI()
-    # ... middleware setup ...
-    app.include_router(users.router)
-    return app
-```
-
-## Database Migrations
-
-### Create a new migration
+From repository root:
 
 ```bash
-alembic revision --autogenerate -m "Add user table"
+docker-compose --env-file .env.local up -d postgres backend frontend adminer
+docker-compose --env-file .env.local exec backend alembic upgrade head
+docker-compose --env-file .env.local exec backend python scripts/seed_initial_users.py
 ```
 
-### Apply migrations
+Service names (compose):
+- `postgres`
+- `adminer`
+- `backend`
+- `frontend`
+
+Container names:
+- `hrmo-postgres`
+- `hrmo-adminer`
+- `hrmo-backend`
+- `hrmo-frontend`
+
+## Migrations
+
+Create migration:
+
+```bash
+alembic revision --autogenerate -m "describe change"
+```
+
+Apply migration:
 
 ```bash
 alembic upgrade head
 ```
 
-### Rollback migrations
+Rollback last migration:
 
 ```bash
-alembic downgrade -1  # Rollback one migration
-alembic downgrade base  # Rollback all migrations
+alembic downgrade -1
 ```
 
-### View migration history
+## File Storage
+
+Certificate uploads are saved locally in:
 
 ```bash
-alembic current  # Show current revision
-alembic history  # Show all revisions
+backend/uploads/certificates/<employee_no>/
+```
+
+Files are served via backend static route under:
+
+```bash
+/uploads/...
 ```
 
 ## Testing
 
-Run tests with pytest:
+Run tests:
 
 ```bash
 pytest
-```
-
-Run tests with coverage:
-
-```bash
-pytest --cov=app tests/
-```
-
-## Environment Variables Reference
-
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `DATABASE_URL` | Supabase PostgreSQL connection | `postgresql://...` |
-| `SUPABASE_URL` | Supabase project URL | `https://xxx.supabase.co` |
-| `SUPABASE_KEY` | Supabase anonymous key | `eyJ0eXAi...` |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key | `eyJ0eXAi...` |
-| `SUPABASE_STORAGE_BUCKET` | Supabase Storage bucket for certificate files | `certificates` |
-| `ENV` | Environment (development/production) | `development` |
-| `PORT` | Server port | `5000` |
-| `HOST` | Server host | `0.0.0.0` |
-| `SECRET_KEY` | JWT secret key | Your secret |
-| `ALGORITHM` | JWT algorithm | `HS256` |
-| `SQL_ECHO` | Log SQL statements | `true`/`false` |
-
-## Integration with Frontend
-
-The frontend is configured to communicate with this backend at `http://localhost:5000` in development mode. Make sure:
-
-1. Backend is running on port 5000
-2. `CORS_ORIGINS` includes your frontend URL in `.env.local`
-3. Frontend calls API endpoints relative to the backend URL
-
-Example frontend API call:
-
-```typescript
-const response = await fetch('http://localhost:5000/api/users', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ email: 'user@example.com', name: 'John' })
-});
-```
-
-## Useful Commands
-
-```bash
-# Install dependencies
-pip install -r requirements.txt
-
-# Start development server with auto-reload
-python main.py
-
-# Create database migration
-alembic revision --autogenerate -m "Description"
-
-# Apply migrations
-alembic upgrade head
-
-# Run tests
-pytest
-
-# Format code with black
-black app/
-
-# Check code style
-flake8 app/
 ```
 
 ## Troubleshooting
 
-### Supabase Storage setup for certificate files
+Database connection issues:
+- Confirm PostgreSQL is running
+- Confirm `DATABASE_URL` in `.env.local`
+- Confirm DB user, password, and database exist
 
-1. Create a Storage bucket named `certificates` (or set `SUPABASE_STORAGE_BUCKET` to your bucket name).
-2. Set bucket visibility to **Public** if files must be directly viewable by all collaborators.
-3. Keep `SUPABASE_SERVICE_ROLE_KEY` only on backend/server environments.
-4. For existing local files in `backend/uploads/certificates`, upload them once:
+Migration issues:
+- Check current revision with `alembic current`
+- Inspect history with `alembic history`
 
-```bash
-cd backend
-python scripts/upload_certificate_files_to_supabase.py
-```
+Port conflicts:
+- Change backend `PORT` in `.env.local`
+- Or adjust published ports in compose config
 
-Use `--dry-run` first to verify what will be uploaded.
+## References
 
-### Connection refused to Supabase
-
-- Verify DATABASE_URL is correct in `.env.local`
-- Check that Supabase project is active
-- Ensure your IP is not blocked by Supabase firewall
-
-### Migration conflicts
-
-- Delete conflicting migration files from `alembic/versions/`
-- Ensure you're on the correct database state before creating new migrations
-
-### Port already in use
-
-```bash
-# Change port in .env.local or run on different port
-PORT=8000 python main.py
-```
-
-## Production Deployment
-
-For production:
-
-1. Set `ENV=production`
-2. Use a strong `SECRET_KEY`
-3. Disable `SQL_ECHO`
-4. Use proper database backups
-5. Implement proper error logging
-6. Use environment-specific variable files
-
-## Further Reading
-
-- [FastAPI Documentation](https://fastapi.tiangolo.com)
-- [SQLAlchemy Documentation](https://docs.sqlalchemy.org)
-- [Alembic Tutorial](https://alembic.sqlalchemy.org)
-- [Supabase Documentation](https://supabase.com/docs)
+- FastAPI: https://fastapi.tiangolo.com
+- SQLAlchemy: https://docs.sqlalchemy.org
+- Alembic: https://alembic.sqlalchemy.org

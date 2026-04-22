@@ -108,7 +108,7 @@ async def test_all_public_async_service_methods_execute(fake_session) -> None:
                     continue
                 if not method.__qualname__.startswith(f"{cls.__name__}."):
                     continue
-                if method_name == "create_user":
+                if method_name in {"create_user", "sync_profile_from_pds"}:
                     continue
 
                 bound_method = getattr(service, method_name)

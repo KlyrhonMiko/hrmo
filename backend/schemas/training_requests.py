@@ -19,7 +19,7 @@ class TrainingRequestBase(BaseModel):
 
 class TrainingRequestCreate(TrainingRequestBase):
     """Schema for creating a training request."""
-    pass
+    training_event_id: str
 
 class TrainingRequestUpdate(BaseModel):
     """Schema for updating a training request status or details."""

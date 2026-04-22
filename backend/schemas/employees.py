@@ -18,6 +18,9 @@ class EmployeeBase(BaseModel):
     date_hired: date
     salary_grade: Optional[int] = None
     step_increment: Optional[int] = None
+    status: str = Field(default="pending", max_length=50)
+    verified_by: Optional[str] = Field(None, max_length=100)
+    verified_at: Optional[datetime] = None
 
 
 class EmployeeCreate(EmployeeBase):
@@ -36,6 +39,9 @@ class EmployeeUpdate(BaseModel):
     date_hired: Optional[date] = None
     salary_grade: Optional[int] = None
     step_increment: Optional[int] = None
+    status: Optional[str] = Field(None, max_length=50)
+    verified_by: Optional[str] = Field(None, max_length=100)
+    verified_at: Optional[datetime] = None
 
 
 class EmployeeResponse(EmployeeBase):

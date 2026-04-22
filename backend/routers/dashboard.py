@@ -14,7 +14,6 @@ from models.employees import CertificateRecord, Employee
 from models.personal_background import RecordCompletion
 from models.personal_information import BasicInformation
 from models.training_tracking import TrainingEvent, TrainingEventParticipant
-from models.professional_background import TrainingRecord
 from deps.auth import get_current_user
 from models.users import User
 from utils.response import APIResponse, create_response
@@ -882,14 +881,15 @@ async def get_employee_dashboard(
     if not employee:
         return create_response(path=request.url.path, data=None, success=True)
 
-    # 2. Get Basic Information ID
-    basic_info_stmt = select(BasicInformation.id).where(
+    # 2. Get Basic Information
+    basic_info_stmt = select(BasicInformation).where(
         and_(
             BasicInformation.employee_id == employee.id,
             BasicInformation.is_deleted.is_(False),
         )
     )
-    basic_info_id = (await session.execute(basic_info_stmt)).scalar_one_or_none()
+    basic_info = (await session.execute(basic_info_stmt)).scalar_one_or_none()
+    basic_info_id = basic_info.id if basic_info else None
 
     now = datetime.utcnow()
     current_year = now.year
@@ -897,17 +897,27 @@ async def get_employee_dashboard(
     years_service = (now.date() - date_hired).days // 365
 
     # 3. Training Stats & Aggregations
-    training_records = []
-    if basic_info_id:
-        tr_stmt = select(TrainingRecord).where(
+    # Evaluates participation across HR-managed TrainingEvent records instead of static TrainingRecord.
+    tr_stmt = (
+        select(TrainingEvent, TrainingEventParticipant.completion_status)
+        .join(TrainingEventParticipant, TrainingEvent.id == TrainingEventParticipant.training_event_id)
+        .where(
             and_(
-                TrainingRecord.basic_information_id == basic_info_id,
-                TrainingRecord.is_deleted.is_(False),
+                TrainingEventParticipant.employee_id == employee.id,
+                TrainingEventParticipant.is_deleted.is_(False),
+                TrainingEvent.is_deleted.is_(False),
             )
         )
-        training_records = (await session.execute(tr_stmt)).scalars().all()
+    )
+    training_results = (await session.execute(tr_stmt)).all()
 
-    total_trainings = len(training_records)
+    completed_trainings = [
+        row.TrainingEvent 
+        for row in training_results 
+        if _is_completed_status(row.completion_status)
+    ]
+
+    total_trainings = len(completed_trainings)
     annual_hours = 0
     categories = {
         "Technical": 0,
@@ -926,17 +936,13 @@ async def get_employee_dashboard(
             return "Compliance"
         return "Soft Skills"
 
-    for tr in training_records:
-        hours = 0
-        try:
-            hours = int(tr.number_of_hours or 0)
-        except (ValueError, TypeError):
-            pass
-
-        if tr.date_from and tr.date_from.year == current_year:
+    for event in completed_trainings:
+        hours = int(event.hours or 0)
+        
+        if event.date_from and event.date_from.year == current_year:
             annual_hours += hours
         
-        cat = map_category(tr.training_type)
+        cat = map_category(event.training_type)
         categories[cat] += hours
 
     # 4. Certificate Records
@@ -1007,11 +1013,20 @@ async def get_employee_dashboard(
 
     data = {
         "profile": {
-            "full_name": current_user.full_name,
+            "full_name": _employee_display_name(
+                employee_no=employee.employee_no,
+                surname=basic_info.surname if basic_info else None,
+                first_name=basic_info.first_name if basic_info else None,
+                middle_name=basic_info.middle_name if basic_info else None,
+            ) if basic_info else current_user.full_name,
             "position": employee.position_title,
             "department": employee.office_department,
             "employee_no": employee.employee_no,
+            "sex": basic_info.sex if basic_info else None,
+            "civil_status": basic_info.civil_status if basic_info else None,
+            "birth_date": basic_info.date_of_birth.strftime("%b %d, %Y") if basic_info and basic_info.date_of_birth else None,
         },
+
         "stats": {
             "years_service": years_service,
             "total_trainings": total_trainings,

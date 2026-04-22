@@ -1,0 +1,95 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: hrmo-postgres
+    env_file: .env.local
+    environment:
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+      POSTGRES_DB: ${DB_NAME:-hrmo}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-hrmo}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - hrmo-network
+
+  # Adminer for Database UI
+  adminer:
+    image: adminer:latest
+    container_name: hrmo-adminer
+    env_file: .env.local
+    ports:
+      - "8001:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+    networks:
+      - hrmo-network
+
+  # FastAPI Backend
+  hrmo-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: hrmo-backend
+    env_file: .env.local
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: ${DOCKER_DATABASE_URL:-postgresql://postgres:password@postgres:5432/hrmo}
+      HOST: ${HOST:-0.0.0.0}
+      PORT: ${PORT:-8000}
+      ENV: ${ENV:-development}
+      RELOAD: ${RELOAD:-true}
+      RUNNING_IN_DOCKER: "true"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - /app/__pycache__
+    networks:
+      - hrmo-network
+
+  # Next.js Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NODE_ENV: ${NODE_ENV:-development}
+        BACKEND_API_URL: ${BACKEND_API_URL:-http://backend:8000}
+        NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL:-http://localhost:8000}
+    container_name: hrmo-frontend
+    env_file: .env.local
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      BACKEND_API_URL: ${BACKEND_API_URL:-http://hrmo-backend:8000}
+      NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL:-http://localhost:8000}
+      RUNNING_IN_DOCKER: "true"
+    depends_on:
+      - hrmo-backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    networks:
+      - hrmo-network
+
+volumes:
+  postgres_data:
+
+networks:
+  hrmo-network:
+    driver: bridge
